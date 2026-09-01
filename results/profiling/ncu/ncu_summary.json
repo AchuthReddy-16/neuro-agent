@@ -1,0 +1,51 @@
+{
+  "timestamp": "2026-09-01T20:03:39.299393+00:00",
+  "ncu_version": "NVIDIA (R) Nsight Compute Command Line Profiler\nCopyright (c) 2018-2025 NVIDIA Corporation\nVersion 2025.1.1.0 (build 35528883) (public-release)",
+  "kernel_filters": [
+    {
+      "label": "gemm_matmul",
+      "regex": "(?i)(gemm|matmul|cutlass|wmma|nvjet)"
+    },
+    {
+      "label": "attention",
+      "regex": "(?i)(attention|bmm|flash|scaled_dot|softmax)"
+    }
+  ],
+  "metrics_collected": [
+    "gpu__time_duration.sum",
+    "sm__throughput.avg.pct_of_peak_sustained_elapsed",
+    "gpu__compute_memory_throughput.avg.pct_of_peak_sustained_elapsed",
+    "dram__throughput.avg.pct_of_peak_sustained_elapsed",
+    "sm__warps_active.avg.pct_of_peak_sustained_active",
+    "launch__occupancy_limit_blocks",
+    "launch__occupancy_limit_warps",
+    "smsp__sass_thread_inst_executed_op_hmma_pred_on.sum.per_cycle_elapsed",
+    "smsp__warp_issue_stalled_long_scoreboard_per_issue_active.pct",
+    "smsp__warp_issue_stalled_memory_dependency_per_issue_active.pct",
+    "smsp__warp_issue_stalled_short_scoreboard_per_issue_active.pct"
+  ],
+  "runs": [
+    {
+      "label": "gemm_matmul",
+      "kernel_regex": "(?i)(gemm|matmul|cutlass|wmma|nvjet)",
+      "returncode": 0,
+      "report": "/workspace/neuro-agent/results/profiling/ncu/ncu_gemm_matmul_20260901_200229.ncu-rep",
+      "log": "/workspace/neuro-agent/results/profiling/ncu/ncu_gemm_matmul_20260901_200229.log",
+      "stdout": "/workspace/neuro-agent/results/profiling/ncu/ncu_gemm_matmul_20260901_200229.stdout",
+      "kernels": []
+    },
+    {
+      "label": "attention",
+      "kernel_regex": "(?i)(attention|bmm|flash|scaled_dot|softmax)",
+      "returncode": 0,
+      "report": "/workspace/neuro-agent/results/profiling/ncu/ncu_attention_20260901_200305.ncu-rep",
+      "log": "/workspace/neuro-agent/results/profiling/ncu/ncu_attention_20260901_200305.log",
+      "stdout": "/workspace/neuro-agent/results/profiling/ncu/ncu_attention_20260901_200305.stdout",
+      "kernels": []
+    }
+  ],
+  "bottleneck_classification": {
+    "classification": "unknown",
+    "reason": "No NCU kernel data parsed"
+  }
+}

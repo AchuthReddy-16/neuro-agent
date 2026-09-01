@@ -1,0 +1,189 @@
+{
+  "timestamp": "2026-09-01T20:02:13.528504+00:00",
+  "pid": 14006,
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "weight_memory_mb": 7672.2490234375,
+  "prompt_tokens": 512,
+  "snapshots": [
+    {
+      "phase": "cuda_context_init",
+      "allocated_mb": 0.00048828125,
+      "reserved_mb": 2.0,
+      "max_allocated_mb": 0.00048828125,
+      "max_reserved_mb": 2.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 450.0
+          }
+        ],
+        "gpu_used_mb": 460.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": "After minimal CUDA alloc"
+    },
+    {
+      "phase": "after_model_load",
+      "allocated_mb": 7672.39306640625,
+      "reserved_mb": 7674.0,
+      "max_allocated_mb": 7672.39306640625,
+      "max_reserved_mb": 7674.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 8122.0
+          }
+        ],
+        "gpu_used_mb": 8132.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": "weights=7672.2MB load_time=44.42s"
+    },
+    {
+      "phase": "before_generation_peak_reset",
+      "allocated_mb": 7672.39306640625,
+      "reserved_mb": 7674.0,
+      "max_allocated_mb": 7672.39306640625,
+      "max_reserved_mb": 7674.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 8122.0
+          }
+        ],
+        "gpu_used_mb": 8132.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": "State before reset_peak in benchmark"
+    },
+    {
+      "phase": "after_generation",
+      "allocated_mb": 7680.51806640625,
+      "reserved_mb": 8000.0,
+      "max_allocated_mb": 7906.43115234375,
+      "max_reserved_mb": 8000.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 8464.0
+          }
+        ],
+        "gpu_used_mb": 8474.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": "benchmark peak_vram reported=7906.4MB"
+    },
+    {
+      "phase": "generation_no_mid_reset",
+      "allocated_mb": 7680.517578125,
+      "reserved_mb": 8000.0,
+      "max_allocated_mb": 7906.43115234375,
+      "max_reserved_mb": 8000.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 8464.0
+          }
+        ],
+        "gpu_used_mb": 8474.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": "Peak since explicit reset only"
+    },
+    {
+      "phase": "after_prefill_profiler",
+      "allocated_mb": 7680.517578125,
+      "reserved_mb": 8000.0,
+      "max_allocated_mb": 7903.396484375,
+      "max_reserved_mb": 8000.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 8476.0
+          }
+        ],
+        "gpu_used_mb": 8486.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": ""
+    },
+    {
+      "phase": "after_decode_profiler",
+      "allocated_mb": 7680.517578125,
+      "reserved_mb": 8000.0,
+      "max_allocated_mb": 7906.4306640625,
+      "max_reserved_mb": 8000.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 8476.0
+          }
+        ],
+        "gpu_used_mb": 8486.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": ""
+    },
+    {
+      "phase": "two_model_instances",
+      "allocated_mb": 15352.78515625,
+      "reserved_mb": 15374.0,
+      "max_allocated_mb": 15352.78515625,
+      "max_reserved_mb": 15374.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 15850.0
+          }
+        ],
+        "gpu_used_mb": 15860.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": "Second model loaded \u2014 duplicate check"
+    },
+    {
+      "phase": "after_delete_second_model",
+      "allocated_mb": 7680.517578125,
+      "reserved_mb": 7694.0,
+      "max_allocated_mb": 15352.78515625,
+      "max_reserved_mb": 15374.0,
+      "nvidia_smi": {
+        "processes": [
+          {
+            "pid": 14006,
+            "name": "python",
+            "used_mb": 8170.0
+          }
+        ],
+        "gpu_used_mb": 8180.0,
+        "gpu_total_mb": 24564.0
+      },
+      "notes": ""
+    }
+  ],
+  "findings": [
+    "Duplicate model load doubled allocated VRAM (15353 MB) \u2014 external 15.9 GB snapshot may reflect two loads or stale process.",
+    "Benchmark peak_vram (7906 MB) matches max_memory_allocated (7906 MB) when using engine reset semantics."
+  ],
+  "explanation": {
+    "benchmark_peak_vram_source": "torch.cuda.max_memory_allocated() after reset_peak at generation start",
+    "nvidia_smi_vs_torch": "nvidia-smi reports driver-level memory including CUDA caching allocator reserved blocks, cuDNN workspaces, and context overhead. torch.cuda.memory_allocated() counts only live tensors. torch.cuda.memory_reserved() is closer to nvidia-smi but still may differ due to driver fragmentation and other processes.",
+    "likely_15_9gb_cause": "~2x single-run footprint: either two model loads in same process, profiler/benchmark scripts run back-to-back without process exit, or nvidia-smi snapshot taken during peak reserved (not allocated) phase."
+  }
+}

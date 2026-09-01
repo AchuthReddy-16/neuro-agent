@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-09-01T20:06:29.021075+00:00",
+  "vram_discrepancy": {
+    "benchmark_peak_mb": 7906.43115234375,
+    "single_model_allocated_mb": 7672.39306640625,
+    "single_model_reserved_mb": 7674.0,
+    "single_model_nvidia_smi_mb": 8122.0,
+    "after_generation_allocated_mb": 7680.51806640625,
+    "after_generation_reserved_mb": 8000.0,
+    "after_generation_max_allocated_mb": 7906.43115234375,
+    "after_generation_max_reserved_mb": 8000.0,
+    "after_generation_nvidia_smi_mb": 8464.0,
+    "two_model_instances_mb": 15352.78515625,
+    "two_model_nvidia_smi_mb": 15850.0,
+    "explanation": "Benchmark peak (~7.9 GB) is correct for a single model + KV cache + activations. The ~15.9 GB nvidia-smi reading matches loading TWO model instances in one process (15,353 MB allocated / 15,850 MB nvidia-smi). Single-model nvidia-smi is ~8.1 GB at rest and ~8.5 GB during inference \u2014 consistent with torch allocated + allocator reserved.",
+    "findings": [
+      "Duplicate model load doubled allocated VRAM (15353 MB) \u2014 external 15.9 GB snapshot may reflect two loads or stale process.",
+      "Benchmark peak_vram (7906 MB) matches max_memory_allocated (7906 MB) when using engine reset semantics."
+    ]
+  },
+  "ncu": {
+    "available": true,
+    "permission_error": true,
+    "metrics_collected": false,
+    "kernels_identified": [
+      "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x3_tn",
+      "ampere_bf16_s1688gemm_bf16_128x64_sliced1x2_ldg8_f2f_tn",
+      "ampere_bf16_s1688gemm_bf16_64x128_sliced1x2_ldg8_f2f_tn",
+      "flash_fwd_splitkv_combine_kernel"
+    ],
+    "note": "ERR_NVGPUCTRPERM on RunPod \u2014 GPU performance counters require elevated permissions. Kernel names were discovered but detailed SM/DRAM/occupancy metrics could not be collected."
+  },
+  "nsys": {
+    "available": false,
+    "note": "Not installed on this pod."
+  },
+  "bottleneck_classification": {
+    "prefill_classification": "compute-bound",
+    "decode_classification": "mixed",
+    "overall_classification": "mixed (prefill compute-bound, decode mixed)",
+    "prefill_top_ops": [
+      "prefill_forward",
+      "prefill_forward",
+      "aten::matmul",
+      "aten::linear",
+      "aten::mm"
+    ],
+    "decode_top_ops": [
+      "decode_step",
+      "decode_step",
+      "aten::matmul",
+      "aten::linear",
+      "aten::mm"
+    ],
+    "prefill_matmul_cuda_us": 189302.51099998018,
+    "prefill_launch_cuda_us": 0,
+    "prefill_bmm_cuda_us": 0,
+    "decode_matmul_cuda_us": 28087.933999999994,
+    "recommended_optimization_target": "BF16 Tensor Core GEMM (linear/FFN layers) \u2014 dominant in both prefill and decode; secondary target: Flash Attention kernels (flash_fwd_splitkv) and kernel-launch fusion to reduce 2000+ cudaLaunchKernel calls per prefill step."
+  },
+  "benchmark_bugs": [
+    {
+      "issue": "peak_vram naming clarity",
+      "severity": "low",
+      "detail": "benchmark peak_vram uses max_memory_allocated after reset_peak at generation start. This is correct and matches measured values, but does not include transient reserved pool overhead visible in nvidia-smi (~400-500 MB above allocated)."
+    },
+    {
+      "issue": "no duplicate-model guard",
+      "severity": "medium",
+      "detail": "Sequential benchmark scripts each load a fresh model in a new process (OK), but orchestration in one process would double VRAM. Document that only one model load should be active per process."
+    }
+  ]
+}

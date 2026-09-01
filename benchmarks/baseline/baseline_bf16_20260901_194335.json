@@ -1,0 +1,256 @@
+{
+  "timestamp": "2026-09-01T19:43:35.390774+00:00",
+  "config_snapshot": {
+    "model": {
+      "name": "Qwen/Qwen3-4B-Instruct-2507",
+      "variant": "base_BF16",
+      "precision": "bf16",
+      "quantization": "none",
+      "dtype": "bfloat16",
+      "trust_remote_code": false
+    },
+    "inference": {
+      "seed": 42,
+      "do_sample": false,
+      "max_new_tokens": 64,
+      "use_cache": true,
+      "temperature": 0.0,
+      "top_p": 1.0
+    },
+    "benchmark": {
+      "warmup_iterations": 2,
+      "benchmark_iterations": 5,
+      "prompt_token_length": 512,
+      "context_lengths": [
+        512,
+        1024,
+        2048,
+        4096
+      ],
+      "try_context_length_8192": true,
+      "kv_cache_experiments": {
+        "run_use_cache_true": true,
+        "run_use_cache_false": true
+      }
+    },
+    "prompt": {
+      "base_text": "You are a neuroscience research assistant. Summarize the relationship between hippocampal sharp-wave ripples and memory consolidation. Consider electrophysiology, replay, and behavioral evidence.\n"
+    },
+    "profiling": {
+      "pytorch": {
+        "warmup_iterations": 1,
+        "record_iterations": 1,
+        "activities": [
+          "cpu",
+          "cuda"
+        ],
+        "profile_memory": true,
+        "record_shapes": true,
+        "with_stack": false
+      },
+      "nsys": {
+        "trace": "cuda,nvtx,osrt",
+        "duration": "short"
+      },
+      "ncu": {
+        "kernel_name_patterns": [],
+        "metrics": [
+          "gpu__time_duration.sum",
+          "sm__throughput.avg.pct_of_peak_sustained_elapsed",
+          "dram__throughput.avg.pct_of_peak_sustained_elapsed",
+          "smsp__sass_thread_inst_executed_op_dadd_pred_on.sum.per_cycle_elapsed",
+          "smsp__warp_issue_stalled_long_scoreboard_per_issue_active.pct"
+        ]
+      }
+    },
+    "output": {
+      "baseline_dir": "benchmarks/baseline",
+      "kv_cache_dir": "benchmarks/kv_cache",
+      "profiling_dir": "results/profiling"
+    },
+    "hardware": {
+      "gpu_name": "NVIDIA GeForce RTX 4090",
+      "vram_gb": 24
+    }
+  },
+  "results": [
+    {
+      "model_name": "Qwen/Qwen3-4B-Instruct-2507",
+      "model_variant": "base_BF16",
+      "precision": "bfloat16",
+      "quantization": "none",
+      "context_length": 512,
+      "generated_tokens": 64,
+      "use_cache": true,
+      "load_time_s": 13.969837695360184,
+      "weight_memory_mb": 7672.2490234375,
+      "peak_vram_mb": 7907.4521484375,
+      "kv_cache_memory_mb": 85.53466796875,
+      "prompt_token_count": 512,
+      "prefill_latency_ms": {
+        "mean": 36.53256297111511,
+        "p50": 36.531247198581696,
+        "p95": 36.57004237174988,
+        "values": [
+          36.50336340069771,
+          36.52406111359596,
+          36.531247198581696,
+          36.53410077095032,
+          36.57004237174988
+        ]
+      },
+      "ttft_ms": {
+        "mean": 36.56286969780922,
+        "p50": 36.55920922756195,
+        "p95": 36.600518971681595,
+        "values": [
+          36.53184697031975,
+          36.55880689620972,
+          36.55920922756195,
+          36.56396642327309,
+          36.600518971681595
+        ]
+      },
+      "decode_latency_per_token_ms": {
+        "mean": 13.261512364260852,
+        "p50": 13.256409554742277,
+        "p95": 13.280736398883164,
+        "values": [
+          13.252585427835584,
+          13.254823163151741,
+          13.256409554742277,
+          13.263007276691496,
+          13.280736398883164
+        ]
+      },
+      "decode_tokens_per_second": {
+        "mean": 75.40622562192783,
+        "p50": 75.43520708759827,
+        "p95": 75.45697444814135,
+        "values": [
+          75.29702946924648,
+          75.39768162213159,
+          75.43520708759827,
+          75.44423548252146,
+          75.45697444814135
+        ]
+      },
+      "end_to_end_latency_ms": {
+        "mean": 885.3169612586498,
+        "p50": 884.9573880434036,
+        "p95": 886.5439891815186,
+        "values": [
+          884.7828656435013,
+          884.8915956914425,
+          884.9573880434036,
+          885.4089677333832,
+          886.5439891815186
+        ]
+      },
+      "gpu_utilization_pct": {
+        "mean": 95.63636363636364,
+        "p50": 97.0,
+        "p95": 97.0,
+        "values": [
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          92.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          96.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0,
+          97.0
+        ]
+      },
+      "hardware": {
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 4090",
+          "vram_total_mb": 24564,
+          "driver_version": "580.126.09",
+          "compute_capability": "8.9"
+        },
+        "cuda_version": "12.8",
+        "driver_version": "580.126.09"
+      },
+      "timestamp": "2026-09-01T19:43:35.390735+00:00",
+      "experiment": "baseline_bf16",
+      "metadata": {
+        "model_variant": "base_BF16",
+        "warmup_iterations": 2,
+        "benchmark_iterations": 5,
+        "peak_vram_stats": {
+          "mean": 7907.4521484375,
+          "p50": 7907.4521484375,
+          "p95": 7907.4521484375,
+          "values": [
+            7907.4521484375,
+            7907.4521484375,
+            7907.4521484375,
+            7907.4521484375,
+            7907.4521484375
+          ]
+        },
+        "kv_cache_measured_mb": 85.53466796875,
+        "iterations": 5
+      }
+    }
+  ]
+}

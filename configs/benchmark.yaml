@@ -1,0 +1,64 @@
+# Benchmark configuration for base-model inference and systems evaluation
+
+model:
+  name: Qwen/Qwen3-4B-Instruct-2507
+  variant: base_BF16
+  precision: bf16
+  quantization: none
+  dtype: bfloat16
+  trust_remote_code: false
+
+inference:
+  seed: 42
+  do_sample: false
+  max_new_tokens: 64
+  use_cache: true
+  temperature: 0.0   # ignored when do_sample=false
+  top_p: 1.0
+
+benchmark:
+  warmup_iterations: 2
+  benchmark_iterations: 5
+  prompt_token_length: 512
+  context_lengths: [512, 1024, 2048, 4096]
+  try_context_length_8192: true
+  kv_cache_experiments:
+    run_use_cache_true: true
+    run_use_cache_false: true
+
+prompt:
+  # Base text repeated/truncated to reach exact token counts
+  base_text: >
+    You are a neuroscience research assistant. Summarize the relationship
+    between hippocampal sharp-wave ripples and memory consolidation.
+    Consider electrophysiology, replay, and behavioral evidence.
+
+profiling:
+  pytorch:
+    warmup_iterations: 1
+    record_iterations: 1
+    activities: [cpu, cuda]
+    profile_memory: true
+    record_shapes: true
+    with_stack: false
+  nsys:
+    trace: cuda,nvtx,osrt
+    duration: short
+  ncu:
+    # Populated after PyTorch profiler identifies hot kernels
+    kernel_name_patterns: []
+    metrics:
+      - gpu__time_duration.sum
+      - sm__throughput.avg.pct_of_peak_sustained_elapsed
+      - dram__throughput.avg.pct_of_peak_sustained_elapsed
+      - smsp__sass_thread_inst_executed_op_dadd_pred_on.sum.per_cycle_elapsed
+      - smsp__warp_issue_stalled_long_scoreboard_per_issue_active.pct
+
+output:
+  baseline_dir: benchmarks/baseline
+  kv_cache_dir: benchmarks/kv_cache
+  profiling_dir: results/profiling
+
+hardware:
+  gpu_name: NVIDIA GeForce RTX 4090
+  vram_gb: 24

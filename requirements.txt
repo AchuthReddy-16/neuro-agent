@@ -1,0 +1,9 @@
+# Core scaffold dependencies (minimal install)
+pyyaml>=6.0
+
+# Hardware verification (install when GPU is available)
+# pip install -e ".[hardware]"
+# torch>=2.1
+
+# Training stack (install later when starting QLoRA/SFT)
+# pip install -e ".[train]"

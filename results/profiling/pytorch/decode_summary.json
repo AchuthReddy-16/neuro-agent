@@ -1,0 +1,192 @@
+{
+  "timestamp": "2026-09-01T19:46:42.161665+00:00",
+  "phase": "decode",
+  "top_cpu_ops": [
+    {
+      "name": "decode_step",
+      "cpu_time_us": 60104.308000000005,
+      "cuda_time_us": 12405.449000000077,
+      "count": 1
+    },
+    {
+      "name": "Runtime Triggered Module Loading",
+      "cpu_time_us": 32580.06099999999,
+      "cuda_time_us": 77.37600000000384,
+      "count": 6
+    },
+    {
+      "name": "cudaLaunchKernel",
+      "cpu_time_us": 30606.734999999728,
+      "cuda_time_us": 20.383999999998196,
+      "count": 2073
+    },
+    {
+      "name": "aten::embedding",
+      "cpu_time_us": 27027.607,
+      "cuda_time_us": 10.87999999999738,
+      "count": 1
+    },
+    {
+      "name": "aten::index_select",
+      "cpu_time_us": 26981.492,
+      "cuda_time_us": 10.87999999999738,
+      "count": 1
+    },
+    {
+      "name": "aten::linear",
+      "cpu_time_us": 9830.254000000008,
+      "cuda_time_us": 9361.769999999997,
+      "count": 253
+    },
+    {
+      "name": "aten::matmul",
+      "cpu_time_us": 8968.825999999954,
+      "cuda_time_us": 9364.394,
+      "count": 254
+    },
+    {
+      "name": "aten::mm",
+      "cpu_time_us": 7885.187999999969,
+      "cuda_time_us": 9361.769999999997,
+      "count": 253
+    },
+    {
+      "name": "cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags",
+      "cpu_time_us": 5131.293999999994,
+      "cuda_time_us": 138.36899999999514,
+      "count": 7
+    },
+    {
+      "name": "aten::scaled_dot_product_attention",
+      "cpu_time_us": 3688.806000000026,
+      "cuda_time_us": 380.19600000003265,
+      "count": 36
+    },
+    {
+      "name": "aten::_scaled_dot_product_flash_attention",
+      "cpu_time_us": 3539.0970000000234,
+      "cuda_time_us": 380.19600000003265,
+      "count": 36
+    },
+    {
+      "name": "aten::_flash_attention_forward",
+      "cpu_time_us": 3261.4110000000073,
+      "cuda_time_us": 380.19600000003265,
+      "count": 36
+    },
+    {
+      "name": "aten::to",
+      "cpu_time_us": 2674.8940000000475,
+      "cuda_time_us": 449.8280000001141,
+      "count": 442
+    },
+    {
+      "name": "aten::_to_copy",
+      "cpu_time_us": 2460.9589999999844,
+      "cuda_time_us": 449.8280000001141,
+      "count": 293
+    },
+    {
+      "name": "aten::mul",
+      "cpu_time_us": 2441.0400000001064,
+      "cuda_time_us": 722.7939999998853,
+      "count": 472
+    }
+  ],
+  "top_cuda_ops": [
+    {
+      "name": "decode_step",
+      "cpu_time_us": 0,
+      "cuda_time_us": 33831.085999999996,
+      "count": 1
+    },
+    {
+      "name": "decode_step",
+      "cpu_time_us": 60104.308000000005,
+      "cuda_time_us": 12405.449000000077,
+      "count": 1
+    },
+    {
+      "name": "aten::matmul",
+      "cpu_time_us": 8968.825999999954,
+      "cuda_time_us": 9364.394,
+      "count": 254
+    },
+    {
+      "name": "aten::linear",
+      "cpu_time_us": 9830.254000000008,
+      "cuda_time_us": 9361.769999999997,
+      "count": 253
+    },
+    {
+      "name": "aten::mm",
+      "cpu_time_us": 7885.187999999969,
+      "cuda_time_us": 9361.769999999997,
+      "count": 253
+    },
+    {
+      "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)",
+      "cpu_time_us": 0,
+      "cuda_time_us": 7204.949999999997,
+      "count": 217
+    },
+    {
+      "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)",
+      "cpu_time_us": 0,
+      "cuda_time_us": 2019.7630000000063,
+      "count": 36
+    },
+    {
+      "name": "aten::mul",
+      "cpu_time_us": 2441.0400000001064,
+      "cuda_time_us": 722.7939999998853,
+      "count": 472
+    },
+    {
+      "name": "aten::to",
+      "cpu_time_us": 2674.8940000000475,
+      "cuda_time_us": 449.8280000001141,
+      "count": 442
+    },
+    {
+      "name": "aten::_to_copy",
+      "cpu_time_us": 2460.9589999999844,
+      "cuda_time_us": 449.8280000001141,
+      "count": 293
+    },
+    {
+      "name": "aten::copy_",
+      "cpu_time_us": 1375.1649999999427,
+      "cuda_time_us": 449.8280000001141,
+      "count": 293
+    },
+    {
+      "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<c10::BFloat16, c10::BFloat16, c10::BFloat16, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1})",
+      "cpu_time_us": 0,
+      "cuda_time_us": 389.57400000002235,
+      "count": 216
+    },
+    {
+      "name": "aten::scaled_dot_product_attention",
+      "cpu_time_us": 3688.806000000026,
+      "cuda_time_us": 380.19600000003265,
+      "count": 36
+    },
+    {
+      "name": "aten::_scaled_dot_product_flash_attention",
+      "cpu_time_us": 3539.0970000000234,
+      "cuda_time_us": 380.19600000003265,
+      "count": 36
+    },
+    {
+      "name": "aten::_flash_attention_forward",
+      "cpu_time_us": 3261.4110000000073,
+      "cuda_time_us": 380.19600000003265,
+      "count": 36
+    }
+  ],
+  "trace_path": "/workspace/neuro-agent/results/profiling/pytorch/decode_trace.json",
+  "metadata": {
+    "use_cache": true
+  }
+}

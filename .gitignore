@@ -1,0 +1,158 @@
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# =============================================================================
+# Virtual environments
+# =============================================================================
+.venv/
+venv/
+env/
+.envrc
+
+# =============================================================================
+# IDE / editor / agent (do NOT commit to GitHub)
+# =============================================================================
+.idea/
+.vscode/
+.cursor/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# Cursor / agent scratch, state, and temporary files
+.agent/
+agent-scratch/
+scratch/
+tmp/
+temp/
+*.tmp
+*.bak
+*.agent.json
+.cursorrules.local
+
+# =============================================================================
+# Secrets
+# =============================================================================
+.env
+.env.*
+!.env.example
+*.pem
+credentials.json
+secrets.yaml
+secrets.json
+
+# =============================================================================
+# Jupyter
+# =============================================================================
+.ipynb_checkpoints/
+
+# =============================================================================
+# Project artifacts — checkpoints & model weights (never commit)
+# =============================================================================
+checkpoints/**
+!checkpoints/.gitkeep
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# =============================================================================
+# Hugging Face / model caches (live under /workspace, not in repo)
+# =============================================================================
+.cache/
+.huggingface/
+models/
+hub/
+
+# =============================================================================
+# Datasets & raw data (never commit)
+# =============================================================================
+data/raw/
+data/downloads/
+datasets/
+*.parquet
+*.arrow
+*.feather
+*.h5
+*.hdf5
+*.nii
+*.nii.gz
+*.edf
+*.fif
+
+# =============================================================================
+# Results & benchmarks
+# Commit: small JSON/CSV summaries only
+# Do NOT commit: huge traces, raw profiler outputs, temp logs
+# =============================================================================
+results/**
+!results/.gitkeep
+!results/hardware_verify.json
+!results/profiling/
+results/profiling/**
+!results/profiling/gpu_profiling_validation_summary.json
+!results/profiling/vram_investigation.json
+!results/profiling/ncu/
+results/profiling/ncu/**
+!results/profiling/ncu/ncu_summary.json
+!results/profiling/pytorch/
+results/profiling/pytorch/**
+!results/profiling/pytorch/prefill_summary.json
+!results/profiling/pytorch/decode_summary.json
+!results/profiling/pytorch/profiling_summary.json
+
+# Large / temporary profiler outputs (never commit)
+*_trace.json
+*.nsys-rep
+*.qdrep
+*.ncu-rep
+*.sqlite
+*.prof
+nsys-report.*
+ncu-report.*
+
+# Benchmarks: JSON/CSV summaries are OK; ignore temp runs
+benchmarks/**/tmp/
+benchmarks/**/*.tmp
+
+# =============================================================================
+# Logs & experiment trackers
+# =============================================================================
+*.log
+logs/
+wandb/
+tensorboard/
+mlruns/
+lightning_logs/
+
+# =============================================================================
+# OS
+# =============================================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =============================================================================
+# Duplicate / accidental nested copies
+# =============================================================================
+neuro-agent/
