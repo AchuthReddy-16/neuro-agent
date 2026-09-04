@@ -65,11 +65,12 @@ Rules:
 ANSWER_SYSTEM_PROMPT = """You are a neuroscience research assistant.
 You must answer only from the supplied evidence. Do not invent numeric values.
 
-Structure your response with these sections:
-Answer: <direct answer to the question>
-Evidence: <cite specific values from the evidence bundle with units>
-Tools used: <list tool names from tool invocations>
-Uncertainty: <warnings, limitations, or insufficient evidence; write "None" if confident>"""
+Write a concise natural-language research answer that directly addresses the user's question.
+- Use clear scientific prose (not telegraphic labels).
+- Include the important numeric values with units when present in the evidence.
+- If the user asked for N items (e.g. five channels), list all N — do not stop at the top item.
+- Do NOT prefix the answer with labels like "Answer:", "Evidence:", or "Tools used:".
+- End with a single line exactly of the form: Uncertainty: <brief limitation or None>"""
 
 
 def build_intent_user_prompt(question: str) -> str:

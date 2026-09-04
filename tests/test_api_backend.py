@@ -470,14 +470,16 @@ def test_decide_requires_vision_unit():
 
 def test_analyze_vision_required_mocked(tmp_path, monkeypatch):
     client, svc, _ = _wire_client(tmp_path, monkeypatch, MockVisionRunner())
-    # ensure demo has linked visuals from sample
+    # ensure demo has linked visuals from sample — client must select explicitly
     demo = svc.ensure_demo_experiment()
     assert demo.linked_image_ids or demo.visualizations
+    image_id = (demo.linked_image_ids or [demo.visualizations[0]["id"]])[0]
     r = client.post(
         "/api/analyze",
         json={
             "experiment_id": "exp_demo_s001",
             "question": "Visually describe the topomap for this sample",
+            "image_id": image_id,
         },
     )
     assert r.status_code == 200, r.text
@@ -487,8 +489,25 @@ def test_analyze_vision_required_mocked(tmp_path, monkeypatch):
     assert body["verification"]["status"] == "recovered"
     assert body["verification"]["recoveryPerformed"] is True
     assert body["verification"]["triggered"] is True
-    # visual evidence from sample index (no VLM when enable_vlm=False)
+    # visual evidence from explicitly selected image (no VLM when enable_vlm=False)
     assert isinstance(body["visual_evidence"], list)
+    assert body["visual_evidence"]
+
+
+def test_analyze_vision_does_not_silently_use_sample_images(tmp_path, monkeypatch):
+    """Live API must not auto-attach built-in sample topomaps."""
+    client, svc, _ = _wire_client(tmp_path, monkeypatch, MockVisionRunner())
+    demo = svc.ensure_demo_experiment()
+    assert demo.linked_image_ids or demo.visualizations
+    r = client.post(
+        "/api/analyze",
+        json={
+            "experiment_id": "exp_demo_s001",
+            "question": "Visually describe the topomap for this sample",
+        },
+    )
+    assert r.status_code == 400
+    assert r.json()["error"] == "missing_image_for_vision"
 
 
 def test_analyze_verifier_recovery_shape(tmp_path, monkeypatch):
@@ -512,6 +531,35 @@ def test_analyze_invalid_experiment(tmp_path, monkeypatch):
         json={"experimentId": "exp_missing", "question": "hello"},
     )
     assert r.status_code == 404
+
+
+def test_analyze_strips_raw_model_output_from_uncertainty(tmp_path, monkeypatch):
+    class _Runner(MockTextRunner):
+        def ask(self, question: str, *, request_id: str | None = None) -> Any:
+            t = super().ask(question, request_id=request_id)
+            t.warnings = [
+                'raw_model_output={"requires_vision": false, "question_type": "channel_ranking"}',
+            ]
+            t.final_answer = (
+                "The highest beta-power channel is C3 at 0.184.\nUncertainty: None"
+            )
+            return t
+
+    client, _, _ = _wire_client(tmp_path, monkeypatch, _Runner())
+    r = client.post(
+        "/api/analyze",
+        json={
+            "experimentId": "exp_demo_s001",
+            "question": "Which channel has the highest beta power?",
+        },
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    unc = body.get("uncertainty") or ""
+    assert "raw_model_output" not in unc
+    assert "requires_vision" not in unc
+    assert "Answer:" not in (body.get("answer") or "")
+    assert "C3" in (body.get("answer") or "")
 
 
 def test_analyze_vision_missing_image(tmp_path, monkeypatch):

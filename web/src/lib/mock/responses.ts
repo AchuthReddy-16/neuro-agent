@@ -234,14 +234,22 @@ function isFigureInterpretQuestion(lower: string): boolean {
 
 function betaTop5Fixture(question: string): AnalyzeResponse {
   const ranking = DEMO_BETA_TOP5;
-  const channels = ranking.map((r) => r.channel).join(", ");
+  const channels = ranking.map((r) => r.channel);
+  const channelList =
+    channels.slice(0, -1).join(", ") + `, and ${channels[channels.length - 1]}`;
+  const detail =
+    `${channels[0]} is highest at ${ranking[0].betaPowerUV2.toFixed(2)} μV², followed by ` +
+    ranking
+      .slice(1)
+      .map((r) => `${r.channel} at ${r.betaPowerUV2.toFixed(2)} μV²`)
+      .join(", ");
   const computed_evidence: AnalyzeResponse["computed_evidence"] = [];
   for (let i = 0; i < ranking.length; i += 1) {
     const r = ranking[i];
     computed_evidence.push({
       label: `Rank ${i + 1} · ${r.channel}`,
       value: String(r.betaPowerUV2),
-      unit: "uV2",
+      unit: "μV²",
       highlight: i === 0,
       tool: "rank_channels_for_sample",
     });
@@ -250,7 +258,7 @@ function betaTop5Fixture(question: string): AnalyzeResponse {
   return {
     id: nextMockAnswerId(),
     question,
-    answer: `The five EEG channels with the highest beta-band power for this sample are ${channels}.`,
+    answer: `The five channels with the highest beta-band power are ${channelList}. ${detail}.`,
     route: "TEXT",
     computed_evidence,
     visual_evidence: [],
@@ -263,7 +271,7 @@ function betaTop5Fixture(question: string): AnalyzeResponse {
       recoveryPerformed: false,
     },
     uncertainty:
-      "Moderate confidence. Values are sample-specific beta_power (uV2); ranking can change with band definition or preprocessing.",
+      "Moderate confidence. Values are sample-specific beta_power (μV²); ranking can change with band definition or preprocessing.",
     timing: {
       totalMs: 412,
       routingMs: 10,

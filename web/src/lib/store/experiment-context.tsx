@@ -32,7 +32,13 @@ import {
   uploadAsset,
 } from "@/lib/api";
 import { mergeUploadResponse, mapExperimentFromApi } from "@/lib/experiment-map";
-import { inferNeedsVision, resolveSelectedImage } from "@/lib/routing";
+import {
+  classifyLiveInput,
+  explicitLiveImageId,
+  experimentHasDatasetContext,
+  inferNeedsVision,
+  resolveSelectedImage,
+} from "@/lib/routing";
 import {
   createDemoAgentAnswer,
   createMockAnswer,
@@ -777,34 +783,55 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const needsVision = forceLocalDemo ? true : inferNeedsVision(q);
+      // Live mode: never treat built-in demo/sample figures as user attachments.
+      const liveAttachmentImages =
+        !forceLocalDemo && (backendMode === "live" || experiment?.isDemo)
+          ? (experiment?.image_files ?? []).filter(
+              (f) => !f.id.includes("-demo") && !f.id.startsWith("viz-"),
+            )
+          : experiment?.image_files ?? [];
+      const liveSelectedImageId =
+        !forceLocalDemo && experiment?.isDemo
+          ? null
+          : experiment?.selected_image_id ?? null;
+
+      const decision = classifyLiveInput(q, {
+        uploadedImages: liveAttachmentImages,
+        selectedImageId: liveSelectedImageId,
+        hasLinkedSample: experimentHasDatasetContext(experiment),
+        hasEegOrMetadataUpload: Boolean(
+          experiment?.eeg_files.some((f) => f.status === "ready") ||
+            experiment?.metadata_files.some((f) => f.status === "ready"),
+        ),
+      });
+
+      // Offline fixture mode may still use built-in sample assets.
+      const needsVision = forceLocalDemo
+        ? inferNeedsVision(q) || decision.needsVision
+        : decision.needsVision;
       let selected: ExperimentFile | null = null;
-      // Built-in live demo sample may expose visualizations without figure uploads.
-      const linkedVizId =
-        experiment?.selected_image_id &&
-        experiment.visualizations?.some((v) => v.id === experiment.selected_image_id)
-          ? experiment.selected_image_id
-          : experiment?.visualizations?.[0]?.id ?? null;
+
+      if (!forceLocalDemo && decision.missingInputMessage) {
+        setAnalysisError(decision.missingInputMessage);
+        setIsAnalyzing(false);
+        return;
+      }
 
       if (needsVision && !forceLocalDemo) {
-        const images = experiment?.image_files ?? [];
-        if (images.length > 0) {
-          const resolved = resolveSelectedImage(images, experiment?.selected_image_id ?? null);
-          if (!resolved.ok) {
-            setAnalysisError(resolved.reason);
-            setIsAnalyzing(false);
-            return;
-          }
-          selected = resolved.image;
-          if (selected && experiment && experiment.selected_image_id !== selected.id) {
-            setExperiment((prev) =>
-              prev ? syncModalities({ ...prev, selected_image_id: selected!.id }) : prev,
-            );
-          }
-        } else if (!(backendMode === "live" && experiment?.isDemo)) {
-          setAnalysisError("Vision analysis needs a figure. Upload an image first.");
+        const resolved = resolveSelectedImage(
+          liveAttachmentImages,
+          liveSelectedImageId,
+        );
+        if (!resolved.ok) {
+          setAnalysisError(resolved.reason);
           setIsAnalyzing(false);
           return;
+        }
+        selected = resolved.image;
+        if (selected && experiment && experiment.selected_image_id !== selected.id) {
+          setExperiment((prev) =>
+            prev ? syncModalities({ ...prev, selected_image_id: selected!.id }) : prev,
+          );
         }
       }
 
@@ -817,27 +844,26 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
           const expId = experiment?.experiment_id ?? experiment?.id;
           if (!expId || !/^exp_/.test(expId)) {
             setAnalysisError(
-              "No backend experiment yet — upload metadata/figures (or load the live demo) first.",
+              "No backend experiment yet — upload metadata/figures (or load a sample) first.",
             );
             setIsAnalyzing(false);
             return;
           }
-          const imageId =
-            selected?.id ??
-            experiment?.selected_image_id ??
-            (needsVision ? linkedVizId : null) ??
-            null;
+          // Only explicitly selected/uploaded images — never silent demo visualization IDs.
+          const imageId = needsVision
+            ? selected?.id ?? explicitLiveImageId(experiment)
+            : null;
           final = await analyzeLive({
             experimentId: expId,
             question: q,
             imageId,
-            visualizationId: needsVision && !selected ? linkedVizId : null,
-            context: needsVision ? { requires_vision: true } : undefined,
+            visualizationId: null,
+            context: needsVision && imageId ? { requires_vision: true } : undefined,
           });
           final = {
             ...final,
             isDemo: false,
-            selectedImageId: selected?.id ?? imageId,
+            selectedImageId: imageId,
             selectedImageName: selected?.name ?? null,
           };
           // Refresh metrics after live analyze
@@ -882,7 +908,6 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
             : null,
         });
       }
-
       // Local demo / offline: enforce frontend TEXT routing when tools-only
       if (!useLive && !needsVision) {
         final = {

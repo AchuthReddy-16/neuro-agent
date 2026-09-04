@@ -472,87 +472,78 @@ class AnalysisService:
         vlm_text: str | None = None
         visual_items: list[VisualEvidenceItem] = []
 
-        # Sidecar vision evidence from tools / index
+        # Sidecar vision evidence from tools / index (only keep when vision is required)
         evidence = getattr(trace, "evidence_bundle", None) or {}
-        for ve in evidence.get("vision_evidence") or []:
-            fam = ve.get("family") or "figure"
-            tab = FAMILY_TO_TAB.get(fam, "figure")
-            iid = ve.get("image_id") or "unknown"
-            visual_items.append(
-                VisualEvidenceItem(
-                    id=iid,
-                    label=tab,
-                    tab=tab,
-                    observation=None,
-                    image_url=f"/api/visualization/{iid}",
-                    image_type=tab,
-                    vlm_interpretation=None,
-                    provenance=ve.get("image_path"),
+        if requires_vision:
+            for ve in evidence.get("vision_evidence") or []:
+                fam = ve.get("family") or "figure"
+                tab = FAMILY_TO_TAB.get(fam, "figure")
+                iid = ve.get("image_id") or "unknown"
+                visual_items.append(
+                    VisualEvidenceItem(
+                        id=iid,
+                        label=tab.replace("_", " ").title(),
+                        tab=tab,
+                        observation=None,
+                        image_url=f"/api/visualization/{iid}",
+                        image_type=tab,
+                        vlm_interpretation=None,
+                        provenance=ve.get("image_path"),
+                    )
                 )
-            )
-
-        # Resolve selected / sample visuals when vision is required or for linked display.
+        # Resolve visuals only for an explicitly selected image — never silently
+        # attach built-in sample topomaps in Live API mode.
         resolve_image = selected_image
-        if requires_vision and resolve_image is None and rec.linked_image_ids:
-            # Prefer an uploaded figure, else first linked sample visualization.
-            for art in rec.artifacts:
-                if art.get("kind") == "figure" and art.get("image_id"):
-                    resolve_image = art["image_id"]
-                    break
-            if resolve_image is None:
-                resolve_image = rec.linked_image_ids[0]
-
-        if not visual_items and (resolve_image or (requires_vision and rec.linked_sample_id)):
+        if requires_vision and not visual_items and resolve_image:
             try:
                 refs = resolve_vision_evidence(
                     sample_id=rec.linked_sample_id,
                     image_id=resolve_image,
                     visual_type=raw_intent.get("requested_visual_type")
-                    if requires_vision
+                    if isinstance(raw_intent, dict)
                     else None,
                 )
             except (SampleNotFoundError, ValueError):
                 refs = []
-                # Fall back: any linked experiment visualization (no fabrication)
-                for vid in rec.linked_image_ids:
-                    info = self.resolve_visualization(vid)
-                    if info is None and rec.visualizations:
-                        # try matching stored viz dicts
-                        for v in rec.visualizations:
-                            if v.get("id") == vid:
-                                info = VisualizationInfo.model_validate(v)
-                                break
-                    if info is not None:
-                        visual_items.append(
-                            VisualEvidenceItem(
-                                id=info.id,
-                                label=info.tab,
-                                tab=info.tab,
-                                image_url=info.image_url or f"/api/visualization/{info.id}",
-                                image_type=info.tab,
-                                provenance=info.image_path,
-                            )
-                        )
-                if not visual_items:
+                info = self.resolve_visualization(resolve_image)
+                if info is None and rec.visualizations:
                     for v in rec.visualizations:
-                        info = VisualizationInfo.model_validate(v)
+                        if v.get("id") == resolve_image:
+                            info = VisualizationInfo.model_validate(v)
+                            break
+                if info is None:
+                    # uploaded artifact path
+                    path = self.visualization_file_path(resolve_image)
+                    if path is not None:
                         visual_items.append(
                             VisualEvidenceItem(
-                                id=info.id,
-                                label=info.tab,
-                                tab=info.tab,
-                                image_url=info.image_url or f"/api/visualization/{info.id}",
-                                image_type=info.tab,
-                                provenance=info.image_path,
+                                id=resolve_image,
+                                label="Uploaded figure",
+                                tab="figure",
+                                image_url=f"/api/visualization/{resolve_image}",
+                                image_type="figure",
+                                provenance=str(path),
                             )
                         )
+                elif info is not None:
+                    tab = info.tab or "figure"
+                    visual_items.append(
+                        VisualEvidenceItem(
+                            id=info.id,
+                            label=(info.title or tab.replace("_", " ").title()),
+                            tab=tab,
+                            image_url=info.image_url or f"/api/visualization/{info.id}",
+                            image_type=tab,
+                            provenance=info.image_path,
+                        )
+                    )
             else:
                 for ref in refs:
                     tab = FAMILY_TO_TAB.get(ref.family, "figure")
                     visual_items.append(
                         VisualEvidenceItem(
                             id=ref.image_id,
-                            label=tab,
+                            label=tab.replace("_", " ").title(),
                             tab=tab,
                             image_url=f"/api/visualization/{ref.image_id}",
                             image_type=tab,
@@ -571,9 +562,9 @@ class AnalysisService:
                 # Hard fail when VLM is enabled — do not invent interpretation text.
                 raise VisionRuntimeError(str(exc)) from exc
             vision_ms = (time.perf_counter() - t_v) * 1000.0
-        elif requires_vision and self.enable_vlm and not visual_items:
-            raise FileNotFoundError("missing_image_for_vision")
         elif requires_vision and not visual_items:
+            raise FileNotFoundError("missing_image_for_vision")
+        elif requires_vision and self.enable_vlm and not visual_items:
             raise FileNotFoundError("missing_image_for_vision")
 
         response = self._trace_to_response(
@@ -728,13 +719,16 @@ class AnalysisService:
                 tools.append(str(name))
 
         computed = self._extract_computed_evidence(evidence, tools)
-        answer = getattr(trace, "final_answer", None) or ""
+        raw_answer = getattr(trace, "final_answer", None) or ""
         # When the VISION path produced a real VLM interpretation but the text
         # synthesizer returned nothing, surface the VLM text as the answer
         # (do not invent unrelated prose).
-        if requires_vision and vlm_text and not str(answer).strip():
-            answer = vlm_text
-        uncertainty = self._extract_uncertainty(answer, getattr(trace, "warnings", []) or [])
+        if requires_vision and vlm_text and not str(raw_answer).strip():
+            raw_answer = vlm_text
+        answer, uncertainty = self._present_user_facing_answer(
+            raw_answer,
+            getattr(trace, "warnings", []) or [],
+        )
 
         ver_triggered = bool(getattr(trace, "verification_triggered", False))
         recovery = getattr(trace, "recovery", None)
@@ -806,15 +800,39 @@ class AnalysisService:
             ),
         ]
 
-        interpretation = answer
-        if vlm_text:
-            interpretation = f"{answer}\n\nVision model: {vlm_text}".strip()
+        # Interpretation: VLM text when present; otherwise a short non-duplicate note.
+        if vlm_text and vlm_text.strip() and vlm_text.strip() != answer.strip():
+            interpretation = vlm_text.strip()
+        elif vlm_text and vlm_text.strip():
+            interpretation = (
+                "Vision-model reading of the selected figure supports the research answer above."
+            )
+        elif tools and answer:
+            interpretation = (
+                "Deterministic tool outputs were synthesized into the research answer above; "
+                "see Computed Evidence for the underlying values."
+            )
+        else:
+            interpretation = ""
+
+        # Deduplicate visual rows with empty observations for cleaner UI
+        cleaned_visuals: list[VisualEvidenceItem] = []
+        seen_viz: set[str] = set()
+        for item in visual_items:
+            if item.id in seen_viz:
+                continue
+            seen_viz.add(item.id)
+            if item.label and item.tab and item.label.lower() == str(item.tab).lower():
+                item = item.model_copy(
+                    update={"label": f"{str(item.tab).replace('_', ' ').title()} figure"}
+                )
+            cleaned_visuals.append(item)
 
         return AnalyzeResponse(
             answer=answer,
             route=route,  # type: ignore[arg-type]
             computed_evidence=computed,
-            visual_evidence=visual_items,
+            visual_evidence=cleaned_visuals if requires_vision else [],
             model_interpretation=interpretation,
             tools_used=tools,
             verification=VerificationInfo(
@@ -883,28 +901,22 @@ class AnalysisService:
         if isinstance(ranked, dict):
             ranking = ranked.get("ranking") or ranked.get("channels") or []
             values = ranked.get("values") or {}
+            unit = ranked.get("units")
             for i, ch in enumerate(list(ranking)[:5]):
+                val = values.get(ch)
                 items.append(
                     ComputedEvidenceItem(
-                        label=f"rank {i+1}",
-                        value=str(ch),
-                        unit=None,
-                        tool="rank_channels_for_sample" if "rank" in ",".join(tools) else (tools[0] if tools else None),
+                        label=f"Rank {i+1} · {ch}",
+                        value=str(val) if val is not None else str(ch),
+                        unit=str(unit) if unit and val is not None else None,
+                        tool="rank_channels_for_sample"
+                        if "rank" in ",".join(tools)
+                        else (tools[0] if tools else None),
                         channel=str(ch),
                         highlight=i == 0,
                         provenance="evidence_bundle.ranked_evidence",
                     )
                 )
-                if ch in values:
-                    items.append(
-                        ComputedEvidenceItem(
-                            label=f"{ch} value",
-                            value=str(values[ch]),
-                            unit=ranked.get("units"),
-                            channel=str(ch),
-                            provenance="evidence_bundle.ranked_evidence.values",
-                        )
-                    )
 
         set_ev = evidence.get("set_evidence")
         if isinstance(set_ev, dict):
@@ -920,21 +932,71 @@ class AnalysisService:
 
         cond = evidence.get("condition_evidence")
         if isinstance(cond, dict):
+            a = cond.get("condition_a") or "A"
+            b = cond.get("condition_b") or "B"
+            winner = cond.get("winner") or cond.get("higher_condition")
+            va = cond.get("value_a")
+            vb = cond.get("value_b")
+            if va is not None and vb is not None:
+                value = f"{a}={va}, {b}={vb}" + (f"; higher={winner}" if winner else "")
+            else:
+                value = str(winner or cond.get("summary") or cond)
             items.append(
                 ComputedEvidenceItem(
-                    label="condition comparison",
-                    value=str(cond.get("winner") or cond.get("summary") or cond),
-                    condition=str(cond.get("condition_a") or ""),
+                    label=f"{a} vs {b}",
+                    value=value,
+                    condition=f"{a}/{b}",
                     provenance="evidence_bundle.condition_evidence",
                 )
             )
 
         return items
 
+    def _present_user_facing_answer(
+        self, raw_answer: str, warnings: list[str]
+    ) -> tuple[str, str]:
+        """Split legacy sectioned agent text into clean answer + uncertainty."""
+        text = (raw_answer or "").strip()
+        uncertainty_parts: list[str] = []
+
+        # Strip legacy section labels from the user-facing answer body.
+        answer_m = re.search(
+            r"(?is)^(?:Answer:\s*)?(.*?)(?:\n\s*Evidence:|\n\s*Tools used:|\n\s*Uncertainty:|\Z)",
+            text,
+        )
+        answer = (answer_m.group(1) if answer_m else text).strip()
+        answer = re.sub(r"(?im)^(Answer|Evidence|Tools used):\s*", "", answer).strip()
+
+        unc_m = re.search(r"(?im)^Uncertainty:\s*(.+)$", text)
+        if unc_m:
+            uncertainty_parts.append(unc_m.group(1).strip())
+
+        for w in warnings:
+            w = str(w).strip()
+            if not w:
+                continue
+            # Never surface internal intent/model JSON dumps to users.
+            if w.startswith("raw_model_output=") or "raw_model_output={" in w:
+                continue
+            if w.startswith("{") and "requires_vision" in w:
+                continue
+            uncertainty_parts.append(w)
+
+        # Deduplicate while preserving order
+        seen: set[str] = set()
+        clean_unc: list[str] = []
+        for p in uncertainty_parts:
+            if p.lower() in {"none", "n/a"}:
+                continue
+            key = p.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            clean_unc.append(p)
+
+        uncertainty = "; ".join(clean_unc) if clean_unc else "None"
+        return answer, uncertainty
+
     def _extract_uncertainty(self, answer: str, warnings: list[str]) -> str:
-        m = re.search(r"Uncertainty:\s*(.+)$", answer, flags=re.IGNORECASE | re.MULTILINE)
-        parts = []
-        if m:
-            parts.append(m.group(1).strip())
-        parts.extend(warnings)
-        return "; ".join(p for p in parts if p) or "None"
+        _, unc = self._present_user_facing_answer(answer, warnings)
+        return unc

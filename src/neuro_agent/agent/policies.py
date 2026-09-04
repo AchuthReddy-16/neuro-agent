@@ -156,11 +156,9 @@ def build_insufficient_evidence_answer(
     notes: list[str] | None = None,
 ) -> str:
     """Safe final response when evidence is insufficient after recovery."""
-    parts = [
-        "Answer: I cannot provide a fully grounded answer for this question.",
-        "Evidence: Available evidence was insufficient or could not be verified.",
-        "Tools used: See trace for attempted tool invocations.",
-        "Uncertainty: "
-        + "; ".join(notes or failure_codes or ["insufficient verified evidence"]),
-    ]
-    return "\n".join(parts)
+    reason = "; ".join(notes or failure_codes or ["insufficient verified evidence"])
+    return (
+        "I cannot provide a fully grounded answer for this question because "
+        f"available evidence was insufficient or could not be verified.\n"
+        f"Uncertainty: {reason}"
+    )

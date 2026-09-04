@@ -1,0 +1,112 @@
+# Vercel packaging ignore (repo root).
+# Root Directory on Vercel is `web/`, but CLI from the repo root still walks the
+# whole tree before packing — exclude heavy non-frontend paths.
+#
+# Patterns are gitignore-style. Leading `/` anchors to the repository root so we
+# do NOT exclude `web/src/` when ignoring the Python package tree.
+
+# --- Python backend / research (root only; keep web/src) ---
+/src/
+/tests/
+/scripts/
+/docs/
+/configs/
+/benchmarks/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Virtualenvs ---
+.venv/
+.venv*/
+.venv-*/
+.venv-llmcompressor/
+venv/
+env/
+
+# --- Data, checkpoints, caches, results (root) ---
+/data/
+/checkpoints/
+/results/
+.cache/
+.huggingface/
+/models/
+/hub/
+/datasets/
+
+# --- Web build artifacts / deps (reinstalled on Vercel) ---
+node_modules/
+.next/
+/web/node_modules/
+/web/.next/
+/web/.tools/
+/web/tsconfig.tsbuildinfo
+
+# --- Git / IDE / local ---
+.git/
+.idea/
+.vscode/
+.cursor/
+.agent/
+agent-scratch/
+scratch/
+tmp/
+temp/
+
+# --- Logs / profiling / traces ---
+*.log
+*.nsys-rep
+*.ncu-rep
+*.qdrep
+*.sqlite
+*.prof
+*.perfetto-trace
+chrome_trace*.json
+profiler_*.json
+nsight*/
+ncu_*/
+*_trace.json
+nsys-report.*
+ncu-report.*
+
+# --- Large binary / ML weight extensions (anywhere) ---
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.parquet
+*.arrow
+*.feather
+*.npz
+*.npy
+*.h5
+*.hdf5
+*.nii
+*.nii.gz
+*.edf
+*.fif
+*.jsonl
+
+# --- Env / secrets ---
+.env
+.env.local
+.env.*.local
+/.env.local
+/web/.env.local
+/.env.api.example
+
+# --- Archives / backups ---
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+neuro-agent-backup*
+/neuro-agent/
