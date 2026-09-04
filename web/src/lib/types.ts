@@ -205,6 +205,8 @@ export interface AgentAnswer {
   rawToolOutput?: string;
   selectedImageId?: string | null;
   selectedImageName?: string | null;
+  visionUsed?: boolean;
+  visionAssetOrigin?: string | null;
   evidence?: ComputedEvidenceItem[];
   visualRefs?: VisualEvidenceItem[];
   routeDetail?: AnalyzeResponse["route_detail"];
@@ -314,6 +316,16 @@ export interface AnalyzeResponse {
     reason?: string | null;
   };
   experiment_id?: string;
+  sourceImageId?: string | null;
+  source_image_id?: string | null;
+  sourceImageName?: string | null;
+  source_image_name?: string | null;
+  visionUsed?: boolean;
+  vision_used?: boolean;
+  visionAssetOrigin?: string | null;
+  vision_asset_origin?: string | null;
+  visionContentType?: string | null;
+  vision_content_type?: string | null;
 }
 
 export type GetExperimentResponse = Experiment;

@@ -201,11 +201,20 @@ export function NeuralExplorer() {
   const figInputRef = useRef<HTMLInputElement>(null);
 
   const hasEeg = Boolean(experiment?.eeg_files.some((f) => f.status === "ready") || experiment?.eeg);
-  const hasImages = Boolean(experiment?.image_files.length);
+  const hasImages = Boolean(experiment?.image_files.some((f) => f.status === "ready"));
+  const imageOnly = hasImages && !hasEeg;
   const tabResult = useMemo(
     () => resultForTab(analysisResults, activeTab),
     [analysisResults, activeTab],
   );
+
+  const waveformStaticUrl =
+    tabResult.status === "ready" &&
+    tabResult.payload &&
+    tabResult.payload.kind === "static_plot" &&
+    typeof tabResult.payload.imageUrl === "string"
+      ? (tabResult.payload.imageUrl as string)
+      : undefined;
 
   if (explorerLoading) {
     return <ExplorerSkeleton />;
@@ -302,13 +311,23 @@ export function NeuralExplorer() {
     <div className="flex flex-col h-full gap-2">
       <ExperimentSummaryStrip />
 
-      {/* Vision context is informational only — never drives EEG tab plotSrc */}
+      {/* Vision context is informational only — never drives EEG tab plots */}
       {selectedImage && (
-        <div className="flex items-baseline gap-2 px-0.5 text-[11px]">
-          <span className="text-muted uppercase tracking-wide text-[10px]">Vision attachment</span>
-          <span className="font-mono text-signal-vision">{selectedImage.name}</span>
-          {visionState.interpretation.status === "ready" && (
-            <span className="text-[10px] text-muted">· interpretation ready</span>
+        <div className="space-y-0.5 px-0.5">
+          <div className="flex items-baseline gap-2 text-[11px]">
+            <span className="text-muted uppercase tracking-wide text-[10px]">
+              {imageOnly ? "Uploaded figure — visual interpretation" : "Vision attachment"}
+            </span>
+            <span className="font-mono text-signal-vision">{selectedImage.name}</span>
+            {visionState.interpretation.status === "ready" && (
+              <span className="text-[10px] text-muted">· interpretation ready</span>
+            )}
+          </div>
+          {imageOnly && (
+            <p className="text-[11px] text-secondary leading-snug">
+              Image loaded. You can ask questions about this figure. EEG-derived analyses require
+              EEG/sample data.
+            </p>
           )}
         </div>
       )}
@@ -327,6 +346,7 @@ export function NeuralExplorer() {
         {EXPLORER_TABS.map((tab) => {
           const r = resultForTab(analysisResults, tab.id);
           const ready = r.status === "ready";
+          const needsInput = r.status === "idle";
           return (
             <button
               key={tab.id}
@@ -343,6 +363,11 @@ export function NeuralExplorer() {
             >
               {tab.label}
               {ready && <span className="ml-1 text-[9px] text-accent/70">●</span>}
+              {needsInput && !ready && activeTab !== tab.id && (
+                <span className="ml-1 text-[9px] text-muted/50" title="Requires input">
+                  ○
+                </span>
+              )}
             </button>
           );
         })}
@@ -350,24 +375,21 @@ export function NeuralExplorer() {
 
       <div className="flex-1 min-h-0 flex flex-col">
         {tabResult.status === "loading" ? (
-          <TabLoading label={`Loading ${activeTab.replace("_", " ")}`} />
+          <TabLoading
+            label={
+              activeTab === "psd"
+                ? "Computing PSD…"
+                : activeTab === "spectrogram"
+                  ? "Computing spectrogram…"
+                  : activeTab === "band_power"
+                    ? "Computing band power…"
+                    : `Loading ${activeTab.replace("_", " ")}`
+            }
+          />
         ) : tabResult.status === "error" ? (
           <TabError message={tabResult.error || "Result unavailable."} />
-        ) : activeTab === "waveform" ? (
-          tabResult.status === "ready" || hasEeg ? (
-            <LiveWaveform
-              staticImageUrl={
-                tabResult.status === "ready" &&
-                tabResult.payload &&
-                tabResult.payload.kind === "static_plot"
-                  ? (tabResult.payload.imageUrl as string | undefined)
-                  : undefined
-              }
-              enabled={hasEeg || tabResult.status === "ready"}
-            />
-          ) : (
-            <TabEmpty title={emptyCopy.title} body={emptyCopy.body} />
-          )
+        ) : activeTab === "waveform" && waveformStaticUrl ? (
+          <LiveWaveform staticImageUrl={waveformStaticUrl} enabled />
         ) : activeTab === "band_power" && tabResult.status === "ready" ? (
           <BandPowerPanel result={tabResult} />
         ) : activeTab === "comparison" && tabResult.status === "ready" ? (
@@ -411,7 +433,7 @@ export function NeuralExplorer() {
         )}
       </div>
 
-      {tabResult.status === "ready" && (
+      {tabResult.status === "ready" && (activeTab !== "waveform" || Boolean(waveformStaticUrl)) && (
         <PlotMeta
           title={
             tabResult.payload && typeof tabResult.payload.title === "string"

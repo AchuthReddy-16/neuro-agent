@@ -5,6 +5,7 @@
 
 import type { AgentAnswer, ExperimentFile } from "./types";
 import {
+  emptyTypedResult,
   emptyVisionState,
   setReadyResult,
   type AnalysisResultsState,
@@ -181,15 +182,11 @@ export function visionStateFromSelectedImage(
   file: ExperimentFile | null,
 ): VisionState {
   if (!file) {
-    return {
-      ...prev,
-      selectedImageId: null,
-      // Keep interpretation if any; clear uploaded figure marker
-      uploadedFigure: emptyVisionState().uploadedFigure,
-    };
+    // Removing selection clears interpretation — do not keep stale answers
+    return emptyVisionState();
   }
+  const sameImage = prev.selectedImageId === file.id;
   return {
-    ...prev,
     selectedImageId: file.id,
     uploadedFigure: setReadyResult(
       "uploaded_figure",
@@ -206,5 +203,9 @@ export function visionStateFromSelectedImage(
         generatedAt: new Date().toISOString(),
       },
     ),
+    // Invalidate prior interpretation when switching A → B
+    interpretation: sameImage
+      ? prev.interpretation
+      : emptyTypedResult("vision_interpretation"),
   };
 }

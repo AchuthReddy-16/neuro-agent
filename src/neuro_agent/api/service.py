@@ -42,7 +42,6 @@ from neuro_agent.tools.metadata import (
 )
 from neuro_agent.tools.router import route_research_request
 from neuro_agent.tools.schemas import SampleNotFoundError
-from neuro_agent.tools.vision_evidence import resolve_vision_evidence
 
 logger = logging.getLogger(__name__)
 if not logger.handlers:
@@ -216,6 +215,109 @@ class AnalysisService:
                             p = PROJECT_ROOT / p
                         if p.exists():
                             return p
+        return None
+
+    def _abspath(self, stored: str | None) -> Path | None:
+        if not stored:
+            return None
+        p = Path(stored)
+        if not p.is_absolute():
+            p = PROJECT_ROOT / p
+        return p if p.exists() else None
+
+    def resolve_exact_vision_asset(
+        self,
+        *,
+        experiment_id: str,
+        image_id: str,
+    ) -> dict[str, Any] | None:
+        """Resolve the exact selected asset — no alternate-image fallback.
+
+        Returns dict with visual (VisualEvidenceItem), path, name, origin, content_type
+        or None if the ID cannot be resolved.
+        """
+        requested = (image_id or "").strip()
+        if not requested:
+            return None
+
+        rec = self.store.get(experiment_id)
+        if rec is not None:
+            for art in rec.artifacts:
+                aid = str(art.get("id") or "")
+                iid = str(art.get("image_id") or "")
+                if requested not in {aid, iid}:
+                    continue
+                path = self._abspath(art.get("stored_path"))
+                if path is None:
+                    continue
+                name = str(art.get("name") or Path(path).name)
+                origin = "uploaded" if art.get("kind") in {"figure", "image", "vision"} else "uploaded"
+                visual = VisualEvidenceItem(
+                    id=aid or requested,
+                    label=name,
+                    tab="figure",
+                    image_url=f"/api/visualization/{aid or requested}",
+                    image_type="figure",
+                    # Do not expose filesystem paths in API provenance strings
+                    provenance=f"asset:{aid or requested}",
+                )
+                return {
+                    "visual": visual,
+                    "path": path,
+                    "name": name,
+                    "origin": origin,
+                    "content_type": art.get("content_type"),
+                }
+
+            for viz in rec.visualizations:
+                vid = str(viz.get("id") or viz.get("image_id") or "")
+                if vid != requested:
+                    continue
+                path = self._abspath(viz.get("image_path") or viz.get("imagePath"))
+                if path is None:
+                    path = self.visualization_file_path(requested)
+                if path is None:
+                    continue
+                name = str(viz.get("title") or Path(path).name)
+                tab = str(viz.get("tab") or "figure")
+                origin = "generated" if tab != "figure" else "uploaded"
+                visual = VisualEvidenceItem(
+                    id=vid,
+                    label=name,
+                    tab=tab,
+                    image_url=viz.get("image_url") or viz.get("imageUrl") or f"/api/visualization/{vid}",
+                    image_type=tab,
+                    provenance=f"visualization:{vid}",
+                )
+                return {
+                    "visual": visual,
+                    "path": path,
+                    "name": name,
+                    "origin": origin,
+                    "content_type": None,
+                }
+
+        # Dataset / sample-linked asset by exact ID only (never "first sample image")
+        info = self.resolve_visualization(requested)
+        if info is not None:
+            path = self._abspath(info.image_path) or self.visualization_file_path(requested)
+            if path is not None:
+                name = str(info.title or requested)
+                visual = VisualEvidenceItem(
+                    id=info.id,
+                    label=name,
+                    tab=info.tab or "figure",
+                    image_url=info.image_url or f"/api/visualization/{info.id}",
+                    image_type=info.tab or "figure",
+                    provenance=f"dataset:{info.id}",
+                )
+                return {
+                    "visual": visual,
+                    "path": path,
+                    "name": name,
+                    "origin": "dataset",
+                    "content_type": None,
+                }
         return None
 
     # --- upload helpers ---
@@ -450,13 +552,15 @@ class AnalysisService:
         if rec is None:
             raise KeyError("invalid_experiment_id")
 
-        selected_image = image_id or visualization_id
+        selected_image = (image_id or "").strip() or None
+        # visualization_id must NOT silently substitute for a missing selected image_id
+        # on vision requests — that caused wrong-figure VLM inputs.
         history = history_from_payload(conversation_history)
         artifacts = ArtifactContext(
             has_sample=bool(rec.linked_sample_id),
-            has_image=bool(selected_image),
+            has_image=bool(selected_image or visualization_id),
             sample_id=rec.linked_sample_id,
-            image_id=selected_image,
+            image_id=selected_image or visualization_id,
         )
         plan = plan_task(q, history=history, artifacts=artifacts)
 
@@ -546,95 +650,64 @@ class AnalysisService:
         vision_ms = 0.0
         vlm_text: str | None = None
         visual_items: list[VisualEvidenceItem] = []
+        source_image_id: str | None = None
+        source_image_name: str | None = None
+        vision_used = False
+        vision_asset_origin: str | None = None
+        vision_content_type: str | None = None
 
         evidence = getattr(trace, "evidence_bundle", None) or {}
-        if requires_vision:
-            for ve in evidence.get("vision_evidence") or []:
-                fam = ve.get("family") or "figure"
-                tab = FAMILY_TO_TAB.get(fam, "figure")
-                iid = ve.get("image_id") or "unknown"
-                visual_items.append(
-                    VisualEvidenceItem(
-                        id=iid,
-                        label=tab.replace("_", " ").title(),
-                        tab=tab,
-                        observation=None,
-                        image_url=f"/api/visualization/{iid}",
-                        image_type=tab,
-                        vlm_interpretation=None,
-                        provenance=ve.get("image_path"),
-                    )
-                )
-
+        # Tool-sidecar vision refs are metadata only — NEVER preferred over the
+        # explicitly selected image_id for VLM input.
         resolve_image = selected_image if requires_vision else None
-        if requires_vision and not visual_items and resolve_image:
-            try:
-                refs = resolve_vision_evidence(
-                    sample_id=rec.linked_sample_id,
-                    image_id=resolve_image,
-                    visual_type=raw_intent.get("requested_visual_type")
-                    if isinstance(raw_intent, dict)
-                    else None,
-                )
-            except (SampleNotFoundError, ValueError):
-                refs = []
-                info = self.resolve_visualization(resolve_image)
-                if info is None and rec.visualizations:
-                    for v in rec.visualizations:
-                        if v.get("id") == resolve_image:
-                            info = VisualizationInfo.model_validate(v)
-                            break
-                if info is None:
-                    path = self.visualization_file_path(resolve_image)
-                    if path is not None:
-                        visual_items.append(
-                            VisualEvidenceItem(
-                                id=resolve_image,
-                                label="Uploaded figure",
-                                tab="figure",
-                                image_url=f"/api/visualization/{resolve_image}",
-                                image_type="figure",
-                                provenance=str(path),
-                            )
-                        )
-                elif info is not None:
-                    tab = info.tab or "figure"
-                    visual_items.append(
-                        VisualEvidenceItem(
-                            id=info.id,
-                            label=(info.title or tab.replace("_", " ").title()),
-                            tab=tab,
-                            image_url=info.image_url or f"/api/visualization/{info.id}",
-                            image_type=tab,
-                            provenance=info.image_path,
-                        )
-                    )
-            else:
-                for ref in refs:
-                    tab = FAMILY_TO_TAB.get(ref.family, "figure")
-                    visual_items.append(
-                        VisualEvidenceItem(
-                            id=ref.image_id,
-                            label=tab.replace("_", " ").title(),
-                            tab=tab,
-                            image_url=f"/api/visualization/{ref.image_id}",
-                            image_type=tab,
-                            provenance=ref.image_path,
-                        )
-                    )
+        if requires_vision and not resolve_image and visualization_id:
+            # Explicit visualization-only request (no upload selected)
+            resolve_image = visualization_id
 
-        if requires_vision and self.enable_vlm and visual_items:
-            t_v = time.perf_counter()
-            try:
-                vlm_text = self._run_vlm(q, visual_items[0])
-                visual_items[0].vlm_interpretation = vlm_text
-                visual_items[0].observation = vlm_text
-            except Exception as exc:  # noqa: BLE001
+        if requires_vision:
+            logger.info("VISION_REQUEST image_id=%s", resolve_image or "")
+            if not resolve_image:
+                raise FileNotFoundError("missing_image_for_vision")
+            resolved = self.resolve_exact_vision_asset(
+                experiment_id=experiment_id,
+                image_id=resolve_image,
+            )
+            if resolved is None:
+                logger.error(
+                    "VISION_ASSET_RESOLVE_FAILED image_id=%s experiment_id=%s",
+                    resolve_image,
+                    experiment_id,
+                )
+                raise FileNotFoundError("missing_image_for_vision")
+
+            visual_items = [resolved["visual"]]
+            source_image_id = resolved["visual"].id
+            source_image_name = resolved["name"]
+            vision_asset_origin = resolved["origin"]
+            vision_content_type = resolved.get("content_type")
+            logger.info(
+                "VISION_ASSET_RESOLVED image_id=%s name=%s origin=%s",
+                source_image_id,
+                source_image_name,
+                vision_asset_origin,
+            )
+
+            if self.enable_vlm:
+                t_v = time.perf_counter()
+                try:
+                    vlm_text = self._run_vlm_on_path(q, resolved["path"])
+                    visual_items[0].vlm_interpretation = vlm_text
+                    visual_items[0].observation = vlm_text
+                    vision_used = True
+                except Exception as exc:  # noqa: BLE001
+                    vision_ms = (time.perf_counter() - t_v) * 1000.0
+                    raise VisionRuntimeError(str(exc)) from exc
                 vision_ms = (time.perf_counter() - t_v) * 1000.0
-                raise VisionRuntimeError(str(exc)) from exc
-            vision_ms = (time.perf_counter() - t_v) * 1000.0
-        elif requires_vision and not visual_items:
-            raise FileNotFoundError("missing_image_for_vision")
+            else:
+                # Mock / VLM-disabled: still bind provenance to the exact asset
+                vision_used = True
+
+            logger.info("VISION_RESPONSE source_image_id=%s", source_image_id)
 
         response = self._trace_to_response(
             trace=trace,
@@ -647,6 +720,11 @@ class AnalysisService:
             total_ms_override=total_ms,
             vlm_text=vlm_text,
             task_plan=plan.to_dict(),
+            source_image_id=source_image_id,
+            source_image_name=source_image_name,
+            vision_used=vision_used,
+            vision_asset_origin=vision_asset_origin,
+            vision_content_type=vision_content_type,
         )
 
         self._record_analyze(experiment_id, response, q)
@@ -742,6 +820,12 @@ class AnalysisService:
                     p = PROJECT_ROOT / p
                 if p.exists():
                     path = p
+        if path is None or not path.exists():
+            raise FileNotFoundError("vision_image_missing")
+        return self._run_vlm_on_path(question, path)
+
+    def _run_vlm_on_path(self, question: str, path: Path) -> str:
+        """Invoke VLM on an already-resolved filesystem path (exact selected asset)."""
         if path is None or not path.exists():
             raise FileNotFoundError("vision_image_missing")
 
@@ -842,6 +926,11 @@ class AnalysisService:
         total_ms_override: float | None,
         vlm_text: str | None,
         task_plan: dict[str, Any] | None = None,
+        source_image_id: str | None = None,
+        source_image_name: str | None = None,
+        vision_used: bool = False,
+        vision_asset_origin: str | None = None,
+        vision_content_type: str | None = None,
     ) -> AnalyzeResponse:
         evidence = getattr(trace, "evidence_bundle", None) or {}
         tools = []
@@ -1020,8 +1109,13 @@ class AnalysisService:
                 experiment_id=experiment_id,
                 task_plan=task_plan,
                 vlm_text=vlm_text,
-                image_id=None,
+                image_id=source_image_id,
             ),
+            source_image_id=source_image_id if requires_vision else None,
+            source_image_name=source_image_name if requires_vision else None,
+            vision_used=bool(vision_used and requires_vision),
+            vision_asset_origin=vision_asset_origin if requires_vision else None,
+            vision_content_type=vision_content_type if requires_vision else None,
         )
 
     def _extract_computed_evidence(

@@ -137,6 +137,10 @@ export function analyzeResponseToAgentAnswer(
     evidence: res.computed_evidence ?? [],
     visualRefs: visualEvidence,
     routeDetail: res.route_detail,
+    selectedImageId: res.sourceImageId ?? res.source_image_id ?? null,
+    selectedImageName: res.sourceImageName ?? res.source_image_name ?? null,
+    visionUsed: Boolean(res.visionUsed ?? res.vision_used),
+    visionAssetOrigin: res.visionAssetOrigin ?? res.vision_asset_origin ?? null,
   };
 }
 

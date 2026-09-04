@@ -415,3 +415,29 @@ class AnalyzeResponse(BaseModel):
     route_detail: RouteInfo | None = None
     experiment_id: str | None = None
     analysis_results: dict[str, Any] | None = None
+    # Strict vision provenance — exact asset analyzed (never a silent substitute)
+    source_image_id: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("source_image_id", "sourceImageId"),
+        serialization_alias="sourceImageId",
+    )
+    source_image_name: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("source_image_name", "sourceImageName"),
+        serialization_alias="sourceImageName",
+    )
+    vision_used: bool = Field(
+        default=False,
+        validation_alias=AliasChoices("vision_used", "visionUsed"),
+        serialization_alias="visionUsed",
+    )
+    vision_asset_origin: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("vision_asset_origin", "visionAssetOrigin"),
+        serialization_alias="visionAssetOrigin",
+    )
+    vision_content_type: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("vision_content_type", "visionContentType"),
+        serialization_alias="visionContentType",
+    )

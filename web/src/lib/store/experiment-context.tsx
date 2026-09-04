@@ -47,7 +47,7 @@ import {
   analysisResultsFromVisualizations,
   emptyAnalysisResults,
   emptyVisionState,
-  setReadyResult,
+  resetEegDerivedResults,
   type AnalysisResultsState,
   type VisionState,
 } from "@/lib/analysis-results";
@@ -534,31 +534,17 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
             source: "linked_sample",
           }),
         );
-        if (mapped.eeg) {
-          setAnalysisResults((prev) => ({
-            ...prev,
-            waveform: setReadyResult(
-              "waveform",
-              {
-                kind: "live_eeg",
-                channelLabels: mapped.eeg?.channelLabels,
-                samplingRateHz: mapped.eeg?.samplingRateHz,
-              },
-              {
-                experimentId: wid,
-                sampleId: mapped.metadata?.sampleId ?? null,
-                source: "linked_sample_eeg",
-              },
-            ),
-          }));
-        }
+        // Do NOT mark waveform ready with live_eeg — only static sample_visualization plots
+        // or explicit analysis responses populate EEG-derived slots.
         setVisionState(emptyVisionState());
         setActiveTab(
           mapped.visualizations.some((v) => v.tab === "topomap")
             ? "topomap"
-            : mapped.eeg
+            : mapped.visualizations.some((v) => v.tab === "waveform")
               ? "waveform"
-              : "topomap",
+              : mapped.eeg
+                ? "waveform"
+                : "topomap",
         );
         setFocusedVizId(mapped.visualizations[0]?.id ?? null);
         setExplorerLoading(false);
@@ -810,14 +796,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
           patchFileProgress("eeg", fileId, { progress: 40 });
           await uploadViaApi(file, "eeg", fileId);
           setActiveTab("waveform");
-          setAnalysisResults((prev) => ({
-            ...prev,
-            waveform: setReadyResult(
-              "waveform",
-              { kind: "live_eeg" },
-              { source: "user_upload_eeg", generatedAt: new Date().toISOString() },
-            ),
-          }));
+          // EEG present → leave waveform idle until a real plot/analysis exists
+          // (do not seed simulated live_eeg).
         } catch (e) {
           const msg = e instanceof ApiError ? e.message : "EEG upload failed";
           setUploadError(msg);
@@ -829,14 +809,6 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       await simulateUploadProgress((p) => patchFileProgress("eeg", fileId, { progress: p }));
       patchFileProgress("eeg", fileId, { status: "ready", progress: 100 });
       setActiveTab("waveform");
-      setAnalysisResults((prev) => ({
-        ...prev,
-        waveform: setReadyResult(
-          "waveform",
-          { kind: "live_eeg" },
-          { source: "user_upload_eeg", generatedAt: new Date().toISOString() },
-        ),
-      }));
       setExperiment((prev) => {
         if (!prev) return prev;
         return syncModalities({
@@ -874,6 +846,15 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         url: blobUrl,
         mimeType: file.type,
       };
+
+      // Image-only (or figure added with no EEG): never keep stale EEG-derived plots
+      const cur = experimentRef.current;
+      const hasReadyEeg = Boolean(
+        cur?.eeg || cur?.eeg_files.some((f) => f.status === "ready"),
+      );
+      if (!hasReadyEeg) {
+        setAnalysisResults(resetEegDerivedResults());
+      }
 
       setExperiment((prev) => {
         const base = baseForUpload(prev);
@@ -996,29 +977,59 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const removeFile = useCallback((fileId: string) => {
-    setExperiment((prev) => {
-      if (!prev) return prev;
-      const removedImg = prev.image_files.find((f) => f.id === fileId);
-      if (removedImg?.url?.startsWith("blob:")) URL.revokeObjectURL(removedImg.url);
+    const prev = experimentRef.current;
+    if (!prev) return;
 
-      let next: Experiment = {
-        ...prev,
-        eeg_files: prev.eeg_files.filter((f) => f.id !== fileId),
-        metadata_files: prev.metadata_files.filter((f) => f.id !== fileId),
-        image_files: prev.image_files.filter((f) => f.id !== fileId),
-      };
+    const removingEeg = prev.eeg_files.some((f) => f.id === fileId);
+    const removingImg = prev.image_files.find((f) => f.id === fileId);
+    if (removingImg?.url?.startsWith("blob:")) URL.revokeObjectURL(removingImg.url);
 
-      if (prev.eeg_files.some((f) => f.id === fileId)) {
-        next.eeg = undefined;
-      }
-      if (prev.selected_image_id === fileId) {
-        next.selected_image_id = next.image_files[0]?.id ?? null;
-      }
+    const remainingEeg = prev.eeg_files.filter((f) => f.id !== fileId);
+    const remainingImages = prev.image_files.filter((f) => f.id !== fileId);
+    const eegFullyCleared =
+      removingEeg && !remainingEeg.some((f) => f.status === "ready");
 
-      next = syncModalities(next);
-      if (isExperimentEmpty(next)) return null;
-      return next;
-    });
+    let next: Experiment = {
+      ...prev,
+      eeg_files: remainingEeg,
+      metadata_files: prev.metadata_files.filter((f) => f.id !== fileId),
+      image_files: remainingImages,
+    };
+
+    if (removingEeg) {
+      next.eeg = undefined;
+    }
+    if (prev.selected_image_id === fileId) {
+      // Require explicit re-selection — do not auto-pick another image
+      next.selected_image_id = null;
+    }
+
+    next = syncModalities(next);
+
+    if (isExperimentEmpty(next)) {
+      experimentRef.current = null;
+      setExperiment(null);
+      setAnalysisResults(emptyAnalysisResults());
+      setVisionState(emptyVisionState());
+      return;
+    }
+
+    experimentRef.current = next;
+    setExperiment(next);
+
+    // Last ready EEG removed → wipe EEG-derived explorer slots (no stale plots)
+    if (eegFullyCleared) {
+      setAnalysisResults(resetEegDerivedResults());
+    }
+
+    // Vision follows current selection only; removing selected image clears interpretation
+    if (removingImg) {
+      const sel =
+        next.selected_image_id != null
+          ? (next.image_files.find((f) => f.id === next.selected_image_id) ?? null)
+          : null;
+      setVisionState((vs) => visionStateFromSelectedImage(vs, sel));
+    }
   }, []);
 
   const updateMetadata = useCallback((patch: Partial<Experiment["metadata"]>) => {
@@ -1114,13 +1125,20 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
           imageId,
           visualizationId: null,
           conversationHistory,
-          context: imageId ? { has_image: true } : undefined,
+          context: imageId
+            ? {
+                has_image: true,
+                selected_image_id: imageId,
+                selected_image_name: selected?.name ?? null,
+              }
+            : undefined,
         });
+        // Prefer backend provenance — never invent a different image id
         final = {
           ...final,
           isDemo: false,
-          selectedImageId: imageId,
-          selectedImageName: selected?.name ?? null,
+          selectedImageId: final.selectedImageId ?? imageId,
+          selectedImageName: final.selectedImageName ?? selected?.name ?? null,
         };
         try {
           const { metrics, source } = await fetchSystemMetricsWithFallback();

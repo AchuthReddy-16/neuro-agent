@@ -123,6 +123,11 @@ export function AgentResponseView({
             No answer text was returned for this request.
           </p>
         )}
+        {(answer.visionUsed || answer.route === "VISION") && answer.selectedImageName && (
+          <p className="mt-2 text-[11px] text-signal-vision font-mono">
+            Analyzed image: {answer.selectedImageName}
+          </p>
+        )}
       </section>
 
       {computed.length > 0 && (

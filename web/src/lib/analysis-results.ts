@@ -136,6 +136,14 @@ export function emptyAnalysisResults(): AnalysisResultsState {
   };
 }
 
+/** Clear all EEG-derived explorer slots (idle). Vision/uploaded figures are separate. */
+export function resetEegDerivedResults(
+  prev?: AnalysisResultsState | null,
+): AnalysisResultsState {
+  void prev;
+  return emptyAnalysisResults();
+}
+
 export function emptyVisionState(): VisionState {
   return {
     selectedImageId: null,
@@ -302,53 +310,92 @@ export function setReadyResult<T>(
 
 export function emptyStateMessage(
   tab: VisualizationTab,
-  opts: { hasEeg: boolean; hasImage: boolean },
+  opts: {
+    hasEeg: boolean;
+    hasImage: boolean;
+    /** When EEG is present but fewer than two comparable conditions */
+    hasComparableConditions?: boolean;
+  },
 ): { title: string; body: string } {
   switch (tab) {
     case "waveform":
       return {
         title: "No waveform",
         body: opts.hasEeg
-          ? "Waveform is loading or unavailable for this sample."
+          ? "Generate the waveform for the selected EEG sample."
           : "Load or select an EEG sample to view the waveform.",
       };
     case "spectrogram":
       return {
         title: "No spectrogram",
         body: opts.hasEeg
-          ? "No spectrogram result for this sample yet."
-          : "Load an EEG sample to compute or view a spectrogram.",
+          ? "Run spectrogram analysis for the selected sample and channel."
+          : "Load an EEG sample to compute the spectrogram.",
       };
     case "psd":
       return {
         title: "No PSD",
         body: opts.hasEeg
-          ? "Run PSD analysis for the selected sample/channel, or load a sample with a PSD plot."
-          : "Load an EEG sample to view PSD.",
+          ? "Run PSD analysis for the selected sample and channel."
+          : "Load an EEG sample to compute the power spectral density.",
       };
     case "band_power":
       return {
-        title: "No band-power result",
+        title: "No band power",
         body: opts.hasEeg
-          ? "Ask a band-power / ranking question, or load a sample with band-power plots."
-          : "Load an EEG sample to compute band power.",
+          ? "Run band-power analysis for the selected sample."
+          : "Load an EEG sample to compute band-power features.",
       };
     case "topomap":
+      if (!opts.hasEeg && opts.hasImage) {
+        return {
+          title: "No computed topomap",
+          body: "Uploaded figures are for visual interpretation only. Load an EEG sample to generate a topomap.",
+        };
+      }
       return {
         title: "No topomap",
         body: opts.hasEeg
-          ? "No generated topomap for this sample yet. Upload a topomap figure only if you intend visual inspection."
-          : "Load an EEG sample to view a topomap, or upload a figure for vision analysis (not shown in other tabs).",
+          ? "Generate a topomap for the selected EEG sample."
+          : "Load an EEG sample to generate a topomap.",
       };
     case "comparison":
+      if (!opts.hasEeg) {
+        return {
+          title: "No comparison",
+          body: "Load EEG data to compare conditions.",
+        };
+      }
+      if (opts.hasComparableConditions === false) {
+        return {
+          title: "Need more conditions",
+          body: "Load or select at least two comparable conditions.",
+        };
+      }
       return {
         title: "No comparison",
-        body: "Run a condition comparison analysis, or load a sample that includes a comparison plot.",
+        body: "Run a condition comparison for the selected data.",
       };
     default:
       return {
         title: "No result",
-        body: "This tab has no typed analysis result yet.",
+        body: "Load the required input for this analysis.",
       };
   }
+}
+
+/** Vision / figure path — separate from EEG explorer tabs. */
+export function visionEmptyStateMessage(opts: {
+  hasImage: boolean;
+}): { title: string; body: string } {
+  if (!opts.hasImage) {
+    return {
+      title: "No image",
+      body: "Upload or select an image to analyze it.",
+    };
+  }
+  return {
+    title: "Image ready",
+    body: "Ask a question about the selected figure.",
+  };
 }

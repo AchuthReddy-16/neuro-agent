@@ -1,16 +1,32 @@
 "use client";
 
+/**
+ * Real EEG waveform display.
+ * Production UI only shows a static plot image when available.
+ * Simulated canvas animation is gated behind allowSimulated (dev/tests only).
+ */
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { WAVEFORM_CHANNELS } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 
 interface LiveWaveformProps {
+  /** Real waveform plot from sample / analysis — required for production display */
   staticImageUrl?: string;
   enabled?: boolean;
+  /**
+   * DEV/TEST ONLY — synthetic canvas animation.
+   * Must never be set from production Neural Explorer paths.
+   */
+  allowSimulated?: boolean;
 }
 
-export function LiveWaveform({ staticImageUrl, enabled = true }: LiveWaveformProps) {
+export function LiveWaveform({
+  staticImageUrl,
+  enabled = true,
+  allowSimulated = false,
+}: LiveWaveformProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [playing, setPlaying] = useState(true);
   const [selectedChannels, setSelectedChannels] = useState<string[]>(
@@ -111,7 +127,7 @@ export function LiveWaveform({ staticImageUrl, enabled = true }: LiveWaveformPro
   }, [playing, selectedChannels]);
 
   useEffect(() => {
-    if (!enabled || staticImageUrl) return;
+    if (!enabled || staticImageUrl || !allowSimulated) return;
     let id: number;
     const loop = () => {
       draw();
@@ -119,9 +135,10 @@ export function LiveWaveform({ staticImageUrl, enabled = true }: LiveWaveformPro
     };
     if (playing) loop();
     return () => cancelAnimationFrame(id);
-  }, [draw, playing, enabled, staticImageUrl]);
+  }, [draw, playing, enabled, staticImageUrl, allowSimulated]);
 
-  if (staticImageUrl && !playing) {
+  // Production path: real static plot only
+  if (staticImageUrl) {
     return (
       <div className="relative w-full h-full flex items-center justify-center bg-elevated rounded-lg overflow-hidden border border-strong">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -132,6 +149,11 @@ export function LiveWaveform({ staticImageUrl, enabled = true }: LiveWaveformPro
         />
       </div>
     );
+  }
+
+  // Simulated path — unreachable from production explorer (allowSimulated never set)
+  if (!allowSimulated) {
+    return null;
   }
 
   return (
@@ -160,19 +182,10 @@ export function LiveWaveform({ staticImageUrl, enabled = true }: LiveWaveformPro
         </Button>
       </div>
       <div className="flex-1 min-h-[280px] relative overflow-hidden bg-elevated">
-        {staticImageUrl && !playing ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={staticImageUrl}
-            alt="EEG waveform"
-            className="w-full h-full object-contain"
-          />
-        ) : (
-          <canvas ref={canvasRef} className="w-full h-full" aria-label="Live EEG waveform visualization" />
-        )}
+        <canvas ref={canvasRef} className="w-full h-full" aria-label="Simulated EEG waveform" />
       </div>
       <p className="text-[10px] text-muted text-center">
-        Simulated multi-channel EEG — visualization only
+        Simulated multi-channel EEG — visualization only (dev)
       </p>
     </div>
   );
