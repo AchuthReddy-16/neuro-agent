@@ -78,7 +78,7 @@ export function ExperimentPanel() {
       <div className="p-3 space-y-3">
         {backendMode === "unavailable" && !hasData && (
           <p className="text-[10px] text-signal-warning leading-relaxed">
-            Backend offline — uploads stay local; analysis uses labeled demo fixtures.
+            Backend offline — uploads stay local; analysis uses explicitly labeled offline fixtures.
           </p>
         )}
         {backendMode === "live" && !hasData && (
@@ -130,15 +130,16 @@ export function ExperimentPanel() {
         <FileGroup title="EEG / Data">
           <DropZone
             label="Upload EEG / sample JSON"
-            hint="JSON with sample_id — raw EDF not parsed"
+            hint="Sample JSON (e.g. S001_R01_E000)"
             accept={EEG_ACCEPT}
             onFiles={(list) => {
               const f = Array.from(list)[0];
               if (f) void uploadEEG(f);
             }}
           >
-            <FormatHints formats={[{ label: "JSON", active: true }, { label: "EDF", active: false }, { label: "CSV", active: false }]} />
-            <p className="text-[9px] text-muted mt-1">Requires sample_id in processed registry</p>
+            <p className="text-[9px] text-muted mt-1">
+              Use a known sample JSON. Raw EDF/CSV are not supported yet.
+            </p>
           </DropZone>
           {eegFiles.length > 0 && (
             <ul className="mt-1.5 space-y-0.5">

@@ -169,7 +169,7 @@ function mapHistoryItems(raw: unknown[] | undefined): AnalysisHistoryItem[] {
       system: {
         textModel: "—",
         visionModel: "—",
-        precision: "INT8 W8A8",
+        precision: "BF16",
         serving: "—",
         route,
       },

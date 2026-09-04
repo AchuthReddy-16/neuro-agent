@@ -85,6 +85,23 @@ class PrimaryResearchAgent:
         )
         self._loaded = True
 
+    def unload(self) -> None:
+        """Release GPU-resident text weights so a VLM can load safely."""
+        self._model = None
+        self._tokenizer = None
+        self._load_info = None  # type: ignore[assignment]
+        self._loaded = False
+        import gc
+
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.synchronize()
+
+    @property
+    def is_loaded(self) -> bool:
+        return bool(self._loaded and self._model is not None)
+
     def _chat_prompt(self, system: str, user: str) -> str:
         assert self._tokenizer is not None
         messages = [

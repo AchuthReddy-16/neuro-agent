@@ -46,7 +46,11 @@ import {
   MOCK_SYSTEM_METRICS,
 } from "@/lib/constants";
 
+/** Which product surface owns the current client session. */
+export type ExperienceMode = "demo" | "workspace";
+
 interface ExperimentContextValue {
+  experienceMode: ExperienceMode;
   experiment: Experiment | null;
   answers: AgentAnswer[];
   currentAnswer: AgentAnswer | null;
@@ -67,6 +71,11 @@ interface ExperimentContextValue {
   selectedImage: ExperimentFile | null;
   setActiveTab: (tab: VisualizationTab) => void;
   focusVisualization: (id: string, tab?: VisualizationTab) => void;
+  /** Enter Interactive Demo — isolated session, loads built-in demo assets only. */
+  beginDemoSession: () => Promise<void>;
+  /** Enter Research Workspace — clears demo session; starts clean. */
+  beginWorkspaceSession: () => void;
+  /** Load built-in sample inside Workspace (does not switch to Interactive Demo). */
   loadDemo: () => void | Promise<void>;
   uploadEEG: (file: File) => Promise<void>;
   uploadFigure: (file: File) => Promise<void>;
@@ -98,6 +107,36 @@ const defaultSettings: AppSettings = {
 };
 
 const ExperimentContext = createContext<ExperimentContextValue | null>(null);
+
+const LIVE_DEMO_EXPERIMENT_ID = "exp_demo_s001";
+
+function humanizeAnalysisError(err: unknown): string {
+  if (err instanceof ApiError) {
+    const code = (err.code || "").toLowerCase();
+    const msg = (err.message || "").toLowerCase();
+    if (
+      err.status === 503 ||
+      code.includes("unavailable") ||
+      code.includes("model") ||
+      msg.includes("loading") ||
+      msg.includes("warming") ||
+      msg.includes("cuda")
+    ) {
+      return "Preparing research model… Please try again in a moment.";
+    }
+    if (err.status === 408 || msg.includes("timeout")) {
+      return "The analysis timed out. Please try again.";
+    }
+    return err.message || "Analysis request failed.";
+  }
+  return "Analysis request failed. Check that the backend is reachable.";
+}
+
+function revokeBlobUrls(exp: Experiment | null) {
+  exp?.image_files.forEach((f) => {
+    if (f.url?.startsWith("blob:")) URL.revokeObjectURL(f.url);
+  });
+}
 
 function extOf(name: string): string {
   const i = name.lastIndexOf(".");
@@ -234,7 +273,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
   const [focusedVizId, setFocusedVizId] = useState<string | null>(null);
   const [settings, setSettings] = useState<AppSettings>(defaultSettings);
   const [precision, setPrecision] = useState<SystemMetrics["precision"]>("INT8 W8A8");
-  const [backendMode, setBackendMode] = useState<BackendMode>("demo");
+  const [backendMode, setBackendMode] = useState<BackendMode>("unavailable");
+  const [experienceMode, setExperienceMode] = useState<ExperienceMode>("workspace");
   const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
@@ -321,7 +361,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       if (cancelled) return;
       setHealthInfo(health);
       if (health.status === "ok" || health.status === "degraded") {
-        setBackendMode((prev) => (prev === "unavailable" ? "live" : prev === "demo" ? "demo" : "live"));
+        setBackendMode("live");
         try {
           const { metrics, source } = await fetchSystemMetricsWithFallback();
           if (!cancelled && source === "live") setLiveMetrics(metrics);
@@ -329,7 +369,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
           /* ignore poll errors */
         }
       } else if (!cancelled) {
-        setBackendMode((prev) => (prev === "demo" ? "demo" : "unavailable"));
+        setBackendMode("unavailable");
       }
     }, 15000);
     return () => {
@@ -339,22 +379,26 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const loadDemo = useCallback(async () => {
+    // Always start from a clean slate — never inherit prior user uploads/selection
+    revokeBlobUrls(experimentRef.current);
     setUploadError(null);
     setAnalysisError(null);
     setExplorerError(null);
     setExplorerLoading(true);
     setAnswers([]);
     setActiveAnswerId(null);
+    setIsAnalyzing(false);
     setWorkspaceEpoch((e) => e + 1);
+    setExperiment(null);
 
     try {
       const health = await checkHealth();
       if (health.status === "ok" || health.status === "degraded") {
         setBackendMode("live");
         setHealthInfo(health);
-        const raw = await getExperiment("exp_demo_s001");
+        const raw = await getExperiment(LIVE_DEMO_EXPERIMENT_ID);
         const mapped = mapExperimentFromApi(raw);
-        setExperiment(mapped);
+        setExperiment({ ...mapped, isDemo: true });
         setActiveTab("topomap");
         setFocusedVizId(mapped.visualizations[0]?.id ?? null);
         setExplorerLoading(false);
@@ -364,12 +408,40 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       /* fall through to local demo */
     }
 
-    setBackendMode((m) => (m === "live" ? "unavailable" : "demo"));
+    setBackendMode("unavailable");
     setExperiment(createDemoExperiment());
     setActiveTab("topomap");
     setFocusedVizId("viz-topomap-01");
     setExplorerLoading(false);
   }, []);
+
+  const beginDemoSession = useCallback(async () => {
+    setExperienceMode("demo");
+    await loadDemo();
+  }, [loadDemo]);
+
+  const beginWorkspaceSession = useCallback(() => {
+    // Leaving Interactive Demo must not carry demo/user hybrid state into workspace
+    revokeBlobUrls(experimentRef.current);
+    setExperienceMode("workspace");
+    setExperiment(null);
+    setAnswers([]);
+    setActiveAnswerId(null);
+    setFocusedVizId(null);
+    setActiveTab("waveform");
+    setUploadError(null);
+    setAnalysisError(null);
+    setExplorerError(null);
+    setIsAnalyzing(false);
+    setExplorerLoading(false);
+    setWorkspaceEpoch((e) => e + 1);
+  }, []);
+
+  /** Workspace helper: load built-in sample without leaving workspace mode. */
+  const loadWorkspaceDemoSample = useCallback(async () => {
+    setExperienceMode("workspace");
+    await loadDemo();
+  }, [loadDemo]);
 
   const patchFileProgress = useCallback(
     (kind: "eeg" | "figure" | "metadata", fileId: string, patch: Partial<ExperimentFile>) => {
@@ -395,8 +467,13 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
     ) => {
       const current = experimentRef.current;
       const expId = current?.experiment_id ?? current?.id ?? null;
-      // Only reuse real backend experiment ids (exp_…); local temp ids (exp-…) are not sent
-      const backendExpId = expId && /^exp_[a-zA-Z0-9]+/.test(expId) ? expId : null;
+      // Never attach user uploads to the shared live demo experiment id
+      const isSharedDemo =
+        !!current?.isDemo ||
+        expId === LIVE_DEMO_EXPERIMENT_ID ||
+        expId === "exp-s026-demo";
+      const backendExpId =
+        !isSharedDemo && expId && /^exp_[a-zA-Z0-9]+/.test(expId) ? expId : null;
       const res = await uploadAsset(
         {
           fileType,
@@ -406,25 +483,51 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         },
         file,
       );
+      // If forking off demo, drop demo assets — only keep the pending upload slot
       const cleaned = current
-        ? {
-            ...current,
-            eeg_files: current.eeg_files.filter((f) => f.id !== localPendingId),
-            metadata_files: current.metadata_files.filter((f) => f.id !== localPendingId),
-            image_files: current.image_files.filter((f) => f.id !== localPendingId),
-          }
+        ? isSharedDemo
+          ? {
+              ...emptyExperiment(),
+              eeg_files: current.eeg_files.filter((f) => f.id === localPendingId),
+              metadata_files: current.metadata_files.filter((f) => f.id === localPendingId),
+              image_files: current.image_files.filter((f) => f.id === localPendingId),
+            }
+          : {
+              ...current,
+              isDemo: false,
+              eeg_files: current.eeg_files.filter((f) => f.id !== localPendingId),
+              metadata_files: current.metadata_files.filter((f) => f.id !== localPendingId),
+              image_files: current.image_files.filter((f) => f.id !== localPendingId),
+            }
         : null;
+      if (isSharedDemo && current) {
+        current.image_files.forEach((f) => {
+          if (f.id !== localPendingId && f.url?.startsWith("blob:")) {
+            URL.revokeObjectURL(f.url);
+          }
+        });
+      }
       const merged = mergeUploadResponse(cleaned, res, {
         name: file.name,
         kind: fileType,
         sizeBytes: file.size,
       });
-      experimentRef.current = merged;
-      setExperiment(merged);
+      const next = { ...merged, isDemo: false };
+      experimentRef.current = next;
+      setExperiment(next);
       return res;
     },
     [],
   );
+
+  /** Base experiment for uploads — fork away from demo assets instead of mutating them. */
+  const baseForUpload = useCallback((prev: Experiment | null): Experiment => {
+    if (!prev || prev.isDemo || prev.experiment_id === LIVE_DEMO_EXPERIMENT_ID) {
+      if (prev?.isDemo) revokeBlobUrls(prev);
+      return emptyExperiment();
+    }
+    return prev;
+  }, []);
 
   const uploadEEG = useCallback(
     async (file: File) => {
@@ -445,7 +548,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       };
 
       setExperiment((prev) => {
-        const base = prev ?? emptyExperiment();
+        const base = baseForUpload(prev);
         return syncModalities({
           ...base,
           isDemo: false,
@@ -482,7 +585,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         });
       });
     },
-    [backendMode, patchFileProgress, uploadViaApi],
+    [backendMode, patchFileProgress, uploadViaApi, baseForUpload],
   );
 
   const uploadFigure = useCallback(
@@ -507,7 +610,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       };
 
       setExperiment((prev) => {
-        const base = prev ?? emptyExperiment();
+        const base = baseForUpload(prev);
         const images = [...base.image_files, pending];
         return syncModalities({
           ...base,
@@ -520,12 +623,12 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       if (backendMode === "live") {
         try {
           patchFileProgress("figure", fileId, { progress: 40 });
-          const prevSelected = experiment?.selected_image_id;
+          const prevSelected =
+            experiment && !experiment.isDemo ? experiment.selected_image_id : null;
           const res = await uploadViaApi(file, "figure", fileId);
           URL.revokeObjectURL(blobUrl);
           setExperiment((prev) => {
             if (!prev) return prev;
-            // Preserve prior selection when adding additional figures
             const keep =
               prevSelected && prev.image_files.some((f) => f.id === prevSelected)
                 ? prevSelected
@@ -545,7 +648,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       patchFileProgress("figure", fileId, { status: "ready", progress: 100 });
       setActiveTab("topomap");
     },
-    [backendMode, patchFileProgress, uploadViaApi, experiment?.selected_image_id],
+    [backendMode, patchFileProgress, uploadViaApi, experiment, baseForUpload],
   );
 
   const uploadMetadata = useCallback(
@@ -568,7 +671,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       };
 
       setExperiment((prev) => {
-        const base = prev ?? emptyExperiment();
+        const base = baseForUpload(prev);
         return syncModalities({
           ...base,
           isDemo: false,
@@ -591,7 +694,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       await simulateUploadProgress((p) => patchFileProgress("metadata", fileId, { progress: p }));
       patchFileProgress("metadata", fileId, { status: "ready", progress: 100 });
     },
-    [backendMode, patchFileProgress, uploadViaApi],
+    [backendMode, patchFileProgress, uploadViaApi, baseForUpload],
   );
 
   const selectImage = useCallback((imageId: string) => {
@@ -648,12 +751,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const clearExperiment = useCallback(() => {
-    setExperiment((prev) => {
-      prev?.image_files.forEach((f) => {
-        if (f.url?.startsWith("blob:")) URL.revokeObjectURL(f.url);
-      });
-      return null;
-    });
+    revokeBlobUrls(experimentRef.current);
+    setExperiment(null);
     setAnswers([]);
     setActiveAnswerId(null);
     setFocusedVizId(null);
@@ -680,6 +779,12 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
 
       const needsVision = forceLocalDemo ? true : inferNeedsVision(q);
       let selected: ExperimentFile | null = null;
+      // Built-in live demo sample may expose visualizations without figure uploads.
+      const linkedVizId =
+        experiment?.selected_image_id &&
+        experiment.visualizations?.some((v) => v.id === experiment.selected_image_id)
+          ? experiment.selected_image_id
+          : experiment?.visualizations?.[0]?.id ?? null;
 
       if (needsVision && !forceLocalDemo) {
         const images = experiment?.image_files ?? [];
@@ -703,6 +808,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         }
       }
 
+      // Live mode always hits the real API. Fixtures only when explicitly offline / forced.
       const useLive = backendMode === "live" && !forceLocalDemo;
       let final: AgentAnswer;
 
@@ -716,15 +822,22 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
             setIsAnalyzing(false);
             return;
           }
+          const imageId =
+            selected?.id ??
+            experiment?.selected_image_id ??
+            (needsVision ? linkedVizId : null) ??
+            null;
           final = await analyzeLive({
             experimentId: expId,
             question: q,
-            imageId: selected?.id ?? experiment?.selected_image_id ?? null,
+            imageId,
+            visualizationId: needsVision && !selected ? linkedVizId : null,
             context: needsVision ? { requires_vision: true } : undefined,
           });
           final = {
             ...final,
-            selectedImageId: selected?.id ?? experiment?.selected_image_id ?? null,
+            isDemo: false,
+            selectedImageId: selected?.id ?? imageId,
             selectedImageName: selected?.name ?? null,
           };
           // Refresh metrics after live analyze
@@ -736,7 +849,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
           }
         } else if (forceLocalDemo) {
           final = createDemoAgentAnswer();
-        } else {
+        } else if (backendMode === "unavailable") {
           final = createMockAnswer(q, {
             selectedImage: needsVision
               ? selected
@@ -750,17 +863,19 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
                   : null
               : null,
           });
-        }
-      } catch (e) {
-        if (useLive) {
-          const msg =
-            e instanceof ApiError
-              ? e.message
-              : "Analysis request failed. Check backend logs.";
-          setAnalysisError(msg);
+        } else {
+          // Should not happen: non-live with backend claiming live. Fail closed.
+          setAnalysisError("Backend mode inconsistent — refresh and try again.");
           setIsAnalyzing(false);
           return;
         }
+      } catch (e) {
+        if (useLive) {
+          setAnalysisError(humanizeAnalysisError(e));
+          setIsAnalyzing(false);
+          return;
+        }
+        // Offline / unavailable only — never after a live backend failure
         final = createMockAnswer(q, {
           selectedImage: selected
             ? { id: selected.id, name: selected.name, url: selected.url }
@@ -793,14 +908,18 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       const stepDelay = useLive ? 80 : forceLocalDemo ? 380 : 260;
       for (let i = 0; i < steps.length; i++) {
         await new Promise((r) => setTimeout(r, stepDelay));
-        setAnswers([
-          {
-            ...final,
-            answer: "",
-            modelInterpretation: "",
-            timeline: progressiveTimeline(steps, i),
-          },
-        ]);
+        setAnswers((prev) => {
+          const others = prev.filter((a) => a.id !== final.id);
+          return [
+            ...others,
+            {
+              ...final,
+              answer: "",
+              modelInterpretation: "",
+              timeline: progressiveTimeline(steps, i),
+            },
+          ];
+        });
       }
 
       setAnswers((prev) => {
@@ -897,6 +1016,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
+      experienceMode,
       experiment,
       answers,
       currentAnswer,
@@ -917,7 +1037,9 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       selectedImage,
       setActiveTab,
       focusVisualization,
-      loadDemo,
+      beginDemoSession,
+      beginWorkspaceSession,
+      loadDemo: loadWorkspaceDemoSample,
       uploadEEG,
       uploadFigure,
       uploadMetadata,
@@ -937,6 +1059,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       healthInfo,
     }),
     [
+      experienceMode,
       experiment,
       answers,
       currentAnswer,
@@ -956,7 +1079,9 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       workspaceEpoch,
       selectedImage,
       focusVisualization,
-      loadDemo,
+      beginDemoSession,
+      beginWorkspaceSession,
+      loadWorkspaceDemoSample,
       uploadEEG,
       uploadFigure,
       uploadMetadata,

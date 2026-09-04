@@ -2,22 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { useExperiment } from "@/lib/store/experiment-context";
-import { EXAMPLE_QUESTIONS } from "@/lib/constants";
+import { STARTER_PROMPTS } from "@/lib/constants";
+import { describeBackendStatus } from "@/lib/config";
 import { Button } from "@/components/ui/Button";
 import { Collapsible } from "@/components/ui/Collapsible";
 import { AgentResponseView } from "@/components/agent/AgentResponse";
 import { ToolTimeline, TimelinePipeline } from "@/components/agent/ToolTimeline";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { AgentSkeleton } from "@/components/ui/Skeleton";
-import { inferNeedsVision } from "@/lib/routing";
 import clsx from "clsx";
 
-const EVIDENCE_ITEMS = [
-  { key: "eeg", label: "EEG", modality: "eeg" as const },
-  { key: "metadata", label: "Metadata", modality: "metadata" as const },
-  { key: "images", label: "Figures", modality: "vision" as const },
-];
-
+/**
+ * Workspace Research Agent — question → answer → evidence first; secondary controls collapsed.
+ */
 export function ResearchAgentPanel() {
   const {
     experiment,
@@ -32,45 +29,43 @@ export function ResearchAgentPanel() {
     selectedImage,
     workspaceEpoch,
     restoreAnalysis,
+    healthInfo,
   } = useExperiment();
   const [question, setQuestion] = useState("");
+  const [showExamples, setShowExamples] = useState(false);
 
   useEffect(() => {
     setQuestion("");
+    setShowExamples(false);
   }, [workspaceEpoch]);
 
-  const handleAnalyze = () => {
+  const handleSend = () => {
     if (!question.trim()) return;
     void analyze(question);
   };
 
-  const availableEvidence = experiment
-    ? EVIDENCE_ITEMS.filter((item) => {
-        if (item.key === "eeg") return experiment.modalities.eeg;
-        if (item.key === "metadata") return experiment.modalities.metadata;
-        return experiment.modalities.vision;
-      })
-    : [];
-
-  const showEmptyPrompt = !isAnalyzing && !currentAnswer;
+  const conversationStarted = !!currentAnswer || isAnalyzing;
   const history = experiment?.analysis_history ?? [];
-  const previewRoute = question.trim()
-    ? inferNeedsVision(question)
-      ? "VISION + TOOLS"
-      : "TEXT + TOOLS"
-    : null;
+
+  const contextBits = [
+    { label: "EEG", ok: !!experiment?.modalities.eeg },
+    { label: "Metadata", ok: !!experiment?.modalities.metadata },
+    { label: "Figure", ok: !!experiment?.modalities.vision },
+  ];
 
   const runningStage = currentAnswer?.timeline.find((s) => s.status === "running")?.name;
   const statusLine =
     runningStage === "Vision analysis"
-      ? "Vision-required processing…"
+      ? "Analyzing figure…"
       : runningStage === "Verification"
-        ? "Verifier running…"
+        ? "Verifying…"
         : runningStage === "Recovery"
-          ? "Recovery in progress…"
+          ? "Recovering…"
           : runningStage
             ? `${runningStage}…`
-            : "Analysis running…";
+            : backendMode === "live" && healthInfo && !(healthInfo.agentLoaded ?? healthInfo.agent_loaded)
+              ? "Preparing research model…"
+              : "Analyzing…";
 
   return (
     <section className="h-full flex flex-col rounded-lg border border-default bg-elevated overflow-hidden">
@@ -78,220 +73,216 @@ export function ResearchAgentPanel() {
         <h2 className="text-[11px] font-semibold tracking-[0.12em] text-secondary uppercase">
           Research Agent
         </h2>
-        {currentAnswer && !isAnalyzing && (
-          <span className="text-[10px] font-mono text-muted">
-            {currentAnswer.route === "VISION" ? "VISION + TOOLS" : "TEXT + TOOLS"}
-          </span>
-        )}
+        <span className="text-[10px] font-mono text-muted truncate max-w-[50%]">
+          {isAnalyzing
+            ? statusLine
+            : backendMode === "live"
+              ? describeBackendStatus(healthInfo)
+              : backendMode === "unavailable"
+                ? "Offline"
+                : "Connecting…"}
+        </span>
       </header>
 
       <div className="flex flex-col h-full min-h-0 p-3 gap-3">
+        {/* Primary composer */}
         <div className="space-y-2 shrink-0">
-          <label className="block">
-            <span className="text-[10px] font-medium text-muted uppercase tracking-wide">
-              Ask about this experiment
-            </span>
+          <div className="flex gap-2 items-end">
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Compare beta activity between left- and right-fist conditions…"
+              placeholder="Ask a research question…"
               rows={2}
               disabled={isAnalyzing}
-              aria-label="Ask about this experiment"
-              className="research-question-input mt-1.5 w-full resize-none rounded-md border border-[var(--border)] bg-[var(--surface-canvas)] px-2.5 py-2 text-[13px] text-[var(--text-primary)] caret-[var(--accent)] placeholder:text-[var(--text-muted)] selection:bg-[color-mix(in_srgb,var(--accent)_28%,transparent)] selection:text-[var(--text-primary)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[color-mix(in_srgb,var(--accent)_45%,transparent)] disabled:cursor-not-allowed disabled:border-[var(--border)] disabled:bg-[var(--surface)] disabled:text-[var(--text-muted)] disabled:opacity-60 disabled:placeholder:text-[var(--text-muted)]"
+              aria-label="Ask a research question"
+              className="research-question-input flex-1 resize-none rounded-md border border-[var(--border)] bg-[var(--surface-canvas)] px-2.5 py-2 text-[13px] text-[var(--text-primary)] caret-[var(--accent)] placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[color-mix(in_srgb,var(--accent)_45%,transparent)] disabled:opacity-60"
               onKeyDown={(e) => {
-                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleAnalyze();
+                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSend();
               }}
             />
-          </label>
+            <Button
+              size="sm"
+              className="shrink-0 h-[42px] px-3"
+              onClick={handleSend}
+              disabled={!experiment || isAnalyzing || !question.trim()}
+            >
+              Send
+            </Button>
+          </div>
 
-          {previewRoute && (
-            <p className="text-[10px] font-mono text-muted">
-              Predicted route:{" "}
-              <span
-                className={
-                  previewRoute.startsWith("VISION") ? "text-signal-vision" : "text-signal-text"
-                }
-              >
-                {previewRoute}
-              </span>
-              {previewRoute.startsWith("VISION") && selectedImage && (
-                <span className="text-muted"> · {selectedImage.name}</span>
+          {experiment && (
+            <p className="text-[10px] text-muted font-mono flex flex-wrap gap-x-3 gap-y-0.5">
+              <span>Context:</span>
+              {contextBits.map((b) => (
+                <span key={b.label} className={b.ok ? "text-secondary" : "text-muted/70"}>
+                  {b.label} {b.ok ? "✓" : "—"}
+                </span>
+              ))}
+              {selectedImage && (
+                <span className="text-accent truncate max-w-[160px]">
+                  Selected: {selectedImage.name}
+                </span>
               )}
             </p>
           )}
 
-          {selectedImage && (
-            <p className="text-[10px] text-muted">
-              Vision context:{" "}
-              <span className="font-mono text-signal-vision">{selectedImage.name}</span>
-            </p>
-          )}
-
-          <Button
-            className="w-full"
-            size="sm"
-            onClick={handleAnalyze}
-            disabled={!experiment || isAnalyzing || !question.trim()}
-          >
-            {isAnalyzing ? "Running…" : "Analyze"}
-          </Button>
-
           {analysisError && (
-            <div className="rounded border border-signal-warning/35 bg-signal-warning/8 px-2.5 py-2" role="alert">
+            <div
+              className="rounded border border-signal-warning/35 bg-signal-warning/8 px-2.5 py-2"
+              role="alert"
+            >
               <div className="flex items-start justify-between gap-2">
                 <p className="text-[11px] text-signal-warning leading-relaxed">{analysisError}</p>
-                <button type="button" onClick={clearAnalysisError} className="text-[10px] text-muted shrink-0">
+                <button
+                  type="button"
+                  onClick={clearAnalysisError}
+                  className="text-[10px] text-muted shrink-0"
+                >
                   Dismiss
                 </button>
               </div>
             </div>
           )}
-
-          {backendMode !== "live" && (
-            <p className="text-[10px] text-muted leading-snug">
-              Labeled demo fixtures until backend is connected.
-            </p>
-          )}
         </div>
 
-        {history.length > 0 && (
-          <Collapsible title={`Analysis History (${history.length})`} compact>
-            <ul className="space-y-1.5 max-h-40 overflow-y-auto">
-              {history.map((h) => {
-                const answerId = h.answer?.id;
-                const active =
-                  (!!answerId && activeAnswerId === answerId) ||
-                  (!!answerId && currentAnswer?.id === answerId);
-                return (
-                  <li key={h.id}>
-                    <button
-                      type="button"
-                      onClick={() => restoreAnalysis(h.id)}
-                      className={clsx(
-                        "w-full text-left rounded-md px-2 py-1.5 border transition-colors",
-                        active
-                          ? "border-accent/40 bg-accent/8"
-                          : "border-default/60 hover:border-accent/30 hover:bg-muted/30",
-                      )}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span
-                          className={clsx(
-                            "text-[9px] font-mono",
-                            h.route === "VISION" ? "text-signal-vision" : "text-signal-text",
-                          )}
-                        >
-                          {h.route === "VISION" ? "VISION + TOOLS" : "TEXT + TOOLS"}
-                        </span>
-                        <span className="text-[9px] text-muted font-mono">
-                          {h.timestamp
-                            ? new Date(h.timestamp).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })
-                            : "—"}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-primary mt-0.5 line-clamp-2 leading-snug">
-                        {h.question}
-                      </p>
-                      <p className="text-[10px] text-muted mt-0.5 line-clamp-1">
-                        {h.answerPreview}
-                      </p>
-                    </button>
-                  </li>
-                );
-              })}
+        {/* Empty: ≤3 subtle starters */}
+        {!conversationStarted && experiment && (
+          <div className="shrink-0 space-y-1">
+            <p className="text-[10px] text-muted uppercase tracking-wide">Try asking</p>
+            <ul>
+              {STARTER_PROMPTS.slice(0, 3).map((q) => (
+                <li key={q}>
+                  <button
+                    type="button"
+                    onClick={() => setQuestion(q)}
+                    className="w-full text-left text-[12px] text-muted hover:text-secondary py-1.5 border-b border-default/40 last:border-0 transition-colors"
+                  >
+                    {q}
+                  </button>
+                </li>
+              ))}
             </ul>
-          </Collapsible>
+          </div>
         )}
 
-        {showEmptyPrompt && (
-          <div className="shrink-0 space-y-3">
-            {experiment ? (
-              <>
-                <div>
-                  <p className="text-[10px] font-medium text-muted uppercase tracking-wide mb-1.5">
-                    Available evidence
-                  </p>
-                  <div className="flex flex-wrap gap-x-3 gap-y-1">
-                    {availableEvidence.map((item) => (
-                      <span key={item.key} className="inline-flex items-center gap-1.5 text-[11px] text-secondary">
-                        <span
-                          className={`w-1 h-1 rounded-full ${
-                            item.modality === "eeg"
-                              ? "bg-signal-eeg"
-                              : item.modality === "metadata"
-                                ? "bg-signal-meta"
-                                : "bg-signal-vision"
-                          }`}
-                          aria-hidden
-                        />
-                        {item.label}
-                        {item.key === "images" && experiment.image_files.length > 0
-                          ? ` (${experiment.image_files.length})`
-                          : ""}
-                      </span>
-                    ))}
-                    {availableEvidence.length === 0 && (
-                      <span className="text-[11px] text-muted">No modalities loaded yet</span>
-                    )}
-                  </div>
-                </div>
+        {!conversationStarted && !experiment && (
+          <EmptyState
+            title="No experiment loaded"
+            description="Upload data in the experiment panel, or open the Interactive Demo."
+            actions={
+              <Button size="sm" variant="outline" onClick={() => void loadDemo()}>
+                Load demo sample
+              </Button>
+            }
+          />
+        )}
 
-                <div>
-                  <p className="text-[10px] font-medium text-muted uppercase tracking-wide mb-1.5">
-                    Suggested
-                  </p>
-                  <div className="flex flex-col">
-                    {EXAMPLE_QUESTIONS.map((q) => (
-                      <button
-                        key={q}
-                        type="button"
-                        onClick={() => setQuestion(q)}
-                        className="text-left text-[11px] text-secondary py-1.5 border-b border-default/50 last:border-0 hover:text-primary transition-colors"
-                      >
-                        {q}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <EmptyState
-                title="No experiment loaded"
-                description="Load data or try the demo to ask research questions."
-                actions={
-                  <Button size="sm" variant="primary" onClick={loadDemo}>
-                    Try Demo
-                  </Button>
-                }
-              />
+        {conversationStarted && (
+          <div className="shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowExamples((v) => !v)}
+              className="text-[10px] text-muted hover:text-secondary"
+            >
+              {showExamples ? "Hide examples" : "Examples"}
+            </button>
+            {showExamples && (
+              <ul className="mt-1 space-y-0.5">
+                {STARTER_PROMPTS.map((q) => (
+                  <li key={q}>
+                    <button
+                      type="button"
+                      onClick={() => setQuestion(q)}
+                      className="text-[11px] text-muted hover:text-secondary"
+                    >
+                      {q}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             )}
           </div>
         )}
 
-        <div className="flex-1 min-h-0 overflow-y-auto border-t border-default/60 pt-3">
+        {/* Answer / evidence — primary scroll area */}
+        <div className="flex-1 min-h-0 overflow-y-auto space-y-3">
           {isAnalyzing && currentAnswer && (
-            <div className="mb-4 space-y-3">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-[11px] text-accent">{statusLine}</p>
-                <span className="text-[10px] font-mono text-muted">
-                  {currentAnswer.route === "VISION" ? "VISION + TOOLS" : "TEXT + TOOLS"}
-                </span>
-              </div>
+            <div className="space-y-2">
+              <p className="text-[11px] text-accent">{statusLine}</p>
               <div className="overflow-x-auto pb-1">
                 <TimelinePipeline steps={currentAnswer.timeline} />
               </div>
-              <ToolTimeline steps={currentAnswer.timeline} active compact />
             </div>
           )}
 
           {isAnalyzing && !currentAnswer && <AgentSkeleton />}
 
-          {!isAnalyzing && currentAnswer && (
-            <AgentResponseView answer={currentAnswer} />
+          {!isAnalyzing && analysisError && !currentAnswer && (
+            <div className="rounded-lg border border-signal-warning/30 bg-signal-warning/5 px-3 py-3 text-[12px] text-secondary">
+              No answer returned. {analysisError}
+            </div>
+          )}
+
+          {!isAnalyzing && currentAnswer && <AgentResponseView answer={currentAnswer} />}
+        </div>
+
+        {/* Secondary — collapsed */}
+        <div className="shrink-0 space-y-1.5 border-t border-default/50 pt-2">
+          {history.length > 0 && (
+            <Collapsible title={`History (${history.length})`} compact>
+              <ul className="space-y-1 max-h-36 overflow-y-auto">
+                {history.map((h) => {
+                  const answerId = h.answer?.id;
+                  const active =
+                    (!!answerId && activeAnswerId === answerId) ||
+                    (!!answerId && currentAnswer?.id === answerId);
+                  return (
+                    <li key={h.id}>
+                      <button
+                        type="button"
+                        onClick={() => restoreAnalysis(h.id)}
+                        className={clsx(
+                          "w-full text-left rounded-md px-2 py-1.5 border transition-colors",
+                          active
+                            ? "border-accent/40 bg-accent/8"
+                            : "border-default/60 hover:border-accent/30",
+                        )}
+                      >
+                        <p className="text-[11px] text-primary line-clamp-2">{h.question}</p>
+                        <p className="text-[10px] text-muted line-clamp-1 mt-0.5">{h.answerPreview}</p>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </Collapsible>
+          )}
+
+          {currentAnswer && (
+            <Collapsible title="Tools & verification" compact>
+              <ToolTimeline steps={currentAnswer.timeline} active={false} compact />
+              <p className="text-[11px] text-secondary mt-2">
+                Verifier: {currentAnswer.verification.status}
+                {currentAnswer.verification.message
+                  ? ` — ${currentAnswer.verification.message}`
+                  : ""}
+              </p>
+            </Collapsible>
+          )}
+
+          {currentAnswer && (
+            <Collapsible title="System details" compact>
+              <dl className="grid grid-cols-2 gap-x-2 gap-y-1 text-[10px]">
+                <dt className="text-muted">Text</dt>
+                <dd className="text-secondary truncate">{currentAnswer.system.textModel}</dd>
+                <dt className="text-muted">Vision</dt>
+                <dd className="text-secondary truncate">{currentAnswer.system.visionModel}</dd>
+                <dt className="text-muted">Precision</dt>
+                <dd className="text-secondary">{currentAnswer.system.precision}</dd>
+                <dt className="text-muted">Serving</dt>
+                <dd className="text-secondary">{currentAnswer.system.serving}</dd>
+              </dl>
+            </Collapsible>
           )}
         </div>
       </div>

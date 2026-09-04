@@ -247,6 +247,9 @@ export interface HealthResponse {
   servingMode?: string;
   agentLoaded?: boolean;
   visionLoaded?: boolean;
+  /** Snake_case aliases from some API payloads */
+  agent_loaded?: boolean;
+  vision_loaded?: boolean;
 }
 
 export interface UploadRequest {

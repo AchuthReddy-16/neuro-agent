@@ -70,7 +70,7 @@ export async function checkHealth(): Promise<HealthResponse> {
   try {
     return await apiFetch<HealthResponse>("/api/health", {
       method: "GET",
-      signal: AbortSignal.timeout(2500),
+      signal: AbortSignal.timeout(8000),
     });
   } catch {
     return { status: "unavailable" };
@@ -111,10 +111,12 @@ export function analyzeExperiment(req: AnalyzeRequest): Promise<AnalyzeResponse>
     settings: req.settings,
     context: req.context ?? null,
   };
+  // Cold VLM load can exceed 60s; keep a hard upper bound (matches NEURO_API_VLM_TIMEOUT_S).
   return apiFetch<AnalyzeResponse>("/api/analyze", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(300_000),
   });
 }
 

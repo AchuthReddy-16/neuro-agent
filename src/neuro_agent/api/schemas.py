@@ -31,6 +31,19 @@ class HealthResponse(BaseModel):
     serving_mode: str | None = Field(default=None, serialization_alias="servingMode")
     agent_loaded: bool = Field(default=False, serialization_alias="agentLoaded")
     vision_loaded: bool = Field(default=False, serialization_alias="visionLoaded")
+    # Process is up vs model readiness (distinct from HTTP liveness).
+    text_status: Literal["disabled", "unloaded", "loading", "ready", "error"] = Field(
+        default="unloaded", serialization_alias="textStatus"
+    )
+    vision_status: Literal[
+        "disabled", "unloaded", "loading", "ready", "error"
+    ] = Field(default="disabled", serialization_alias="visionStatus")
+    vision_enabled: bool = Field(default=False, serialization_alias="visionEnabled")
+    text_backend: str | None = Field(default=None, serialization_alias="textBackend")
+    vision_backend: str | None = Field(default=None, serialization_alias="visionBackend")
+    precision: str | None = None
+    text_error: str | None = Field(default=None, serialization_alias="textError")
+    vision_error: str | None = Field(default=None, serialization_alias="visionError")
 
 
 class SystemMetricsResponse(BaseModel):
@@ -40,7 +53,7 @@ class SystemMetricsResponse(BaseModel):
     vision_model: str = Field(serialization_alias="visionModel")
     post_training: str = Field(serialization_alias="postTraining")
     serving: str
-    precision: Literal["BF16", "INT8", "INT4", "INT8 W8A8"] = "INT8 W8A8"
+    precision: str = "BF16"
     # Live / last-request fields (null when not yet measured)
     ttft_ms: float | None = Field(default=None, serialization_alias="ttftMs")
     tokens_per_sec: float | None = Field(default=None, serialization_alias="tokensPerSec")

@@ -12,16 +12,14 @@ from neuro_agent.paths import RESULTS_DIR
 
 @lru_cache(maxsize=1)
 def get_settings() -> dict:
+    # Prefer NEURO_ALLOWED_ORIGINS; keep NEURO_API_CORS_ORIGINS as alias.
+    cors_raw = os.environ.get("NEURO_ALLOWED_ORIGINS") or os.environ.get(
+        "NEURO_API_CORS_ORIGINS",
+        "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001",
+    )
     return {
         "max_upload_bytes": int(os.environ.get("NEURO_API_MAX_UPLOAD_MB", "25")) * 1024 * 1024,
-        "cors_origins": [
-            o.strip()
-            for o in os.environ.get(
-                "NEURO_API_CORS_ORIGINS",
-                "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001",
-            ).split(",")
-            if o.strip()
-        ],
+        "cors_origins": [o.strip() for o in cors_raw.split(",") if o.strip()],
         "serving_mode": os.environ.get("NEURO_SERVING_MODE", "hybrid"),
         "enable_vlm": os.environ.get("NEURO_API_ENABLE_VLM", "0") == "1",
         "load_agent_on_startup": os.environ.get("NEURO_API_LOAD_AGENT", "0") == "1",
@@ -41,9 +39,17 @@ def get_store() -> ExperimentStore:
 @lru_cache(maxsize=1)
 def get_service() -> AnalysisService:
     settings = get_settings()
+    state = RuntimeState(
+        serving_mode=settings["serving_mode"],
+        vision_enabled=bool(settings["enable_vlm"]),
+        vision_status="unloaded" if settings["enable_vlm"] else "disabled",
+        precision="BF16",
+        text_backend="PrimaryResearchAgent HF Transformers + LoRA (sft_corrected_v2)",
+        vision_backend="HF Transformers + PEFT (lazy)",
+    )
     svc = AnalysisService(
         store=get_store(),
-        state=RuntimeState(serving_mode=settings["serving_mode"]),
+        state=state,
         enable_vlm=bool(settings["enable_vlm"]),
     )
     return svc

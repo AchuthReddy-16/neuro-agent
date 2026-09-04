@@ -26,7 +26,12 @@ from neuro_agent.api.schemas import (
     UploadedArtifact,
     VisualizationInfo,
 )
-from neuro_agent.api.service import TEXT_MODEL_LABEL, VISION_MODEL_LABEL
+from neuro_agent.api.service import (
+    PRECISION,
+    TEXT_MODEL_LABEL,
+    VISION_MODEL_LABEL,
+    VisionRuntimeError,
+)
 from neuro_agent.tools.schemas import SampleNotFoundError
 
 ALLOWED_FIGURE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
@@ -42,14 +47,17 @@ def create_app() -> FastAPI:
     async def lifespan(_app: FastAPI):
         svc = api_deps.get_service()
         try:
+            svc.initialize_tools()
             svc.ensure_demo_experiment()
         except Exception:
             pass
         if settings["load_agent_on_startup"]:
             try:
                 svc.ensure_agent()
-            except Exception:
+            except Exception as exc:
                 svc.state.agent_loaded = False
+                svc.state.text_status = "error"
+                svc.state.text_error = str(exc)
         yield
 
     app = FastAPI(
@@ -94,13 +102,34 @@ def create_app() -> FastAPI:
     @app.get("/api/health", response_model=HealthResponse)
     def health() -> HealthResponse:
         svc = api_deps.get_service()
+        st = svc.state
+        mock = svc.mock_runner is not None
+        text_status = "ready" if mock else st.text_status
+        vision_status = st.vision_status
+        if mock:
+            overall = "ok"
+        elif text_status == "ready":
+            overall = "ok"
+        elif text_status == "error":
+            overall = "unavailable"
+        else:
+            # Process is up; text model not yet ready (lazy / loading).
+            overall = "degraded"
         return HealthResponse(
-            status="ok",
+            status=overall,  # type: ignore[arg-type]
             text_model=TEXT_MODEL_LABEL,
             vision_model=VISION_MODEL_LABEL,
-            serving_mode=svc.state.serving_mode,
-            agent_loaded=svc.state.agent_loaded or svc.mock_runner is not None,
-            vision_loaded=svc.state.vision_loaded,
+            serving_mode=st.serving_mode,
+            agent_loaded=bool(st.agent_loaded or mock),
+            vision_loaded=bool(st.vision_loaded),
+            text_status=text_status,  # type: ignore[arg-type]
+            vision_status=vision_status,  # type: ignore[arg-type]
+            vision_enabled=bool(svc.enable_vlm),
+            text_backend=st.text_backend,
+            vision_backend=st.vision_backend,
+            precision=st.precision or PRECISION,
+            text_error=st.text_error,
+            vision_error=st.vision_error,
         )
 
     @app.get("/api/system/metrics", response_model=SystemMetricsResponse)
@@ -112,7 +141,7 @@ def create_app() -> FastAPI:
             vision_model=VISION_MODEL_LABEL,
             post_training="corrected SFT (+ optional RLVR lineage)",
             serving=svc.state.serving_mode,
-            precision="INT8 W8A8",
+            precision=svc.state.precision or PRECISION,
             ttft_ms=svc.state.last_ttft_ms,
             tokens_per_sec=None,
             p95_latency_ms=None,
@@ -422,7 +451,29 @@ def create_app() -> FastAPI:
                 )
             raise HTTPException(
                 status_code=503,
-                detail={"error": "vlm_unavailable", "code": "vlm_unavailable"},
+                detail={
+                    "error": "vlm_unavailable",
+                    "detail": str(exc),
+                    "code": "vlm_unavailable",
+                },
+            )
+        except VisionRuntimeError as exc:
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "error": "vlm_unavailable",
+                    "detail": str(exc),
+                    "code": "vlm_unavailable",
+                },
+            )
+        except TimeoutError as exc:
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "error": "vlm_timeout",
+                    "detail": str(exc),
+                    "code": "vlm_timeout",
+                },
             )
         except ValueError as exc:
             if "missing_question" in str(exc):
@@ -433,10 +484,14 @@ def create_app() -> FastAPI:
             raise
         except RuntimeError as exc:
             msg = str(exc).lower()
-            if "cuda" in msg or "out of memory" in msg:
+            if "cuda" in msg or "out of memory" in msg or "vlm" in msg:
                 raise HTTPException(
                     status_code=503,
-                    detail={"error": "model_backend_unavailable", "code": "model_backend_unavailable"},
+                    detail={
+                        "error": "model_backend_unavailable",
+                        "detail": str(exc),
+                        "code": "model_backend_unavailable",
+                    },
                 )
             raise HTTPException(
                 status_code=500,

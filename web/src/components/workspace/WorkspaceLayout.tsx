@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useExperiment } from "@/lib/store/experiment-context";
 import { ModalityBadges } from "./ModalityBadges";
 import { ExperimentPanel } from "./ExperimentPanel";
@@ -15,26 +15,22 @@ import { SystemStatusStrip } from "./SystemStatusStrip";
 
 export function WorkspaceLayout() {
   const searchParams = useSearchParams();
-  const { loadDemo, runDemoAnalysis } = useExperiment();
-  const loadDemoRef = useRef(loadDemo);
-  const runDemoRef = useRef(runDemoAnalysis);
-  loadDemoRef.current = loadDemo;
-  runDemoRef.current = runDemoAnalysis;
+  const router = useRouter();
+  const { beginWorkspaceSession } = useExperiment();
+  const booted = useRef(false);
 
-  const demoParam = searchParams.get("demo");
+  // Legacy link /workspace?demo=1 → dedicated Interactive Demo
+  useEffect(() => {
+    if (searchParams.get("demo") === "1") {
+      router.replace("/demo");
+    }
+  }, [searchParams, router]);
 
   useEffect(() => {
-    if (demoParam !== "1") return;
-    let cancelled = false;
-    loadDemoRef.current();
-    const timer = setTimeout(() => {
-      if (!cancelled) void runDemoRef.current();
-    }, 700);
-    return () => {
-      cancelled = true;
-      clearTimeout(timer);
-    };
-  }, [demoParam]);
+    if (booted.current) return;
+    booted.current = true;
+    beginWorkspaceSession();
+  }, [beginWorkspaceSession]);
 
   return (
     <div className="h-screen flex flex-col bg-surface overflow-hidden">
@@ -49,21 +45,27 @@ export function WorkspaceLayout() {
             </div>
             <div className="min-w-0">
               <h1 className="text-[13px] font-semibold text-primary leading-tight truncate tracking-tight">
-                Multimodal Neuroscience Research Agent
+                Research Workspace
               </h1>
               <p className="text-[10px] text-muted hidden xl:block leading-tight mt-0.5">
-                Deterministic tools · evidence grounding · verification · optimized inference
+                Experiment context · neural explorer · research agent
               </p>
             </div>
           </Link>
         </div>
-        <ModalityBadges />
+        <div className="flex items-center gap-2 shrink-0">
+          <Link href="/demo">
+            <span className="text-[10px] text-muted hover:text-secondary hidden sm:inline px-2">
+              Interactive Demo
+            </span>
+          </Link>
+          <ModalityBadges />
+        </div>
       </header>
 
       <SystemStatusStrip />
 
       <main className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[minmax(220px,20%)_minmax(0,1fr)_minmax(300px,26%)] xl:grid-cols-[minmax(240px,20%)_minmax(0,1fr)_minmax(320px,27%)] 2xl:grid-cols-[minmax(260px,21%)_minmax(0,1fr)_minmax(340px,26%)] gap-0 overflow-hidden">
-        {/* Left — compact controls */}
         <aside className="border-b lg:border-b-0 lg:border-r border-default overflow-y-auto max-h-[38vh] lg:max-h-none order-2 lg:order-1 bg-elevated/40">
           <div className="p-2.5 space-y-2 h-full">
             <ExperimentPanel />
@@ -73,7 +75,6 @@ export function WorkspaceLayout() {
           </div>
         </aside>
 
-        {/* Center — visualization hero (minimal chrome) */}
         <section className="flex flex-col min-h-[50vh] lg:min-h-0 order-1 lg:order-2 border-b lg:border-b-0 lg:border-r border-default bg-canvas">
           <div className="shrink-0 flex items-center justify-between px-4 py-2 border-b border-default/80">
             <h2 className="text-[11px] font-semibold tracking-[0.14em] text-secondary uppercase">
@@ -88,7 +89,6 @@ export function WorkspaceLayout() {
           </div>
         </section>
 
-        {/* Right — analysis system */}
         <aside className="overflow-y-auto min-h-[38vh] lg:min-h-0 order-3 bg-elevated/30">
           <div className="p-2.5 h-full">
             <ResearchAgentPanel />

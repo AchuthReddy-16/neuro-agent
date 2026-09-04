@@ -56,14 +56,14 @@ export function SystemStatusStrip() {
   if (backendMode === "live" && healthInfo && healthInfo.agentLoaded === false) {
     items.push({
       key: "agent",
-      label: "Agent",
-      value: "not loaded",
+      label: "Status",
+      value: "Preparing research model…",
       accent: "text-signal-warning",
     });
   }
 
   const modeLabel =
-    backendMode === "live" ? "Live" : backendMode === "unavailable" ? "Offline" : "Demo";
+    backendMode === "live" ? "Live" : backendMode === "unavailable" ? "Offline" : "Offline";
 
   return (
     <div

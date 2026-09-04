@@ -203,11 +203,23 @@ def test_system_metrics(tmp_path, monkeypatch):
     r = client.get("/api/system/metrics")
     assert r.status_code == 200
     body = r.json()
-    assert body["precision"] == "INT8 W8A8"
+    assert body["precision"] == "BF16"
     assert "visionModel" in body
     # unmeasured latency must be null, not invented
     assert body.get("tokensPerSec") is None
     assert body.get("p95LatencyMs") is None
+
+
+def test_health_reports_runtime_status(tmp_path, monkeypatch):
+    client, svc, _ = _wire_client(tmp_path, monkeypatch, MockTextRunner())
+    r = client.get("/api/health")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["status"] == "ok"
+    assert body.get("textStatus") == "ready" or body.get("text_status") == "ready"
+    assert body.get("visionEnabled") is False or body.get("vision_enabled") is False
+    assert "W8A8" not in (body.get("textModel") or body.get("text_model") or "")
+    assert svc.state.precision == "BF16"
 
 
 def test_upload_empty_file(tmp_path, monkeypatch):
@@ -313,9 +325,147 @@ def test_analyze_schema_text_only(tmp_path, monkeypatch):
     assert body["computed_evidence"], "expected numeric evidence"
     assert body["verification"]["status"] == "skipped"
     assert "totalMs" in body["timing"]
-    assert body["system"]["precision"] == "INT8 W8A8"
+    assert body["system"]["precision"] == "BF16"
     assert body["route_detail"]["requires_vision"] is False
     assert body["tools_used"]
+
+
+class MockFalseVisionSidecarRunner:
+    """Simulates the known bug: ranking intent with vision sidecar fields set."""
+
+    def ask(self, question: str, *, request_id: str | None = None) -> Any:
+        return _FakeTrace(
+            request_id=request_id or "req_false_vision",
+            original_question=question,
+            parsed_intent={
+                "question_type": "channel_ranking",
+                "requires_vision": False,
+                "include_vision_evidence": True,
+                "requested_visual_type": "topomap",
+                "image_id": "img_fake_topomap",
+                "sample_id": "S001_R01_E000",
+            },
+            tool_invocations=[{"name": "rank_channels_for_sample"}],
+            evidence_bundle={
+                "success": True,
+                "ranked_evidence": {"ranking": ["C3", "Cz", "C4"], "values": {"C3": 0.2}},
+                "numeric_evidence": [],
+                "vision_evidence": [],
+            },
+            final_answer="Most discriminative channels: C3, Cz, C4.",
+        )
+
+
+class MockWrongRequiresVisionRunner:
+    """Model incorrectly sets requires_vision for a pure ranking question."""
+
+    def ask(self, question: str, *, request_id: str | None = None) -> Any:
+        return _FakeTrace(
+            request_id=request_id or "req_wrong_rv",
+            original_question=question,
+            parsed_intent={
+                "question_type": "channel_ranking",
+                "requires_vision": True,
+                "include_vision_evidence": True,
+                "requested_visual_type": "topomap",
+                "sample_id": "S001_R01_E000",
+            },
+            tool_invocations=[{"name": "rank_channels_for_sample"}],
+            evidence_bundle={
+                "success": True,
+                "ranked_evidence": {"ranking": ["C3", "C4"], "values": {"C3": 0.3}},
+                "vision_evidence": [],
+            },
+            final_answer="C3 and C4 are most discriminative.",
+        )
+
+
+def test_routing_discriminative_channels_stays_text(tmp_path, monkeypatch):
+    """Regression: ranking question must not require vision merely because a topomap exists."""
+    client, svc, _ = _wire_client(tmp_path, monkeypatch, MockFalseVisionSidecarRunner())
+    demo = svc.ensure_demo_experiment()
+    assert demo.linked_image_ids, "demo must have linked figures to reproduce the bug condition"
+    r = client.post(
+        "/api/analyze",
+        json={
+            "experimentId": "exp_demo_s001",
+            "question": "Which channels are most discriminative?",
+        },
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["route"] == "TEXT"
+    assert body["route_detail"]["requires_vision"] is False
+    assert body["tools_used"]
+    assert body["answer"]
+    warnings = " ".join(body.get("uncertainty") or "").lower()
+    assert "vlm" not in warnings
+    assert "missing vision" not in warnings
+
+
+def test_routing_ignores_false_requires_vision_on_ranking(tmp_path, monkeypatch):
+    client, _, _ = _wire_client(tmp_path, monkeypatch, MockWrongRequiresVisionRunner())
+    r = client.post(
+        "/api/analyze",
+        json={
+            "experimentId": "exp_demo_s001",
+            "question": "Which channels are most discriminative?",
+        },
+    )
+    assert r.status_code == 200, r.text
+    body = r.json()
+    assert body["route"] == "TEXT"
+    assert body["route_detail"]["requires_vision"] is False
+
+
+def test_decide_requires_vision_unit():
+    from neuro_agent.api.service import AnalysisService
+    from neuro_agent.api.experiment_store import ExperimentStore
+    from pathlib import Path
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as d:
+        svc = AnalysisService(store=ExperimentStore(root=Path(d)))
+        assert (
+            svc.decide_requires_vision(
+                question="Which channels are most discriminative?",
+                raw_intent={
+                    "requires_vision": False,
+                    "include_vision_evidence": True,
+                    "requested_visual_type": "topomap",
+                    "question_type": "channel_ranking",
+                },
+                image_id=None,
+                visualization_id=None,
+                context=None,
+            )
+            is False
+        )
+        assert (
+            svc.decide_requires_vision(
+                question="What does this figure show visually?",
+                raw_intent={"requires_vision": True, "question_type": "visual_inspection"},
+                image_id="img_1",
+                visualization_id=None,
+                context=None,
+            )
+            is True
+        )
+        assert (
+            svc.decide_requires_vision(
+                question="rank channels by beta",
+                raw_intent={
+                    "requires_vision": True,
+                    "include_vision_evidence": True,
+                    "requested_visual_type": "topomap",
+                    "question_type": "channel_ranking",
+                },
+                image_id=None,
+                visualization_id=None,
+                context=None,
+            )
+            is False
+        )
 
 
 def test_analyze_vision_required_mocked(tmp_path, monkeypatch):

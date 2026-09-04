@@ -50,15 +50,25 @@ export const ANALYSIS_TOOLS = [
 ] as const;
 
 export const EXAMPLE_QUESTIONS = [
-  "Which channels are most discriminative?",
-  "Which channels have the highest beta power?",
-  "Interpret the selected topomap figure",
-  "Look at the spectrogram — where is mu suppression strongest?",
-  "Show the strongest alpha/mu changes",
+  "Which five EEG channels have the highest beta-band power for this sample?",
+  "Compare the two conditions.",
+  "Interpret the selected figure.",
 ];
+
+/** Subtle starters for empty Interactive Demo / workspace agent (max 3). */
+export const STARTER_PROMPTS = EXAMPLE_QUESTIONS;
 
 export const DEMO_QUESTION =
   "Compare beta-band activity between left- and right-fist conditions.";
+
+/** Known S001_R01_E000 beta_power ranking (rank_channels_for_sample, top_k=5). */
+export const DEMO_BETA_TOP5: { channel: string; betaPowerUV2: number }[] = [
+  { channel: "T8", betaPowerUV2: 278.5670471191406 },
+  { channel: "IZ", betaPowerUV2: 239.53125 },
+  { channel: "O2", betaPowerUV2: 212.8015899658203 },
+  { channel: "P7", betaPowerUV2: 208.7153778076172 },
+  { channel: "O1", betaPowerUV2: 207.8683624267578 },
+];
 
 export const TIMELINE_STAGE_NAMES = [
   "Routing",
@@ -248,24 +258,24 @@ export function createDemoExperiment(): Experiment {
 }
 
 export const DEFAULT_SYSTEM_INFO: SystemInfo = {
-  textModel: "Qwen3-4B",
-  visionModel: "Qwen2.5-VL-3B",
-  precision: "INT8 W8A8",
-  serving: "vLLM",
+  textModel: "Qwen3-4B corrected SFT (HF+LoRA)",
+  visionModel: "Qwen2.5-VL-3B corrected SFT (HF+PEFT)",
+  precision: "BF16",
+  serving: "HF Transformers",
   route: "TEXT",
   verifierStatus: "skipped",
 };
 
 export const MOCK_SYSTEM_METRICS: SystemMetrics = {
-  model: "Qwen3-4B",
-  visionModel: "Qwen2.5-VL-3B",
-  postTraining: "SFT + RLVR",
-  serving: "vLLM",
-  precision: "INT8 W8A8",
-  ttftMs: 118,
-  tokensPerSec: 54.3,
-  p95LatencyMs: 740,
-  gpuUtilizationPct: 68,
+  model: "Qwen3-4B corrected SFT (HF+LoRA)",
+  visionModel: "Qwen2.5-VL-3B corrected SFT (HF+PEFT)",
+  postTraining: "corrected SFT",
+  serving: "HF Transformers (offline fixture)",
+  precision: "BF16",
+  ttftMs: null,
+  tokensPerSec: null,
+  p95LatencyMs: null,
+  gpuUtilizationPct: null,
   route: "TEXT",
   verifierStatus: "skipped",
 };

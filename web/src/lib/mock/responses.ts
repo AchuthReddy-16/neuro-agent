@@ -2,10 +2,10 @@ import type {
   AgentAnswer,
   AnalyzeResponse,
   TimelineStage,
-  VisualEvidenceItem,
 } from "@/lib/types";
 import {
   DEFAULT_SYSTEM_INFO,
+  DEMO_BETA_TOP5,
   DEMO_QUESTION,
   SAMPLE_IMAGES,
   TIMELINE_STAGE_NAMES,
@@ -16,33 +16,6 @@ let mockAnswerSeq = 0;
 function nextMockAnswerId(): string {
   mockAnswerSeq += 1;
   return `ans-local-${Date.now()}-${mockAnswerSeq}`;
-}
-
-function demoVisualEvidence(): VisualEvidenceItem[] {
-  return [
-    {
-      id: "viz-topomap-01",
-      label: "Topomap #01 — Left Fist (Beta)",
-      tab: "topomap",
-      observation:
-        "Contralateral sensorimotor focus visible over left central electrodes for left-fist imagery.",
-      imageUrl: SAMPLE_IMAGES.topomap_left,
-    },
-    {
-      id: "viz-psd-02",
-      label: "PSD #02 — Right Fist",
-      tab: "psd",
-      observation: "Beta-band peak structure differs between C3 and C4 traces.",
-      imageUrl: SAMPLE_IMAGES.psd_right,
-    },
-    {
-      id: "viz-compare-01",
-      label: "Comparison #01",
-      tab: "comparison",
-      observation: "Condition contrast plot highlights lateralized beta power differences.",
-      imageUrl: SAMPLE_IMAGES.comparison,
-    },
-  ];
 }
 
 function buildTimeline(opts: {
@@ -166,45 +139,44 @@ export function analyzeResponseToAgentAnswer(
   };
 }
 
+/** Condition-comparison fixture aligned with DEMO_QUESTION / "Compare the two conditions." */
 export function createDemoAnalyzeResponse(): AnalyzeResponse {
-  const vision = true;
+  const vision = false;
   const timeline = buildTimeline({ vision, verifier: false, recovery: false });
   return {
     id: "ans-demo-001",
     question: DEMO_QUESTION,
     answer:
-      "Beta-band (13–30 Hz) power over sensorimotor cortex is lateralized toward the contralateral hemisphere during motor imagery. For left-fist imagery, C3 (left motor cortex) shows elevated beta desynchronization relative to C4, consistent with event-related desynchronization patterns in BCI motor imagery paradigms.",
-    route: "VISION",
+      "Left-fist imagery shows higher mean beta-band power (0.168) than right-fist imagery (0.145) in this demo session — a +15.9% relative difference. Channel-level contrast is largest at C3 vs C4 (0.184 vs 0.132).",
+    route: "TEXT",
     computed_evidence: [
-      { label: "Highest beta-power channel", value: "C3", highlight: true, tool: "Channel Ranking" },
-      { label: "C3 beta power", value: "0.184", tool: "Band Power Analysis" },
-      { label: "C4 beta power", value: "0.132", tool: "Band Power Analysis" },
-      { label: "Difference", value: "+39.4%", highlight: true, tool: "Condition Comparison" },
-      { label: "Effect size (Cohen's d)", value: "0.87", tool: "Effect Size" },
-      { label: "Discriminative rank", value: "C3 > FC3 > CP3", tool: "Channel Ranking" },
+      { label: "Left-fist mean beta", value: "0.168", tool: "Condition Comparison" },
+      { label: "Right-fist mean beta", value: "0.145", tool: "Condition Comparison" },
+      { label: "Relative difference", value: "+15.9%", highlight: true, tool: "Condition Comparison" },
+      { label: "C3 beta (left-fist)", value: "0.184", highlight: true, tool: "Band Power Analysis" },
+      { label: "C4 beta (left-fist)", value: "0.132", tool: "Band Power Analysis" },
     ],
-    visual_evidence: demoVisualEvidence(),
+    visual_evidence: [],
     model_interpretation:
-      "Taken together, deterministic band-power statistics and plot-level observations support contralateral beta modulation during left-fist motor imagery in this demo session.",
-    tools_used: ["Band Power Analysis", "Condition Comparison", "Channel Ranking"],
+      "Deterministic condition comparison attributes the contrast to beta-band means already present in the demo fixture; no vision pass was required.",
+    tools_used: ["Condition Comparison", "Band Power Analysis"],
     verification: {
       status: "passed",
-      message: "Tool outputs consistent with visual evidence; no recovery required.",
+      message: "Tool outputs consistent; no recovery required.",
       recoveryPerformed: false,
     },
     uncertainty:
-      "Moderate confidence. Cross-subject EEG variability and electrode impedance differences may affect absolute power estimates. Single-trial imagery timing was not verified.",
+      "Moderate confidence. Demo fixture values for a single session; absolute scales may differ across subjects.",
     timing: {
-      totalMs: 787,
+      totalMs: 412,
       routingMs: 12,
       toolsMs: 210,
-      visionMs: 340,
       synthesisMs: 180,
-      verificationMs: 45,
+      verificationMs: 10,
     },
     system: {
       ...DEFAULT_SYSTEM_INFO,
-      route: "VISION",
+      route: "TEXT",
       verifierStatus: "passed",
     },
     timeline,
@@ -219,7 +191,6 @@ export function createDemoAnalyzeResponse(): AnalyzeResponse {
           right_fist: { mean_beta: 0.145 },
           delta_pct: 15.9,
         },
-        channel_ranking: ["C3", "FC3", "CP3", "C4", "FC4"],
       },
       null,
       2,
@@ -232,9 +203,92 @@ export function createDemoAgentAnswer(): AgentAnswer {
     isDemo: true,
     question: DEMO_QUESTION,
   });
-  answer.selectedImageId = "img-topo-demo";
-  answer.selectedImageName = "beta_topomap.png";
+  answer.selectedImageId = null;
+  answer.selectedImageName = null;
   return answer;
+}
+
+function isBetaChannelRankingQuestion(lower: string): boolean {
+  return (
+    /highest beta/.test(lower) ||
+    /five eeg channels/.test(lower) ||
+    /beta-band power/.test(lower) ||
+    (/which channels/.test(lower) && /beta/.test(lower))
+  );
+}
+
+function isConditionCompareQuestion(lower: string): boolean {
+  return (
+    /compare the two conditions/.test(lower) ||
+    /compare beta-band activity between left- and right-fist/.test(lower) ||
+    (/compare/.test(lower) && /(condition|left|right|fist)/.test(lower))
+  );
+}
+
+function isFigureInterpretQuestion(lower: string): boolean {
+  return (
+    /interpret the selected figure/.test(lower) ||
+    /\b(figure|plot|topomap|spectrogram|visual)\b/.test(lower)
+  );
+}
+
+function betaTop5Fixture(question: string): AnalyzeResponse {
+  const ranking = DEMO_BETA_TOP5;
+  const channels = ranking.map((r) => r.channel).join(", ");
+  const computed_evidence: AnalyzeResponse["computed_evidence"] = [];
+  for (let i = 0; i < ranking.length; i += 1) {
+    const r = ranking[i];
+    computed_evidence.push({
+      label: `Rank ${i + 1} · ${r.channel}`,
+      value: String(r.betaPowerUV2),
+      unit: "uV2",
+      highlight: i === 0,
+      tool: "rank_channels_for_sample",
+    });
+  }
+
+  return {
+    id: nextMockAnswerId(),
+    question,
+    answer: `The five EEG channels with the highest beta-band power for this sample are ${channels}.`,
+    route: "TEXT",
+    computed_evidence,
+    visual_evidence: [],
+    model_interpretation:
+      "Ranking is the descending beta_power ordering from the deterministic channel-ranking tool for this sample.",
+    tools_used: ["rank_channels_for_sample"],
+    verification: {
+      status: "passed",
+      message: "Ranking matches deterministic tool output.",
+      recoveryPerformed: false,
+    },
+    uncertainty:
+      "Moderate confidence. Values are sample-specific beta_power (uV2); ranking can change with band definition or preprocessing.",
+    timing: {
+      totalMs: 412,
+      routingMs: 10,
+      toolsMs: 240,
+      synthesisMs: 140,
+      verificationMs: 22,
+    },
+    system: {
+      ...DEFAULT_SYSTEM_INFO,
+      route: "TEXT",
+      verifierStatus: "passed",
+    },
+    timeline: buildTimeline({ vision: false, verifier: false, recovery: false }),
+    raw_tool_output: JSON.stringify(
+      {
+        ranking: ranking.map((r) => r.channel),
+        values: Object.fromEntries(ranking.map((r) => [r.channel, r.betaPowerUV2])),
+        metric: "beta_power",
+        units: "uV2",
+        top_k: 5,
+      },
+      null,
+      2,
+    ),
+  };
 }
 
 export function createMockAnswer(
@@ -244,73 +298,56 @@ export function createMockAnswer(
   const lower = question.toLowerCase();
   const selected = opts?.selectedImage;
 
-  if (lower.includes("discriminative") || lower.includes("channel") || lower.includes("highest beta")) {
-    const res: AnalyzeResponse = {
-      id: nextMockAnswerId(),
+  if (isBetaChannelRankingQuestion(lower)) {
+    const answer = analyzeResponseToAgentAnswer(betaTop5Fixture(question), {
+      isDemo: true,
       question,
-      answer:
-        "Sensorimotor channels C3, FC3, and CP3 show the strongest discriminability between left- and right-fist imagery conditions, with C3 ranking highest for beta-band lateralization.",
-      route: "TEXT",
-      computed_evidence: [
-        { label: "Top discriminative channel", value: "C3", highlight: true, tool: "Channel Ranking" },
-        { label: "C3 vs C4 separation", value: "0.052", unit: "μV²/Hz", tool: "Channel Ranking" },
-        { label: "Classifier accuracy (sample)", value: "78.4%", tool: "Classifier" },
-      ],
-      visual_evidence: [],
-      model_interpretation:
-        "Ranking is driven by deterministic channel-separation metrics; no vision pass was required for this question.",
-      tools_used: ["Channel Ranking", "Classifier"],
-      verification: {
-        status: "passed",
-        message: "Ranking stable across tool re-check.",
-        recoveryPerformed: false,
-      },
-      uncertainty: "Moderate confidence. Ranking based on held-out validation split (demo fixture).",
-      timing: {
-        totalMs: 412,
-        routingMs: 10,
-        toolsMs: 240,
-        synthesisMs: 140,
-        verificationMs: 22,
-      },
-      system: {
-        ...DEFAULT_SYSTEM_INFO,
-        route: "TEXT",
-        verifierStatus: "passed",
-      },
-      timeline: buildTimeline({ vision: false, verifier: false, recovery: false }),
-    };
-    const answer = analyzeResponseToAgentAnswer(res, { isDemo: true, question });
+    });
     answer.selectedImageId = null;
     answer.selectedImageName = null;
     return answer;
   }
 
-  if (lower.includes("alpha") || lower.includes("mu") || lower.includes("topomap") || lower.includes("figure") || lower.includes("plot") || lower.includes("spectrogram") || lower.includes("visual")) {
+  if (isConditionCompareQuestion(lower)) {
+    const base = createDemoAnalyzeResponse();
+    base.id = nextMockAnswerId();
+    base.question = question;
+    const answer = analyzeResponseToAgentAnswer(base, { isDemo: true, question });
+    answer.selectedImageId = null;
+    answer.selectedImageName = null;
+    return answer;
+  }
+
+  if (isFigureInterpretQuestion(lower) || lower.includes("alpha") || lower.includes("mu")) {
     const imageLabel = selected?.name ?? "Selected figure";
-    const imageUrl = selected?.url ?? SAMPLE_IMAGES.spectrogram;
+    const imageUrl = selected?.url ?? SAMPLE_IMAGES.topomap_left;
     const res: AnalyzeResponse = {
       id: nextMockAnswerId(),
       question,
       answer:
-        "Visual inspection of the selected figure, together with band-power tools, indicates prominent alpha/mu or beta-structure patterns over central electrodes consistent with motor imagery.",
+        `The selected figure (${imageLabel}) shows EEG-derived spatial/spectral structure consistent with motor-imagery band activity over central electrodes in this demo session.`,
       route: "VISION",
       computed_evidence: [
-        { label: "Strongest alpha/mu change", value: "C3", highlight: true, tool: "Band Power Analysis" },
-        { label: "Alpha suppression", value: "-24.6%", tool: "Band Power Analysis" },
         { label: "Selected figure", value: imageLabel, tool: "Vision routing" },
+        {
+          label: "C3 beta (fixture)",
+          value: "0.184",
+          highlight: true,
+          tool: "Band Power Analysis",
+        },
+        { label: "C4 beta (fixture)", value: "0.132", tool: "Band Power Analysis" },
       ],
       visual_evidence: [
         {
           id: selected?.id ?? "viz-selected",
           label: imageLabel,
-          tab: "spectrogram",
-          observation: `Vision model inspected ${imageLabel}: spatial/spectral structure supports the tool-derived summary.`,
+          tab: "topomap",
+          observation: `Visual inspection of ${imageLabel}: contralateral / spectral structure supports the tool-derived band summary.`,
           imageUrl,
         },
       ],
       model_interpretation:
-        "Figure-level observations align with deterministic band metrics for this demo recording.",
+        "Short visual read of the selected plot only; numeric band values come from the demo fixture tools.",
       tools_used: ["Band Power Analysis"],
       verification: {
         status: "passed",
@@ -339,6 +376,7 @@ export function createMockAnswer(
     return answer;
   }
 
+  // Unknown prompt: still return a condition-compare fixture rather than a mismatched ranking answer.
   const demo = createDemoAgentAnswer();
   demo.question = question;
   demo.id = nextMockAnswerId();

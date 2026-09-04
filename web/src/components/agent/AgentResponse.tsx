@@ -70,7 +70,10 @@ export function AgentResponseView({ answer }: { answer: AgentAnswer }) {
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <RouteBadge route={answer.route} />
         {answer.isDemo && (
-          <span className="text-[10px] text-muted">Sample demo — not a live model run</span>
+          <span className="text-[10px] text-muted">Offline fixture — not a live model run</span>
+        )}
+        {!answer.isDemo && (
+          <span className="text-[10px] text-muted">Live API</span>
         )}
         {answer.timing.totalMs != null && (
           <span className="text-[10px] font-mono text-muted ml-auto tabular-nums">
