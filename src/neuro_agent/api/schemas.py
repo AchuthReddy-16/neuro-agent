@@ -219,9 +219,14 @@ class ExperimentResponse(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     id: str
+    experiment_id: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("experiment_id", "experimentId"),
+        serialization_alias="experimentId",
+    )
     eeg: EEGMetadata | None = None
     figure: dict[str, Any] | None = None
-    metadata: ExperimentMetadata
+    metadata: ExperimentMetadata | None = None
     visualizations: list[VisualizationInfo] = Field(default_factory=list)
     modalities: dict[str, bool] = Field(default_factory=dict)
     files: list[UploadedArtifact] = Field(default_factory=list)
@@ -250,6 +255,10 @@ class AnalyzeRequest(BaseModel):
     context: dict[str, Any] | None = None
     tools: list[str] | None = None
     settings: dict[str, Any] | None = None
+    conversation_history: list[dict[str, Any]] | None = Field(
+        default=None,
+        validation_alias=AliasChoices("conversation_history", "conversationHistory"),
+    )
 
 
 class RouteInfo(BaseModel):
@@ -259,6 +268,12 @@ class RouteInfo(BaseModel):
     requires_vision: bool = False
     requested_visual_type: str | None = None
     question_type: str | None = None
+    components: list[str] | None = None
+    task_plan: dict[str, Any] | None = None
+    text_only: bool | None = None
+    needs_input: bool | None = None
+    need_kind: str | None = None
+    reason: str | None = None
 
 
 class ComputedEvidenceItem(BaseModel):
@@ -399,3 +414,4 @@ class AnalyzeResponse(BaseModel):
     raw_tool_output: str | None = None
     route_detail: RouteInfo | None = None
     experiment_id: str | None = None
+    analysis_results: dict[str, Any] | None = None

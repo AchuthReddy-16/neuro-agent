@@ -347,6 +347,22 @@ def create_app() -> FastAPI:
         )
 
     # ----- experiment / visualization -----
+    @app.post("/api/experiment", response_model=ExperimentResponse)
+    def create_experiment() -> ExperimentResponse:
+        """Create an empty live experiment session (Chat / Workspace)."""
+        store = api_deps.get_store()
+        rec = store.create()
+        return ExperimentResponse(
+            id=rec.id,
+            experiment_id=rec.id,
+            status=rec.status or "empty",
+            is_demo=False,
+            files=[],
+            visualizations=[],
+            modalities={"eeg": False, "metadata": False, "vision": False, "text": True},
+            analysis_history=[],
+        )
+
     @app.get("/api/experiment/{experiment_id}", response_model=ExperimentResponse)
     def get_experiment(experiment_id: str) -> ExperimentResponse:
         store = api_deps.get_store()
@@ -433,6 +449,7 @@ def create_app() -> FastAPI:
                 image_id=body.image_id,
                 visualization_id=body.visualization_id,
                 context=body.context,
+                conversation_history=body.conversation_history,
             )
         except KeyError:
             raise HTTPException(

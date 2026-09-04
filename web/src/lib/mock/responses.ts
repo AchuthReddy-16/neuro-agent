@@ -136,6 +136,7 @@ export function analyzeResponseToAgentAnswer(
     rawToolOutput: res.raw_tool_output,
     evidence: res.computed_evidence ?? [],
     visualRefs: visualEvidence,
+    routeDetail: res.route_detail,
   };
 }
 

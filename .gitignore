@@ -172,3 +172,5 @@ desktop.ini
 # Nested accidental copies
 # =============================================================================
 neuro-agent/
+.vercel/
+.env.local

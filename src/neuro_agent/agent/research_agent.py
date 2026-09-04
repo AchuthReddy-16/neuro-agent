@@ -14,9 +14,11 @@ from neuro_agent.agent.answer_format import format_grounded_answer
 from neuro_agent.agent.policies import is_format_only_failure, should_trigger_verifier
 from neuro_agent.agent.prompts import (
     ANSWER_SYSTEM_PROMPT,
+    CONVERSATIONAL_SYSTEM_PROMPT,
     INTENT_SYSTEM_PROMPT,
     RECOVERY_ANSWER_SYSTEM_PROMPT,
     build_answer_user_prompt,
+    build_conversational_user_prompt,
     build_intent_user_prompt,
 )
 from neuro_agent.agent.recovery import RecoveryResult, execute_recovery, plan_recovery
@@ -214,12 +216,72 @@ class PrimaryResearchAgent:
             result.failure_codes.append("verifier_parse_error")
         return result, latency_ms, peak_vram
 
+    def generate_conversational_answer(
+        self,
+        question: str,
+        *,
+        prior_context: str | None = None,
+        history_snippet: str | None = None,
+    ) -> tuple[str, float, float]:
+        """Text-only reply — no tools, no verifier."""
+        self.load()
+        prompt = self._chat_prompt(
+            CONVERSATIONAL_SYSTEM_PROMPT,
+            build_conversational_user_prompt(
+                question,
+                prior_context=prior_context,
+                history_snippet=history_snippet,
+            ),
+        )
+        return self._generate(prompt, self.config.answer_max_new_tokens)
+
+    def ask_text_only(
+        self,
+        question: str,
+        *,
+        request_id: str | None = None,
+        prior_context: str | None = None,
+        history_snippet: str | None = None,
+    ) -> AgentTrace:
+        """Conversational / concept path — skips intent, tools, and verifier."""
+        t_start = time.perf_counter()
+        req_id = request_id or new_request_id()
+        text, answer_ms, peak_vram = self.generate_conversational_answer(
+            question,
+            prior_context=prior_context,
+            history_snippet=history_snippet,
+        )
+        return AgentTrace(
+            request_id=req_id,
+            original_question=question,
+            parsed_intent={"requires_vision": False, "question_type": None, "text_only": True},
+            intent_valid=True,
+            routing_result=None,
+            tool_invocations=[],
+            evidence_bundle={"success": True, "tool_invocations": [], "numeric_evidence": {}},
+            final_answer=text,
+            runtime_ms=(time.perf_counter() - t_start) * 1000.0,
+            intent_latency_ms=0.0,
+            answer_latency_ms=answer_ms,
+            peak_vram_mb=peak_vram,
+            errors=[],
+            warnings=[],
+            verification_triggered=False,
+            trigger_reason=[],
+            first_pass_verification=None,
+            recovery=None,
+            final_verification=None,
+            verifier_latency_ms=0.0,
+            recovery_latency_ms=0.0,
+        )
+
     def ask(
         self,
         question: str,
         *,
         request_id: str | None = None,
         draft_corruption: Any | None = None,
+        enable_verification: bool | None = None,
     ) -> AgentTrace:
         """Full pipeline: intent → route → grounded answer."""
         t_start = time.perf_counter()
@@ -227,6 +289,11 @@ class PrimaryResearchAgent:
         errors: list[str] = []
         warnings: list[str] = []
         peak_vram = 0.0
+        verify_enabled = (
+            self.config.enable_verification
+            if enable_verification is None
+            else bool(enable_verification)
+        )
 
         intent_result, intent_ms, intent_vram = self.parse_intent(question)
         peak_vram = max(peak_vram, intent_vram)
@@ -284,7 +351,7 @@ class PrimaryResearchAgent:
                 final_answer = draft_answer
                 grounding = check_grounding(final_answer, bundle)
 
-                if self.config.enable_verification and draft_answer:
+                if verify_enabled and draft_answer:
                     det = run_deterministic_checks(
                         draft_answer,
                         bundle,

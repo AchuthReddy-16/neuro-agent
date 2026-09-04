@@ -14,6 +14,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Protocol
 
+from neuro_agent.agent.task_plan import (
+    ArtifactContext,
+    history_from_payload,
+    plan_task,
+)
+from neuro_agent.api.result_contracts import (
+    build_analysis_results_payload,
+)
 from neuro_agent.api.experiment_store import ExperimentRecord, ExperimentStore
 from neuro_agent.api.schemas import (
     AnalyzeResponse,
@@ -432,6 +440,7 @@ class AnalysisService:
         image_id: str | None = None,
         visualization_id: str | None = None,
         context: dict[str, Any] | None = None,
+        conversation_history: list[dict[str, Any]] | None = None,
     ) -> AnalyzeResponse:
         q = (question or "").strip()
         if not q:
@@ -442,37 +451,102 @@ class AnalysisService:
             raise KeyError("invalid_experiment_id")
 
         selected_image = image_id or visualization_id
-        # Do NOT auto-pick a linked topomap/figure merely because the experiment has one.
-        # That previously injected [image_id=…] into the prompt and forced a false VISION route.
+        history = history_from_payload(conversation_history)
+        artifacts = ArtifactContext(
+            has_sample=bool(rec.linked_sample_id),
+            has_image=bool(selected_image),
+            sample_id=rec.linked_sample_id,
+            image_id=selected_image,
+        )
+        plan = plan_task(q, history=history, artifacts=artifacts)
+
+        # Missing required input — clean user-facing message, no fake analysis.
+        if plan.needs_input:
+            return self._needs_input_response(
+                question=q,
+                experiment_id=experiment_id,
+                plan=plan,
+            )
 
         t0 = time.perf_counter()
         agent = self.ensure_agent()
 
-        # Enrich with sample context only — never inject an image_id unless the client
-        # explicitly selected one (and even then, routing still requires visual intent).
-        enriched = q
-        if rec.linked_sample_id and rec.linked_sample_id not in q:
-            enriched = f"{q} (sample {rec.linked_sample_id})"
-        if selected_image and selected_image not in enriched and self.question_has_visual_language(q):
+        history_snippet = None
+        if history:
+            bits = []
+            for turn in history[-6:]:
+                bits.append(f"{turn.role}: {turn.content[:400]}")
+            history_snippet = "\n".join(bits)
+
+        # TEXT-only conversational / concept / explanatory follow-up
+        if plan.text_only and not plan.use_vision and not plan.use_tools:
+            trace = agent.ask_text_only(
+                plan.resolved_question or q,
+                prior_context=plan.prior_context_for_answer,
+                history_snippet=history_snippet,
+            )
+            total_ms = (time.perf_counter() - t0) * 1000.0
+            response = self._trace_to_response(
+                trace=trace,
+                question=q,
+                experiment_id=experiment_id,
+                requires_vision=False,
+                raw_intent=getattr(trace, "parsed_intent", None) or {},
+                visual_items=[],
+                vision_ms=0.0,
+                total_ms_override=total_ms,
+                vlm_text=None,
+                task_plan=plan.to_dict(),
+            )
+            self._record_analyze(experiment_id, response, q)
+            return response
+
+        # Enrich with sample context ONLY when tools are planned.
+        enriched = plan.resolved_question or q
+        if plan.use_tools and rec.linked_sample_id and rec.linked_sample_id not in enriched:
+            enriched = f"{enriched} (sample {rec.linked_sample_id})"
+        if (
+            plan.use_vision
+            and selected_image
+            and selected_image not in enriched
+            and self.question_has_visual_language(q)
+        ):
             enriched = f"{enriched} [image_id={selected_image}]"
 
-        trace = agent.ask(enriched)
+        if plan.use_tools:
+            trace = agent.ask(
+                enriched,
+                enable_verification=plan.use_verify,
+            )
+        else:
+            # Vision-primary: still may run a light text path; prefer text_only shell
+            # then attach VLM below.
+            trace = agent.ask_text_only(
+                enriched,
+                prior_context=plan.prior_context_for_answer,
+                history_snippet=history_snippet,
+            )
+
         total_ms = (time.perf_counter() - t0) * 1000.0
 
         raw_intent = getattr(trace, "parsed_intent", None) or {}
-        requires_vision = self.decide_requires_vision(
-            question=q,
-            raw_intent=raw_intent if isinstance(raw_intent, dict) else {},
-            image_id=image_id,
-            visualization_id=visualization_id,
-            context=context,
-        )
+        requires_vision = bool(plan.use_vision)
+        # Still consult decide_requires_vision as a soft check when client sent context,
+        # but task plan is authoritative for production gating.
+        if requires_vision and context and context.get("requires_vision") is False:
+            requires_vision = self.decide_requires_vision(
+                question=q,
+                raw_intent=raw_intent if isinstance(raw_intent, dict) else {},
+                image_id=image_id,
+                visualization_id=visualization_id,
+                context=context,
+            )
+            requires_vision = True  # plan wins for explicit vision tasks
 
         vision_ms = 0.0
         vlm_text: str | None = None
         visual_items: list[VisualEvidenceItem] = []
 
-        # Sidecar vision evidence from tools / index (only keep when vision is required)
         evidence = getattr(trace, "evidence_bundle", None) or {}
         if requires_vision:
             for ve in evidence.get("vision_evidence") or []:
@@ -491,9 +565,8 @@ class AnalysisService:
                         provenance=ve.get("image_path"),
                     )
                 )
-        # Resolve visuals only for an explicitly selected image — never silently
-        # attach built-in sample topomaps in Live API mode.
-        resolve_image = selected_image
+
+        resolve_image = selected_image if requires_vision else None
         if requires_vision and not visual_items and resolve_image:
             try:
                 refs = resolve_vision_evidence(
@@ -512,7 +585,6 @@ class AnalysisService:
                             info = VisualizationInfo.model_validate(v)
                             break
                 if info is None:
-                    # uploaded artifact path
                     path = self.visualization_file_path(resolve_image)
                     if path is not None:
                         visual_items.append(
@@ -559,12 +631,9 @@ class AnalysisService:
                 visual_items[0].observation = vlm_text
             except Exception as exc:  # noqa: BLE001
                 vision_ms = (time.perf_counter() - t_v) * 1000.0
-                # Hard fail when VLM is enabled — do not invent interpretation text.
                 raise VisionRuntimeError(str(exc)) from exc
             vision_ms = (time.perf_counter() - t_v) * 1000.0
         elif requires_vision and not visual_items:
-            raise FileNotFoundError("missing_image_for_vision")
-        elif requires_vision and self.enable_vlm and not visual_items:
             raise FileNotFoundError("missing_image_for_vision")
 
         response = self._trace_to_response(
@@ -577,25 +646,90 @@ class AnalysisService:
             vision_ms=vision_ms,
             total_ms_override=total_ms,
             vlm_text=vlm_text,
+            task_plan=plan.to_dict(),
         )
 
+        self._record_analyze(experiment_id, response, q)
+        return response
+
+    def _record_analyze(
+        self, experiment_id: str, response: AnalyzeResponse, question: str
+    ) -> None:
         self.state.last_request_latency_ms = response.timing.total_ms
         self.state.last_route = response.route
         self.state.last_verifier_status = response.verification.status
         if response.timing.routing_ms is not None:
             self.state.last_ttft_ms = response.timing.routing_ms
-
         self.store.append_analysis(
             experiment_id,
             {
                 "id": response.id,
-                "question": q,
+                "question": question,
                 "route": response.route,
                 "answer_preview": (response.answer or "")[:240],
                 "total_ms": response.timing.total_ms,
+                "components": (response.route_detail.components if response.route_detail else None),
             },
         )
-        return response
+
+    def _needs_input_response(
+        self,
+        *,
+        question: str,
+        experiment_id: str,
+        plan: Any,
+    ) -> AnalyzeResponse:
+        msg = plan.missing_input_message or "Additional input is required."
+        return AnalyzeResponse(
+            answer=msg,
+            route="TEXT",
+            computed_evidence=[],
+            visual_evidence=[],
+            model_interpretation="",
+            tools_used=[],
+            verification=VerificationInfo(status="skipped"),
+            uncertainty="None",
+            timing=TimingInfo(total_ms=0.0, routing_ms=0.0),
+            system=SystemInfo(
+                text_model=TEXT_MODEL_LABEL,
+                vision_model=VISION_MODEL_LABEL,
+                precision=PRECISION,
+                serving=self.state.serving_mode,
+                route="TEXT",
+                verifier_status="skipped",
+                text_backend=self.state.text_backend,
+                vision_backend=self.state.vision_backend,
+                serving_mode=self.state.serving_mode,
+            ),
+            timeline=[],
+            question=question,
+            id=None,
+            raw_tool_output=None,
+            route_detail=RouteInfo(
+                intent=None,
+                requires_vision=False,
+                components=list(plan.components),
+                task_plan=plan.to_dict(),
+                text_only=True,
+                needs_input=True,
+                need_kind=plan.need_kind,
+                reason=plan.reason,
+            ),
+            experiment_id=experiment_id,
+            analysis_results=build_analysis_results_payload(
+                question=question,
+                route="TEXT",
+                tools_used=[],
+                computed_evidence=[],
+                visual_evidence=[],
+                answer=msg,
+                sample_id=None,
+                experiment_id=experiment_id,
+                task_plan=plan.to_dict(),
+                vlm_text=None,
+                image_id=None,
+            ),
+        )
 
     def _run_vlm(self, question: str, visual: VisualEvidenceItem) -> str:
         """Load/generate with text unloaded and a hard timeout (no indefinite hang)."""
@@ -707,6 +841,7 @@ class AnalysisService:
         vision_ms: float,
         total_ms_override: float | None,
         vlm_text: str | None,
+        task_plan: dict[str, Any] | None = None,
     ) -> AnalyzeResponse:
         evidence = getattr(trace, "evidence_bundle", None) or {}
         tools = []
@@ -800,18 +935,11 @@ class AnalysisService:
             ),
         ]
 
-        # Interpretation: VLM text when present; otherwise a short non-duplicate note.
+        # Interpretation: only when it adds something beyond the research answer.
         if vlm_text and vlm_text.strip() and vlm_text.strip() != answer.strip():
             interpretation = vlm_text.strip()
-        elif vlm_text and vlm_text.strip():
-            interpretation = (
-                "Vision-model reading of the selected figure supports the research answer above."
-            )
-        elif tools and answer:
-            interpretation = (
-                "Deterministic tool outputs were synthesized into the research answer above; "
-                "see Computed Evidence for the underlying values."
-            )
+        elif tools and answer and not (task_plan or {}).get("text_only"):
+            interpretation = ""
         else:
             interpretation = ""
 
@@ -828,10 +956,18 @@ class AnalysisService:
                 )
             cleaned_visuals.append(item)
 
+        components = list((task_plan or {}).get("components") or [])
+        if not components:
+            components = ["TEXT"]
+            if tools:
+                components.append("TOOLS")
+            if requires_vision:
+                components.append("VISION")
+
         return AnalyzeResponse(
             answer=answer,
             route=route,  # type: ignore[arg-type]
-            computed_evidence=computed,
+            computed_evidence=computed if tools else [],
             visual_evidence=cleaned_visuals if requires_vision else [],
             model_interpretation=interpretation,
             tools_used=tools,
@@ -859,14 +995,33 @@ class AnalysisService:
             timeline=timeline,
             question=question,
             id=getattr(trace, "request_id", None),
-            raw_tool_output=json.dumps(evidence, default=str)[:8000] if evidence else None,
+            raw_tool_output=json.dumps(evidence, default=str)[:8000] if evidence and tools else None,
             route_detail=RouteInfo(
                 intent=raw_intent or None,
                 requires_vision=requires_vision,
                 requested_visual_type=raw_intent.get("requested_visual_type"),
                 question_type=raw_intent.get("question_type"),
+                components=components,
+                task_plan=task_plan,
+                text_only=bool((task_plan or {}).get("text_only")),
+                needs_input=bool((task_plan or {}).get("needs_input")),
+                need_kind=(task_plan or {}).get("need_kind"),
+                reason=(task_plan or {}).get("reason"),
             ),
             experiment_id=experiment_id,
+            analysis_results=build_analysis_results_payload(
+                question=question,
+                route=route,
+                tools_used=tools,
+                computed_evidence=computed if tools else [],
+                visual_evidence=cleaned_visuals if requires_vision else [],
+                answer=answer,
+                sample_id=None,
+                experiment_id=experiment_id,
+                task_plan=task_plan,
+                vlm_text=vlm_text,
+                image_id=None,
+            ),
         )
 
     def _extract_computed_evidence(

@@ -17,11 +17,18 @@ export function LandingHero() {
           </div>
           <span className="text-sm font-medium text-secondary tracking-tight">Neuro Agent</span>
         </div>
-        <Link href="/workspace">
-          <Button variant="ghost" size="sm">
-            Workspace
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/chat">
+            <Button variant="ghost" size="sm">
+              Chat
+            </Button>
+          </Link>
+          <Link href="/workspace">
+            <Button variant="ghost" size="sm">
+              Workspace
+            </Button>
+          </Link>
+        </div>
       </header>
 
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 pb-20">
@@ -35,13 +42,13 @@ export function LandingHero() {
             <span className="text-accent">Research Agent</span>
           </h1>
           <p className="text-base md:text-lg text-secondary max-w-xl mx-auto leading-relaxed">
-            Deterministic EEG tools, evidence-grounded answers, and vision when needed —
-            try it quickly, or open the full scientific workstation.
+            Live task-aware assistant for EEG analysis, evidence-grounded answers, and vision when
+            you attach a figure.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
-            <Link href="/demo">
-              <Button size="lg">Open Interactive Demo</Button>
+            <Link href="/chat">
+              <Button size="lg">Open Chat</Button>
             </Link>
             <Link href="/workspace">
               <Button variant="outline" size="lg">
@@ -52,29 +59,27 @@ export function LandingHero() {
 
           <div className="pt-4 grid sm:grid-cols-2 gap-3 text-left max-w-lg mx-auto">
             <p className="text-[11px] text-muted leading-snug rounded-lg border border-default/60 px-3 py-2">
-              <span className="text-secondary font-medium">Interactive Demo</span>
+              <span className="text-secondary font-medium">Chat</span>
               <br />
-              Conversational try-it flow. Attach files with +.
+              Clean conversational research assistant. Attach files when needed.
             </p>
             <p className="text-[11px] text-muted leading-snug rounded-lg border border-default/60 px-3 py-2">
               <span className="text-secondary font-medium">Workspace</span>
               <br />
-              Full experiment controls, explorer, and evidence.
+              Full experiment controls, explorer, and analysis views.
             </p>
           </div>
 
           <ul className="pt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] text-muted font-mono">
-            <li>Text · Qwen3-4B</li>
+            <li>Text · Qwen3-4B LoRA BF16</li>
             <li className="text-border-strong">·</li>
             <li>Vision · Qwen2.5-VL-3B</li>
-            <li className="text-border-strong">·</li>
-            <li>INT8 W8A8 · vLLM</li>
           </ul>
         </div>
       </main>
 
       <footer className="relative z-10 text-center pb-8 text-[11px] text-muted">
-        Deployed API via NEXT_PUBLIC_API_BASE_URL
+        Live API via NEXT_PUBLIC_API_BASE_URL
       </footer>
     </div>
   );

@@ -1,5 +1,6 @@
-import { InteractiveDemo } from "@/components/demo/InteractiveDemo";
+import { redirect } from "next/navigation";
 
-export default function DemoPage() {
-  return <InteractiveDemo />;
+/** Legacy /demo → production /chat */
+export default function DemoRedirectPage() {
+  redirect("/chat");
 }

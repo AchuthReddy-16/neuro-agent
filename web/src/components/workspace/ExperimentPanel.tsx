@@ -78,14 +78,14 @@ export function ExperimentPanel() {
       <div className="p-3 space-y-3">
         {backendMode === "unavailable" && !hasData && (
           <p className="text-[10px] text-signal-warning leading-relaxed">
-            Backend offline — uploads stay local; analysis uses explicitly labeled offline fixtures.
+            Live API unavailable. Start the backend to upload data and run analysis.
           </p>
         )}
         {backendMode === "live" && !hasData && (
           <p className="text-[10px] text-muted leading-relaxed">
             Live API connected. Upload JSON with{" "}
-            <span className="font-mono">sample_id</span> (e.g. S001_R01_E000), figures, or try the
-            demo experiment.
+            <span className="font-mono">sample_id</span> (e.g. S001_R01_E000), figures, or load the
+            linked sample.
           </p>
         )}
 
@@ -283,7 +283,7 @@ export function ExperimentPanel() {
 
         {!experiment?.isDemo && (
           <Button variant="secondary" size="sm" className="w-full" onClick={loadDemo}>
-            Load S026 Demo
+            Load linked sample
           </Button>
         )}
 

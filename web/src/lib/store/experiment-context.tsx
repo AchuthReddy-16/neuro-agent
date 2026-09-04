@@ -27,33 +27,38 @@ import {
   ApiError,
   analyzeLive,
   checkHealth,
+  createExperiment,
   fetchSystemMetricsWithFallback,
   getExperiment,
   uploadAsset,
 } from "@/lib/api";
 import { mergeUploadResponse, mapExperimentFromApi } from "@/lib/experiment-map";
 import {
-  classifyLiveInput,
   explicitLiveImageId,
-  experimentHasDatasetContext,
-  inferNeedsVision,
-  resolveSelectedImage,
 } from "@/lib/routing";
+import { progressiveTimeline } from "@/lib/mock/responses";
 import {
-  createDemoAgentAnswer,
-  createMockAnswer,
-  progressiveTimeline,
-} from "@/lib/mock/responses";
-import {
-  createDemoExperiment,
   EEG_SUPPORTED,
   FIGURE_SUPPORTED,
   METADATA_SUPPORTED,
   MOCK_SYSTEM_METRICS,
 } from "@/lib/constants";
+import {
+  analysisResultsFromVisualizations,
+  emptyAnalysisResults,
+  emptyVisionState,
+  setReadyResult,
+  type AnalysisResultsState,
+  type VisionState,
+} from "@/lib/analysis-results";
+import {
+  applyAnswerToAnalysisResults,
+  applyAnswerToVisionState,
+  visionStateFromSelectedImage,
+} from "@/lib/merge-analysis-results";
 
 /** Which product surface owns the current client session. */
-export type ExperienceMode = "demo" | "workspace";
+export type ExperienceMode = "chat" | "workspace";
 
 interface ExperimentContextValue {
   experienceMode: ExperienceMode;
@@ -75,13 +80,19 @@ interface ExperimentContextValue {
   explorerLoading: boolean;
   workspaceEpoch: number;
   selectedImage: ExperimentFile | null;
+  /** Typed EEG/analysis result slots — independent of uploaded figures. */
+  analysisResults: AnalysisResultsState;
+  /** Vision / figure attachment + interpretation — never feeds EEG tabs. */
+  visionState: VisionState;
   setActiveTab: (tab: VisualizationTab) => void;
   focusVisualization: (id: string, tab?: VisualizationTab) => void;
-  /** Enter Interactive Demo — isolated session, loads built-in demo assets only. */
+  /** Enter live Chat — empty experiment session, no fixtures. */
+  beginChatSession: () => Promise<void>;
+  /** @deprecated use beginChatSession */
   beginDemoSession: () => Promise<void>;
-  /** Enter Research Workspace — clears demo session; starts clean. */
+  /** Enter Research Workspace — clears session; starts clean. */
   beginWorkspaceSession: () => void;
-  /** Load built-in sample inside Workspace (does not switch to Interactive Demo). */
+  /** Load linked live sample from API when available (workspace helper). */
   loadDemo: () => void | Promise<void>;
   uploadEEG: (file: File) => Promise<void>;
   uploadFigure: (file: File) => Promise<void>;
@@ -92,6 +103,7 @@ interface ExperimentContextValue {
   updateMetadata: (patch: Partial<Experiment["metadata"]>) => void;
   clearExperiment: () => void;
   analyze: (question: string) => Promise<void>;
+  /** @deprecated */
   runDemoAnalysis: () => Promise<void>;
   restoreAnalysis: (historyId: string) => void;
   updateSettings: (patch: Partial<AppSettings>) => void;
@@ -288,8 +300,16 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
   const [explorerLoading, setExplorerLoading] = useState(false);
   const [liveMetrics, setLiveMetrics] = useState<SystemMetrics | null>(null);
   const [workspaceEpoch, setWorkspaceEpoch] = useState(0);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResultsState>(emptyAnalysisResults);
+  const [visionState, setVisionState] = useState<VisionState>(emptyVisionState);
   const experimentRef = useRef<Experiment | null>(null);
   experimentRef.current = experiment;
+  const answersRef = useRef<AgentAnswer[]>([]);
+  answersRef.current = answers;
+  const analysisResultsRef = useRef(analysisResults);
+  analysisResultsRef.current = analysisResults;
+  const visionStateRef = useRef(visionState);
+  visionStateRef.current = visionState;
 
   const currentAnswer = useMemo(() => {
     if (activeAnswerId) {
@@ -384,8 +404,32 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  const ensureLiveExperiment = useCallback(async (): Promise<Experiment | null> => {
+    const health = await checkHealth();
+    if (health.status !== "ok" && health.status !== "degraded") {
+      setBackendMode("unavailable");
+      setHealthInfo(health);
+      return null;
+    }
+    setBackendMode("live");
+    setHealthInfo(health);
+
+    const current = experimentRef.current;
+    const expId = current?.experiment_id ?? current?.id;
+    if (expId && /^exp_/.test(expId) && !current?.isDemo) {
+      return current;
+    }
+
+    const raw = await createExperiment();
+    const mapped = mapExperimentFromApi(raw);
+    const next = { ...mapped, isDemo: false };
+    experimentRef.current = next;
+    setExperiment(next);
+    return next;
+  }, []);
+
+  /** Workspace helper: attach the API-linked sample experiment (live only). */
   const loadDemo = useCallback(async () => {
-    // Always start from a clean slate — never inherit prior user uploads/selection
     revokeBlobUrls(experimentRef.current);
     setUploadError(null);
     setAnalysisError(null);
@@ -396,6 +440,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
     setIsAnalyzing(false);
     setWorkspaceEpoch((e) => e + 1);
     setExperiment(null);
+    setAnalysisResults(emptyAnalysisResults());
+    setVisionState(emptyVisionState());
 
     try {
       const health = await checkHealth();
@@ -404,30 +450,82 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         setHealthInfo(health);
         const raw = await getExperiment(LIVE_DEMO_EXPERIMENT_ID);
         const mapped = mapExperimentFromApi(raw);
-        setExperiment({ ...mapped, isDemo: true });
-        setActiveTab("topomap");
+        // Linked sample provides dataset context; do not treat as offline fixture.
+        setExperiment({ ...mapped, isDemo: false });
+        setAnalysisResults(
+          analysisResultsFromVisualizations(mapped.visualizations, {
+            experimentId: mapped.experiment_id ?? mapped.id,
+            sampleId: mapped.metadata?.sampleId ?? null,
+            source: "linked_sample",
+          }),
+        );
+        // Seed waveform live slot when EEG metadata present
+        if (mapped.eeg) {
+          setAnalysisResults((prev) => ({
+            ...prev,
+            waveform: setReadyResult(
+              "waveform",
+              {
+                kind: "live_eeg",
+                channelLabels: mapped.eeg?.channelLabels,
+                samplingRateHz: mapped.eeg?.samplingRateHz,
+              },
+              {
+                experimentId: mapped.experiment_id ?? mapped.id,
+                sampleId: mapped.metadata?.sampleId ?? null,
+                source: "linked_sample_eeg",
+              },
+            ),
+          }));
+        }
+        setVisionState(emptyVisionState());
+        setActiveTab(
+          mapped.visualizations.some((v) => v.tab === "topomap")
+            ? "topomap"
+            : mapped.eeg
+              ? "waveform"
+              : "topomap",
+        );
         setFocusedVizId(mapped.visualizations[0]?.id ?? null);
         setExplorerLoading(false);
         return;
       }
+      setBackendMode("unavailable");
+      setAnalysisError("Live API unavailable — cannot load sample.");
     } catch {
-      /* fall through to local demo */
+      setBackendMode("unavailable");
+      setAnalysisError("Live API unavailable — cannot load sample.");
     }
-
-    setBackendMode("unavailable");
-    setExperiment(createDemoExperiment());
-    setActiveTab("topomap");
-    setFocusedVizId("viz-topomap-01");
     setExplorerLoading(false);
   }, []);
 
-  const beginDemoSession = useCallback(async () => {
-    setExperienceMode("demo");
-    await loadDemo();
-  }, [loadDemo]);
+  const beginChatSession = useCallback(async () => {
+    setExperienceMode("chat");
+    revokeBlobUrls(experimentRef.current);
+    setUploadError(null);
+    setAnalysisError(null);
+    setExplorerError(null);
+    setAnswers([]);
+    setActiveAnswerId(null);
+    setIsAnalyzing(false);
+    setExperiment(null);
+    setAnalysisResults(emptyAnalysisResults());
+    setVisionState(emptyVisionState());
+    setFocusedVizId(null);
+    setExplorerLoading(true);
+    setWorkspaceEpoch((e) => e + 1);
+    try {
+      await ensureLiveExperiment();
+    } catch {
+      setBackendMode("unavailable");
+      setAnalysisError("Live API unavailable.");
+    }
+    setExplorerLoading(false);
+  }, [ensureLiveExperiment]);
+
+  const beginDemoSession = beginChatSession;
 
   const beginWorkspaceSession = useCallback(() => {
-    // Leaving Interactive Demo must not carry demo/user hybrid state into workspace
     revokeBlobUrls(experimentRef.current);
     setExperienceMode("workspace");
     setExperiment(null);
@@ -435,6 +533,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
     setActiveAnswerId(null);
     setFocusedVizId(null);
     setActiveTab("waveform");
+    setAnalysisResults(emptyAnalysisResults());
+    setVisionState(emptyVisionState());
     setUploadError(null);
     setAnalysisError(null);
     setExplorerError(null);
@@ -567,6 +667,14 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
           patchFileProgress("eeg", fileId, { progress: 40 });
           await uploadViaApi(file, "eeg", fileId);
           setActiveTab("waveform");
+          setAnalysisResults((prev) => ({
+            ...prev,
+            waveform: setReadyResult(
+              "waveform",
+              { kind: "live_eeg" },
+              { source: "user_upload_eeg", generatedAt: new Date().toISOString() },
+            ),
+          }));
         } catch (e) {
           const msg = e instanceof ApiError ? e.message : "EEG upload failed";
           setUploadError(msg);
@@ -577,6 +685,15 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
 
       await simulateUploadProgress((p) => patchFileProgress("eeg", fileId, { progress: p }));
       patchFileProgress("eeg", fileId, { status: "ready", progress: 100 });
+      setActiveTab("waveform");
+      setAnalysisResults((prev) => ({
+        ...prev,
+        waveform: setReadyResult(
+          "waveform",
+          { kind: "live_eeg" },
+          { source: "user_upload_eeg", generatedAt: new Date().toISOString() },
+        ),
+      }));
       setExperiment((prev) => {
         if (!prev) return prev;
         return syncModalities({
@@ -639,9 +756,12 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
               prevSelected && prev.image_files.some((f) => f.id === prevSelected)
                 ? prevSelected
                 : prev.selected_image_id ?? res.assetId;
-            return syncModalities({ ...prev, selected_image_id: keep });
+            const next = syncModalities({ ...prev, selected_image_id: keep });
+            const sel = next.image_files.find((f) => f.id === keep) ?? null;
+            setVisionState((vs) => visionStateFromSelectedImage(vs, sel));
+            return next;
           });
-          setActiveTab("topomap");
+          // Do NOT force topomap tab / analysis slots — figure is vision-only.
         } catch (e) {
           const msg = e instanceof ApiError ? e.message : "Figure upload failed";
           setUploadError(msg);
@@ -652,7 +772,16 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
 
       await simulateUploadProgress((p) => patchFileProgress("figure", fileId, { progress: p }));
       patchFileProgress("figure", fileId, { status: "ready", progress: 100 });
-      setActiveTab("topomap");
+      setVisionState((vs) =>
+        visionStateFromSelectedImage(vs, {
+          id: fileId,
+          name: file.name,
+          kind: "figure",
+          sizeBytes: file.size,
+          status: "ready",
+          url: blobUrl,
+        }),
+      );
     },
     [backendMode, patchFileProgress, uploadViaApi, experiment, baseForUpload],
   );
@@ -707,9 +836,12 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
     setExperiment((prev) => {
       if (!prev) return prev;
       if (!prev.image_files.some((f) => f.id === imageId)) return prev;
-      return syncModalities({ ...prev, selected_image_id: imageId });
+      const next = syncModalities({ ...prev, selected_image_id: imageId });
+      const sel = next.image_files.find((f) => f.id === imageId) ?? null;
+      setVisionState((vs) => visionStateFromSelectedImage(vs, sel));
+      return next;
     });
-    setActiveTab("topomap");
+    // Tab click unchanged — selecting a figure must not rewrite analysis tabs.
   }, []);
 
   const clearImageSelection = useCallback(() => {
@@ -717,6 +849,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       if (!prev) return prev;
       return syncModalities({ ...prev, selected_image_id: null });
     });
+    setVisionState((vs) => visionStateFromSelectedImage(vs, null));
   }, []);
 
   const removeFile = useCallback((fileId: string) => {
@@ -763,6 +896,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
     setActiveAnswerId(null);
     setFocusedVizId(null);
     setActiveTab("waveform");
+    setAnalysisResults(emptyAnalysisResults());
+    setVisionState(emptyVisionState());
     setUploadError(null);
     setAnalysisError(null);
     setExplorerError(null);
@@ -771,7 +906,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const simulateAnalysis = useCallback(
-    async (question: string, forceLocalDemo = false) => {
+    async (question: string) => {
       setIsAnalyzing(true);
       setAnalysisError(null);
       setExplorerError(null);
@@ -783,163 +918,99 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // Live mode: never treat built-in demo/sample figures as user attachments.
-      const liveAttachmentImages =
-        !forceLocalDemo && (backendMode === "live" || experiment?.isDemo)
-          ? (experiment?.image_files ?? []).filter(
-              (f) => !f.id.includes("-demo") && !f.id.startsWith("viz-"),
-            )
-          : experiment?.image_files ?? [];
-      const liveSelectedImageId =
-        !forceLocalDemo && experiment?.isDemo
-          ? null
-          : experiment?.selected_image_id ?? null;
-
-      const decision = classifyLiveInput(q, {
-        uploadedImages: liveAttachmentImages,
-        selectedImageId: liveSelectedImageId,
-        hasLinkedSample: experimentHasDatasetContext(experiment),
-        hasEegOrMetadataUpload: Boolean(
-          experiment?.eeg_files.some((f) => f.status === "ready") ||
-            experiment?.metadata_files.some((f) => f.status === "ready"),
-        ),
-      });
-
-      // Offline fixture mode may still use built-in sample assets.
-      const needsVision = forceLocalDemo
-        ? inferNeedsVision(q) || decision.needsVision
-        : decision.needsVision;
-      let selected: ExperimentFile | null = null;
-
-      if (!forceLocalDemo && decision.missingInputMessage) {
-        setAnalysisError(decision.missingInputMessage);
+      if (backendMode === "unavailable") {
+        setAnalysisError(
+          "Live API is unavailable. Start the backend and refresh — offline fixtures are disabled.",
+        );
         setIsAnalyzing(false);
         return;
       }
 
-      if (needsVision && !forceLocalDemo) {
-        const resolved = resolveSelectedImage(
-          liveAttachmentImages,
-          liveSelectedImageId,
-        );
-        if (!resolved.ok) {
-          setAnalysisError(resolved.reason);
-          setIsAnalyzing(false);
-          return;
+      let exp = experimentRef.current;
+      try {
+        if (!exp || !(exp.experiment_id ?? exp.id)?.match(/^exp_/)) {
+          exp = await ensureLiveExperiment();
         }
-        selected = resolved.image;
-        if (selected && experiment && experiment.selected_image_id !== selected.id) {
-          setExperiment((prev) =>
-            prev ? syncModalities({ ...prev, selected_image_id: selected!.id }) : prev,
-          );
-        }
+      } catch {
+        setAnalysisError("Live API unavailable.");
+        setIsAnalyzing(false);
+        return;
+      }
+      if (!exp) {
+        setAnalysisError("Live API unavailable — cannot create an experiment session.");
+        setIsAnalyzing(false);
+        return;
       }
 
-      // Live mode always hits the real API. Fixtures only when explicitly offline / forced.
-      const useLive = backendMode === "live" && !forceLocalDemo;
-      let final: AgentAnswer;
+      const expId = exp.experiment_id ?? exp.id;
+      const imageId = explicitLiveImageId(exp);
+      const selected =
+        imageId ? exp.image_files.find((f) => f.id === imageId) ?? null : null;
 
-      try {
-        if (useLive) {
-          const expId = experiment?.experiment_id ?? experiment?.id;
-          if (!expId || !/^exp_/.test(expId)) {
-            setAnalysisError(
-              "No backend experiment yet — upload metadata/figures (or load a sample) first.",
-            );
-            setIsAnalyzing(false);
-            return;
-          }
-          // Only explicitly selected/uploaded images — never silent demo visualization IDs.
-          const imageId = needsVision
-            ? selected?.id ?? explicitLiveImageId(experiment)
-            : null;
-          final = await analyzeLive({
-            experimentId: expId,
-            question: q,
-            imageId,
-            visualizationId: null,
-            context: needsVision && imageId ? { requires_vision: true } : undefined,
-          });
-          final = {
-            ...final,
-            isDemo: false,
-            selectedImageId: imageId,
-            selectedImageName: selected?.name ?? null,
-          };
-          // Refresh metrics after live analyze
-          try {
-            const { metrics, source } = await fetchSystemMetricsWithFallback();
-            if (source === "live") setLiveMetrics(metrics);
-          } catch {
-            /* ignore */
-          }
-        } else if (forceLocalDemo) {
-          final = createDemoAgentAnswer();
-        } else if (backendMode === "unavailable") {
-          final = createMockAnswer(q, {
-            selectedImage: needsVision
-              ? selected
-                ? { id: selected.id, name: selected.name, url: selected.url }
-                : experiment?.figure
-                  ? {
-                      id: experiment.figure.id,
-                      name: experiment.figure.filename,
-                      url: experiment.figure.url,
-                    }
-                  : null
-              : null,
-          });
-        } else {
-          // Should not happen: non-live with backend claiming live. Fail closed.
-          setAnalysisError("Backend mode inconsistent — refresh and try again.");
-          setIsAnalyzing(false);
-          return;
-        }
-      } catch (e) {
-        if (useLive) {
-          setAnalysisError(humanizeAnalysisError(e));
-          setIsAnalyzing(false);
-          return;
-        }
-        // Offline / unavailable only — never after a live backend failure
-        final = createMockAnswer(q, {
-          selectedImage: selected
-            ? { id: selected.id, name: selected.name, url: selected.url }
-            : null,
+      // Conversation history for multi-turn task planning (backend).
+      const conversationHistory: Array<Record<string, unknown>> = [];
+      for (const a of answersRef.current.slice(-6)) {
+        conversationHistory.push({ role: "user", content: a.question });
+        conversationHistory.push({
+          role: "assistant",
+          content: a.answer,
+          tools_used: a.toolsUsed,
+          route: a.route,
+          evidence_summary: a.computedEvidence
+            ?.slice(0, 8)
+            .map((e) => `${e.label}=${e.value}`)
+            .join("; "),
         });
       }
-      // Local demo / offline: enforce frontend TEXT routing when tools-only
-      if (!useLive && !needsVision) {
+
+      let final: AgentAnswer;
+      try {
+        final = await analyzeLive({
+          experimentId: expId,
+          question: q,
+          imageId,
+          visualizationId: null,
+          conversationHistory,
+          context: imageId ? { has_image: true } : undefined,
+        });
         final = {
           ...final,
-          route: "TEXT",
-          visualEvidence: [],
-          visualRefs: [],
-          system: { ...final.system, route: "TEXT" },
-          selectedImageId: null,
-          selectedImageName: null,
-          timeline: final.timeline.map((s) =>
-            s.name === "Vision analysis" ? { ...s, status: "skipped", latencyMs: undefined } : s,
-          ),
+          isDemo: false,
+          selectedImageId: imageId,
+          selectedImageName: selected?.name ?? null,
         };
+        try {
+          const { metrics, source } = await fetchSystemMetricsWithFallback();
+          if (source === "live") setLiveMetrics(metrics);
+        } catch {
+          /* ignore */
+        }
+      } catch (e) {
+        setAnalysisError(humanizeAnalysisError(e));
+        setIsAnalyzing(false);
+        return;
       }
 
       const steps = final.timeline.length
         ? final.timeline
         : [
-            { id: "t-done", name: "Synthesis", status: "complete" as const, latencyMs: final.timing.totalMs },
+            {
+              id: "t-done",
+              name: "Synthesis",
+              status: "complete" as const,
+              latencyMs: final.timing.totalMs,
+            },
           ];
       setActiveAnswerId(final.id);
-      const stepDelay = useLive ? 80 : forceLocalDemo ? 380 : 260;
-      for (let i = 0; i < steps.length; i++) {
-        await new Promise((r) => setTimeout(r, stepDelay));
+      for (let i = 0; i < Math.min(steps.length, 4); i++) {
+        await new Promise((r) => setTimeout(r, 40));
         setAnswers((prev) => {
           const others = prev.filter((a) => a.id !== final.id);
           return [
             ...others,
             {
               ...final,
-              answer: "",
+              answer: i < steps.length - 1 ? "" : final.answer,
               modelInterpretation: "",
               timeline: progressiveTimeline(steps, i),
             },
@@ -953,6 +1024,22 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       });
       setActiveAnswerId(final.id);
       setIsAnalyzing(false);
+
+      // Write into typed result slots — never cross-overwrite unrelated tabs.
+      if (experienceMode === "workspace") {
+        const sampleId =
+          (exp.metadata as { sampleId?: string } | undefined)?.sampleId ?? null;
+        setAnalysisResults((prev) =>
+          applyAnswerToAnalysisResults(prev, final, {
+            experimentId: expId,
+            sampleId,
+          }),
+        );
+        setVisionState((prev) => applyAnswerToVisionState(prev, final, selected));
+      } else {
+        // Chat: vision interpretation only; do not populate workspace explorer slots.
+        setVisionState((prev) => applyAnswerToVisionState(prev, final, selected));
+      }
 
       const historyItem: AnalysisHistoryItem = {
         id: newLocalId("hist"),
@@ -969,42 +1056,38 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         return { ...prev, analysis_history: history };
       });
 
-      if (settings.autoGenerateVisuals && experiment) {
-        if (final.route === "VISION" && (selected?.url || experiment.figure?.url)) {
-          setActiveTab("topomap");
+      if (settings.autoGenerateVisuals && experienceMode === "workspace") {
+        // Switch view to the result type that was produced — not to a selected figure.
+        if (final.route === "VISION") {
+          /* keep current analysis tab; vision lives in attachment strip + agent answer */
+        } else if (final.toolsUsed.some((t) => /rank|band/i.test(t))) {
+          setActiveTab("band_power");
+        } else if (final.toolsUsed.some((t) => /compar/i.test(t))) {
+          setActiveTab("comparison");
         } else {
           const firstViz = final.visualEvidence[0];
-          if (firstViz) {
-            setActiveTab(firstViz.tab as VisualizationTab);
+          const tab = firstViz?.tab as VisualizationTab | undefined;
+          if (tab && ["waveform", "psd", "spectrogram", "topomap", "band_power", "comparison"].includes(tab)) {
+            setActiveTab(tab);
             setFocusedVizId(firstViz.id);
           }
         }
       }
     },
-    [experiment, settings.autoGenerateVisuals, backendMode],
+    [backendMode, settings.autoGenerateVisuals, ensureLiveExperiment, experienceMode],
   );
 
   const analyze = useCallback(
     async (question: string) => {
       if (!question.trim()) return;
-      if (!experiment) {
-        setAnalysisError("Load or create an experiment before analyzing.");
-        return;
-      }
       await simulateAnalysis(question);
     },
-    [simulateAnalysis, experiment],
+    [simulateAnalysis],
   );
 
   const runDemoAnalysis = useCallback(async () => {
-    if (!experiment) await loadDemo();
-    // When live, prefer real API on the demo experiment (not local mock fixtures)
-    if (backendMode === "live") {
-      await simulateAnalysis(createDemoAgentAnswer().question, false);
-    } else {
-      await simulateAnalysis(createDemoAgentAnswer().question, true);
-    }
-  }, [experiment, loadDemo, simulateAnalysis, backendMode]);
+    setAnalysisError("Use Chat or ask a question in the workspace — demo fixtures are disabled.");
+  }, []);
 
   const restoreAnalysis = useCallback(
     (historyId: string) => {
@@ -1060,8 +1143,11 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       explorerLoading,
       workspaceEpoch,
       selectedImage,
+      analysisResults,
+      visionState,
       setActiveTab,
       focusVisualization,
+      beginChatSession,
       beginDemoSession,
       beginWorkspaceSession,
       loadDemo: loadWorkspaceDemoSample,
@@ -1103,7 +1189,10 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       explorerLoading,
       workspaceEpoch,
       selectedImage,
+      analysisResults,
+      visionState,
       focusVisualization,
+      beginChatSession,
       beginDemoSession,
       beginWorkspaceSession,
       loadWorkspaceDemoSample,

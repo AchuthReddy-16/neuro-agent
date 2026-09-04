@@ -73,8 +73,35 @@ Write a concise natural-language research answer that directly addresses the use
 - End with a single line exactly of the form: Uncertainty: <brief limitation or None>"""
 
 
+CONVERSATIONAL_SYSTEM_PROMPT = """You are a helpful neuroscience research assistant.
+Answer the user's message naturally and concisely.
+- For greetings, respond warmly and briefly offer how you can help with EEG/neuroscience research.
+- For conceptual questions, explain clearly without inventing sample-specific numbers.
+- For follow-ups, use any supplied prior conversation/result context; do not invent new numeric values.
+- Do NOT invent tool results, channel rankings, or experimental measurements.
+- Do NOT prefix with labels like "Answer:", "Evidence:", or "Tools used:".
+- If a brief limitation is needed, end with: Uncertainty: <brief note or None>
+Otherwise end with: Uncertainty: None"""
+
+
 def build_intent_user_prompt(question: str) -> str:
     return f"Question: {question.strip()}\n\nJSON:"
+
+
+def build_conversational_user_prompt(
+    question: str,
+    *,
+    prior_context: str | None = None,
+    history_snippet: str | None = None,
+) -> str:
+    parts = []
+    if history_snippet:
+        parts.append(f"Recent conversation:\n{history_snippet.strip()}")
+    if prior_context:
+        parts.append(f"Relevant prior result:\n{prior_context.strip()}")
+    parts.append(f"Current user message:\n{question.strip()}")
+    parts.append("Assistant reply:")
+    return "\n\n".join(parts)
 
 
 RECOVERY_ANSWER_SYSTEM_PROMPT = ANSWER_SYSTEM_PROMPT + (

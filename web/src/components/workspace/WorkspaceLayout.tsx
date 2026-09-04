@@ -19,10 +19,10 @@ export function WorkspaceLayout() {
   const { beginWorkspaceSession } = useExperiment();
   const booted = useRef(false);
 
-  // Legacy link /workspace?demo=1 → dedicated Interactive Demo
+  // Legacy /workspace?demo=1 → Chat
   useEffect(() => {
     if (searchParams.get("demo") === "1") {
-      router.replace("/demo");
+      router.replace("/chat");
     }
   }, [searchParams, router]);
 
@@ -54,9 +54,9 @@ export function WorkspaceLayout() {
           </Link>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Link href="/demo">
+          <Link href="/chat">
             <span className="text-[10px] text-muted hover:text-secondary hidden sm:inline px-2">
-              Interactive Demo
+              Chat
             </span>
           </Link>
           <ModalityBadges />

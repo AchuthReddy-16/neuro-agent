@@ -1,10 +1,15 @@
 "use client";
 
 import clsx from "clsx";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useMemo, useRef, type ReactNode } from "react";
 import { useExperiment } from "@/lib/store/experiment-context";
 import { EEG_ACCEPT, EXPLORER_TABS } from "@/lib/constants";
-import type { Visualization } from "@/lib/types";
+import type { Visualization, VisualizationTab } from "@/lib/types";
+import {
+  emptyStateMessage,
+  type AnalysisResultsState,
+  type TypedAnalysisResult,
+} from "@/lib/analysis-results";
 import { LiveWaveform } from "@/components/visualizations/LiveWaveform";
 import { ImageViewer } from "@/components/visualizations/ImageViewer";
 import { EmptyState, EmptyStateButton } from "@/components/ui/EmptyState";
@@ -87,26 +92,95 @@ function VizToolbar({
   );
 }
 
-function PlotMeta({ viz, isDemo }: { viz: Visualization | null; isDemo?: boolean }) {
-  if (!viz) return null;
+function PlotMeta({
+  title,
+  channel,
+  band,
+  condition,
+  compareWith,
+  provenanceNote,
+}: {
+  title?: string | null;
+  channel?: string | null;
+  band?: string | null;
+  condition?: string | null;
+  compareWith?: string | null;
+  provenanceNote?: string | null;
+}) {
   const bits = [
-    viz.channel && `Ch ${viz.channel}`,
-    viz.band && viz.band,
-    viz.condition,
-    viz.compareWith && `vs ${viz.compareWith}`,
+    channel && `Ch ${channel}`,
+    band,
+    condition,
+    compareWith && `vs ${compareWith}`,
   ].filter(Boolean);
 
   return (
-    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[10px] text-muted">
-      <span className="text-secondary">{viz.title}</span>
+    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[10px] text-muted px-0.5">
+      {title && <span className="text-secondary">{title}</span>}
       {bits.map((b) => (
-        <span key={String(b)} className="font-mono before:content-['·'] before:mr-2.5 before:text-border-strong">
+        <span
+          key={String(b)}
+          className="font-mono before:content-['·'] before:mr-2.5 before:text-border-strong"
+        >
           {b}
         </span>
       ))}
-      {isDemo && <span className="text-muted/70 before:content-['·'] before:mr-2.5">sample</span>}
+      {provenanceNote && (
+        <span className="text-muted/70 before:content-['·'] before:mr-2.5">{provenanceNote}</span>
+      )}
     </div>
   );
+}
+
+function TabEmpty({ title, body }: { title: string; body: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center h-full text-center px-6">
+      <p className="text-sm text-primary mb-1">{title}</p>
+      <p className="text-xs text-muted max-w-sm leading-relaxed">{body}</p>
+    </div>
+  );
+}
+
+function TabLoading({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center h-full text-center px-6">
+      <p className="text-sm text-primary mb-1">{label}</p>
+      <p className="text-xs text-muted">Computing…</p>
+    </div>
+  );
+}
+
+function TabError({ message }: { message: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center h-full text-center px-6">
+      <p className="text-sm text-signal-error mb-1">Analysis error</p>
+      <p className="text-xs text-muted max-w-sm leading-relaxed">{message}</p>
+    </div>
+  );
+}
+
+function resultForTab(
+  results: AnalysisResultsState,
+  tab: VisualizationTab,
+): TypedAnalysisResult<Record<string, unknown>> {
+  const cast = (r: TypedAnalysisResult<unknown>) =>
+    r as unknown as TypedAnalysisResult<Record<string, unknown>>;
+  switch (tab) {
+    case "waveform":
+      return cast(results.waveform);
+    case "spectrogram":
+      return cast(results.spectrogram);
+    case "psd":
+      return cast(results.psd);
+    case "band_power":
+      return cast(results.bandPower);
+    case "topomap":
+      return cast(results.topomap);
+    case "comparison":
+      return cast(results.comparison);
+    default:
+      return cast(results.waveform);
+  }
 }
 
 export function NeuralExplorer() {
@@ -114,42 +188,24 @@ export function NeuralExplorer() {
     experiment,
     activeTab,
     setActiveTab,
-    focusedVizId,
     loadDemo,
     uploadEEG,
     uploadFigure,
     explorerLoading,
     explorerError,
     selectedImage,
+    analysisResults,
+    visionState,
   } = useExperiment();
-  const [localViz, setLocalViz] = useState<Visualization | null>(null);
   const eegInputRef = useRef<HTMLInputElement>(null);
   const figInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setLocalViz(null);
-  }, [activeTab, focusedVizId, selectedImage?.id]);
-
-  const tabViz = useMemo(() => {
-    if (!experiment) return [];
-    return experiment.visualizations.filter((v) => v.tab === activeTab);
-  }, [experiment, activeTab]);
-
-  const currentViz = useMemo(() => {
-    if (!tabViz.length) return null;
-    if (focusedVizId) {
-      const found = tabViz.find((v) => v.id === focusedVizId);
-      if (found) return found;
-    }
-    return tabViz[0];
-  }, [tabViz, focusedVizId]);
-
-  const displayViz = localViz ?? currentViz;
-  const currentIdx = displayViz ? tabViz.findIndex((v) => v.id === displayViz.id) : -1;
-
-  // Prefer explicitly selected uploaded/demo figure for non-waveform views
-  const selectedUrl = selectedImage?.url;
-  const showSelectedFigure = !!selectedUrl && activeTab !== "waveform";
+  const hasEeg = Boolean(experiment?.eeg_files.some((f) => f.status === "ready") || experiment?.eeg);
+  const hasImages = Boolean(experiment?.image_files.length);
+  const tabResult = useMemo(
+    () => resultForTab(analysisResults, activeTab),
+    [analysisResults, activeTab],
+  );
 
   if (explorerLoading) {
     return <ExplorerSkeleton />;
@@ -159,7 +215,7 @@ export function NeuralExplorer() {
     return (
       <EmptyState
         title="Load an experiment to begin"
-        description="Upload sample JSON + figures — or open the live demo experiment."
+        description="Upload sample JSON + optional figures, or load the linked live sample."
         actions={
           <>
             <EmptyStateButton onClick={() => eegInputRef.current?.click()}>
@@ -177,7 +233,7 @@ export function NeuralExplorer() {
               }}
             />
             <EmptyStateButton onClick={loadDemo} variant="primary">
-              Try Demo
+              Load linked sample
             </EmptyStateButton>
           </>
         }
@@ -192,160 +248,312 @@ export function NeuralExplorer() {
         description={explorerError}
         actions={
           <EmptyStateButton onClick={loadDemo} variant="primary">
-            Reload Demo
+            Reload sample
           </EmptyStateButton>
         }
       />
     );
   }
 
-  const hasEeg = experiment.eeg_files.length > 0 || !!experiment.eeg;
-  const hasImages = experiment.image_files.length > 0;
   const hasMeta = experiment.metadata_files.length > 0;
-  const onlyMeta = hasMeta && !hasEeg && !hasImages && experiment.visualizations.length === 0;
+  const onlyMeta =
+    hasMeta && !hasEeg && !hasImages && Object.values(analysisResults).every((r) => r.status === "idle");
 
   if (onlyMeta) {
     return (
       <EmptyState
         title="Metadata loaded"
-        description="Add EEG or a figure to populate the Neural Data Explorer. Text-only tool questions can still be asked."
+        description="Add EEG for explorer analysis tabs, or a figure for vision questions. Text-only questions still work."
         actions={
           <>
             <EmptyStateButton onClick={() => eegInputRef.current?.click()}>Upload EEG</EmptyStateButton>
             <EmptyStateButton onClick={() => figInputRef.current?.click()}>Upload figure</EmptyStateButton>
-            <input ref={eegInputRef} type="file" accept={EEG_ACCEPT} className="hidden" aria-hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadEEG(f); }} />
-            <input ref={figInputRef} type="file" accept=".png,.jpg,.jpeg,.webp" className="hidden" aria-hidden onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadFigure(f); }} />
+            <input
+              ref={eegInputRef}
+              type="file"
+              accept={EEG_ACCEPT}
+              className="hidden"
+              aria-hidden
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) void uploadEEG(f);
+              }}
+            />
+            <input
+              ref={figInputRef}
+              type="file"
+              accept=".png,.jpg,.jpeg,.webp"
+              className="hidden"
+              aria-hidden
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) void uploadFigure(f);
+              }}
+            />
           </>
         }
       />
     );
   }
 
-  const hasVizForTab =
-    activeTab === "waveform"
-      ? hasEeg || !!displayViz?.imageUrl || !!selectedUrl
-      : showSelectedFigure || !!displayViz?.imageUrl;
-
-  const plotSrc = showSelectedFigure
-    ? selectedUrl!
-    : displayViz?.imageUrl;
+  const emptyCopy = emptyStateMessage(activeTab, { hasEeg, hasImage: hasImages });
 
   return (
     <div className="flex flex-col h-full gap-2">
       <ExperimentSummaryStrip />
 
+      {/* Vision context is informational only — never drives EEG tab plotSrc */}
       {selectedImage && (
         <div className="flex items-baseline gap-2 px-0.5 text-[11px]">
-          <span className="text-muted uppercase tracking-wide text-[10px]">Selected figure</span>
+          <span className="text-muted uppercase tracking-wide text-[10px]">Vision attachment</span>
           <span className="font-mono text-signal-vision">{selectedImage.name}</span>
-          {experiment.image_files.length > 1 && (
-            <span className="text-[10px] text-muted">
-              ({experiment.image_files.length} figures)
-            </span>
+          {visionState.interpretation.status === "ready" && (
+            <span className="text-[10px] text-muted">· interpretation ready</span>
           )}
         </div>
       )}
 
       {!selectedImage && hasImages && (
         <p className="text-[10px] text-signal-warning px-0.5">
-          Multiple figures available — select one in the left panel for vision context.
+          Figures available — select one in the left panel for vision questions (not for EEG tabs).
         </p>
       )}
 
       <div
         className="flex gap-0 overflow-x-auto shrink-0 border-b border-default"
         role="tablist"
-        aria-label="Visualization type"
+        aria-label="Analysis result type"
       >
-        {EXPLORER_TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={clsx(
-              "px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px",
-              activeTab === tab.id
-                ? "text-accent border-accent"
-                : "text-muted border-transparent hover:text-secondary",
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
+        {EXPLORER_TABS.map((tab) => {
+          const r = resultForTab(analysisResults, tab.id);
+          const ready = r.status === "ready";
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={clsx(
+                "px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px",
+                activeTab === tab.id
+                  ? "text-accent border-accent"
+                  : "text-muted border-transparent hover:text-secondary",
+              )}
+            >
+              {tab.label}
+              {ready && <span className="ml-1 text-[9px] text-accent/70">●</span>}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col">
-        {!hasVizForTab ? (
-          <div className="flex flex-col items-center justify-center h-full text-center px-6">
-            <p className="text-sm text-primary mb-1">
-              {hasEeg && !hasImages
-                ? "EEG loaded — no figure yet"
-                : hasImages && !hasEeg
-                  ? "Figure loaded"
-                  : "No visualization for this tab"}
-            </p>
-            <p className="text-xs text-muted max-w-sm leading-relaxed">
-              {hasEeg && !hasImages
-                ? "Waveform is available; upload a figure for topomap/PSD/spectrogram views, or ask a text/tool question."
-                : hasImages && !selectedImage
-                  ? "Select a figure in the left panel to display it here."
-                  : experiment.isDemo
-                    ? "This demo fixture does not include this view."
-                    : "Upload EEG or a figure, or load the S026 demo."}
-            </p>
-          </div>
+        {tabResult.status === "loading" ? (
+          <TabLoading label={`Loading ${activeTab.replace("_", " ")}`} />
+        ) : tabResult.status === "error" ? (
+          <TabError message={tabResult.error || "Result unavailable."} />
         ) : activeTab === "waveform" ? (
-          <LiveWaveform
-            staticImageUrl={selectedUrl && !hasEeg ? selectedUrl : displayViz?.imageUrl}
-            enabled={hasEeg}
-          />
-        ) : plotSrc ? (
+          tabResult.status === "ready" || hasEeg ? (
+            <LiveWaveform
+              staticImageUrl={
+                tabResult.status === "ready" &&
+                tabResult.payload &&
+                tabResult.payload.kind === "static_plot"
+                  ? (tabResult.payload.imageUrl as string | undefined)
+                  : undefined
+              }
+              enabled={hasEeg || tabResult.status === "ready"}
+            />
+          ) : (
+            <TabEmpty title={emptyCopy.title} body={emptyCopy.body} />
+          )
+        ) : activeTab === "band_power" && tabResult.status === "ready" ? (
+          <BandPowerPanel result={tabResult} />
+        ) : activeTab === "comparison" && tabResult.status === "ready" ? (
+          <ComparisonPanel result={tabResult} />
+        ) : tabResult.status === "ready" &&
+          tabResult.payload &&
+          typeof tabResult.payload.imageUrl === "string" &&
+          tabResult.payload.imageUrl ? (
           <ImageViewer
-            src={plotSrc}
-            alt={selectedImage?.name ?? displayViz?.title ?? "Figure"}
-            hasPrev={!showSelectedFigure && currentIdx > 0}
-            hasNext={!showSelectedFigure && currentIdx < tabViz.length - 1}
-            onPrev={
-              showSelectedFigure
-                ? undefined
-                : () => {
-                    if (currentIdx > 0) setLocalViz(tabViz[currentIdx - 1]);
-                  }
+            src={tabResult.payload.imageUrl}
+            alt={
+              (typeof tabResult.payload.title === "string" && tabResult.payload.title) ||
+              `${activeTab} plot`
             }
-            onNext={
-              showSelectedFigure
-                ? undefined
-                : () => {
-                    if (currentIdx < tabViz.length - 1) setLocalViz(tabViz[currentIdx + 1]);
-                  }
-            }
-            toolbar={
-              displayViz && !showSelectedFigure
-                ? (viewControls) => (
-                    <VizToolbar
-                      viz={displayViz}
-                      onChange={(patch) => setLocalViz({ ...displayViz, ...patch })}
-                      viewControls={viewControls}
-                    />
-                  )
-                : (viewControls) => (
-                    <div className="flex justify-end py-1">{viewControls}</div>
-                  )
-            }
+            toolbar={(viewControls) => {
+              const p = tabResult.payload || {};
+              const viz: Visualization = {
+                id: (p.visualizationId as string) || `typed-${activeTab}`,
+                tab: activeTab,
+                title: (p.title as string) || activeTab,
+                imageUrl: String(p.imageUrl),
+                index: 0,
+                channel: p.channel as string | undefined,
+                band: p.band as string | undefined,
+                condition: p.condition as string | undefined,
+                compareWith: p.compareWith as string | undefined,
+              };
+              return (
+                <VizToolbar
+                  viz={viz}
+                  onChange={() => {
+                    /* display-only controls — do not mutate typed results */
+                  }}
+                  viewControls={viewControls}
+                />
+              );
+            }}
           />
-        ) : null}
+        ) : (
+          <TabEmpty title={emptyCopy.title} body={emptyCopy.body} />
+        )}
       </div>
 
-      {showSelectedFigure ? (
-        <div className="text-[10px] text-muted font-mono px-0.5">
-          {selectedImage?.name}
-          <span className="before:content-['·'] before:mx-2">active figure</span>
-        </div>
-      ) : (
-        <PlotMeta viz={displayViz} isDemo={experiment.isDemo} />
+      {tabResult.status === "ready" && (
+        <PlotMeta
+          title={
+            tabResult.payload && typeof tabResult.payload.title === "string"
+              ? tabResult.payload.title
+              : activeTab.replace("_", " ")
+          }
+          channel={tabResult.provenance.channel}
+          band={tabResult.provenance.band}
+          condition={
+            tabResult.provenance.conditionA ||
+            (tabResult.payload && typeof tabResult.payload.condition === "string"
+              ? tabResult.payload.condition
+              : undefined)
+          }
+          compareWith={
+            tabResult.provenance.conditionB ||
+            (tabResult.payload && typeof tabResult.payload.compareWith === "string"
+              ? tabResult.payload.compareWith
+              : undefined)
+          }
+          provenanceNote={tabResult.provenance.source || undefined}
+        />
       )}
+    </div>
+  );
+}
+
+function BandPowerPanel({
+  result,
+}: {
+  result: TypedAnalysisResult<Record<string, unknown>>;
+}) {
+  const payload = result.payload;
+  const imageUrl = typeof payload?.imageUrl === "string" ? payload.imageUrl : null;
+  const rowsRaw = payload?.rows;
+  const ranking = payload?.ranking as string[] | undefined;
+  const values = payload?.values as Record<string, number | string> | undefined;
+  const units = typeof payload?.units === "string" ? payload.units : undefined;
+
+  if (imageUrl && (!Array.isArray(rowsRaw) || rowsRaw.length === 0)) {
+    return (
+      <ImageViewer
+        src={imageUrl}
+        alt="Band power"
+        toolbar={(viewControls) => <div className="flex justify-end py-1">{viewControls}</div>}
+      />
+    );
+  }
+
+  const rows: { label: string; value: string; unit?: string; highlight?: boolean }[] =
+    Array.isArray(rowsRaw) && rowsRaw.length
+      ? (rowsRaw as { label: string; value: string; unit?: string; highlight?: boolean }[])
+      : (ranking || []).map((ch, i) => ({
+          label: `Rank ${i + 1} · ${ch}`,
+          value: String(values?.[ch] ?? ch),
+          unit: units,
+          highlight: i === 0,
+        }));
+
+  if (!rows.length && !imageUrl) {
+    return <TabEmpty title="No band-power rows" body="No computed band-power values yet." />;
+  }
+
+  return (
+    <div className="flex flex-col h-full min-h-0 gap-2 p-2">
+      {imageUrl && (
+        <div className="max-h-[40%] min-h-0">
+          <ImageViewer
+            src={imageUrl}
+            alt="Band power plot"
+            toolbar={(viewControls) => <div className="flex justify-end py-1">{viewControls}</div>}
+          />
+        </div>
+      )}
+      <div className="overflow-auto border border-default/60 rounded-md">
+        <table className="w-full text-[12px]">
+          <tbody>
+            {rows.map((row, idx) => (
+              <tr key={`${row.label}-${idx}`} className="border-b border-default/50 last:border-0">
+                <td className="py-1.5 px-2 text-muted">{row.label}</td>
+                <td
+                  className={clsx(
+                    "py-1.5 px-2 text-right font-mono tabular-nums",
+                    row.highlight ? "text-signal-eeg font-semibold" : "text-primary",
+                  )}
+                >
+                  {row.value}
+                  {row.unit && <span className="text-muted ml-1 font-sans text-[10px]">{row.unit}</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function ComparisonPanel({
+  result,
+}: {
+  result: TypedAnalysisResult<Record<string, unknown>>;
+}) {
+  const payload = result.payload;
+  const imageUrl = typeof payload?.imageUrl === "string" ? payload.imageUrl : null;
+  const conditionA = typeof payload?.conditionA === "string" ? payload.conditionA : undefined;
+  const conditionB = typeof payload?.conditionB === "string" ? payload.conditionB : undefined;
+  const winner = typeof payload?.winner === "string" ? payload.winner : undefined;
+  const summary = typeof payload?.summary === "string" ? payload.summary : undefined;
+
+  return (
+    <div className="flex flex-col h-full min-h-0 gap-2 p-2">
+      {imageUrl && (
+        <div className="max-h-[45%] min-h-0">
+          <ImageViewer
+            src={imageUrl}
+            alt="Comparison"
+            toolbar={(viewControls) => <div className="flex justify-end py-1">{viewControls}</div>}
+          />
+        </div>
+      )}
+      <div className="space-y-2 text-[12px]">
+        {(conditionA || conditionB) && (
+          <p className="text-secondary">
+            {conditionA || "A"} vs {conditionB || "B"}
+            {winner ? ` · higher: ${winner}` : ""}
+          </p>
+        )}
+        {summary && <p className="text-primary leading-relaxed">{summary}</p>}
+        {(payload?.valueA != null || payload?.valueB != null) && (
+          <p className="font-mono text-[11px] text-muted">
+            {conditionA || "A"}={String(payload?.valueA)} · {conditionB || "B"}=
+            {String(payload?.valueB)}
+          </p>
+        )}
+        {result.provenance.sampleIdA && (
+          <p className="text-[10px] text-muted font-mono">
+            A: {result.provenance.sampleIdA}
+            {result.provenance.sampleIdB ? ` · B: ${result.provenance.sampleIdB}` : ""}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

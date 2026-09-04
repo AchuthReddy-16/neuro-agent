@@ -168,10 +168,10 @@ export function ResearchAgentPanel() {
         {!conversationStarted && !experiment && (
           <EmptyState
             title="No experiment loaded"
-            description="Upload data in the experiment panel, or open the Interactive Demo."
+            description="Upload data in the experiment panel, or load the linked sample."
             actions={
               <Button size="sm" variant="outline" onClick={() => void loadDemo()}>
-                Load demo sample
+                Load linked sample
               </Button>
             }
           />

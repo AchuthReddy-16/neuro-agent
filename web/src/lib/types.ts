@@ -207,6 +207,7 @@ export interface AgentAnswer {
   selectedImageName?: string | null;
   evidence?: ComputedEvidenceItem[];
   visualRefs?: VisualEvidenceItem[];
+  routeDetail?: AnalyzeResponse["route_detail"];
 }
 
 export interface SystemMetrics {
@@ -282,6 +283,7 @@ export interface AnalyzeRequest {
   selectedImageId?: string | null;
   visualizationId?: string | null;
   context?: Record<string, unknown> | null;
+  conversationHistory?: Array<Record<string, unknown>> | null;
 }
 
 export interface AnalyzeResponse {
@@ -304,6 +306,12 @@ export interface AnalyzeResponse {
     requires_vision?: boolean;
     requested_visual_type?: string | null;
     question_type?: string | null;
+    components?: string[];
+    task_plan?: Record<string, unknown>;
+    text_only?: boolean;
+    needs_input?: boolean;
+    need_kind?: string | null;
+    reason?: string | null;
   };
   experiment_id?: string;
 }

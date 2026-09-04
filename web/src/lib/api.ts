@@ -110,6 +110,7 @@ export function analyzeExperiment(req: AnalyzeRequest): Promise<AnalyzeResponse>
     tools: req.tools,
     settings: req.settings,
     context: req.context ?? null,
+    conversationHistory: req.conversationHistory ?? null,
   };
   // Cold VLM load can exceed 60s; keep a hard upper bound (matches NEURO_API_VLM_TIMEOUT_S).
   return apiFetch<AnalyzeResponse>("/api/analyze", {
@@ -117,6 +118,15 @@ export function analyzeExperiment(req: AnalyzeRequest): Promise<AnalyzeResponse>
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
     signal: AbortSignal.timeout(300_000),
+  });
+}
+
+/** POST /api/experiment — create empty live session */
+export function createExperiment(): Promise<ApiExperimentPayload> {
+  return apiFetch<ApiExperimentPayload>("/api/experiment", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
   });
 }
 
