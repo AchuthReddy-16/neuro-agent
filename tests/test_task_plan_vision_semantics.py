@@ -36,6 +36,26 @@ def test_selected_image_does_not_hijack_concepts():
         assert p.text_only and not p.use_vision, f"expected TEXT for {q!r}, got {p.reason}"
 
 
+def test_explain_deictic_artifact_routes_to_vision():
+    """explain + this/that + image/figure → VISION; true concepts stay TEXT."""
+    arts = ArtifactContext(has_image=True, image_id="asset_a", has_sample=True)
+    for q in [
+        "explain this image",
+        "can u explain this image once what does it tells",
+        "Explain this figure.",
+    ]:
+        p = plan_task(q, artifacts=arts)
+        assert p.use_vision, f"expected VISION for {q!r}, got {p.reason}"
+        assert not p.use_tools
+        assert not p.needs_input
+        assert not p.text_only
+
+    # Image selected but not referenced — concept explanation stays TEXT.
+    p_concept = plan_task("Explain motor imagery.", artifacts=arts)
+    assert p_concept.text_only and not p_concept.use_vision
+    assert p_concept.reason == "concept_explanation"
+
+
 def test_visual_task_without_image_needs_input():
     arts = ArtifactContext(has_image=False, has_sample=True)
     for q in [

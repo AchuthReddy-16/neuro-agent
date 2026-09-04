@@ -153,6 +153,13 @@ _VIZ_DOMAIN = re.compile(
 _PURE_DEFINITION = re.compile(
     r"(?i)^\s*(what\s+is|what'?s|define|explain|meaning\s+of)\b",
 )
+# "explain this image/figure/…" is visual inspection — not a concept definition.
+# True concepts ("Explain motor imagery.") lack this deixis+artifact pattern.
+_EXPLAIN_DEICTIC_ARTIFACT = re.compile(
+    r"(?i)\bexplain\b.{0,48}\b"
+    r"(?:this|that|these|those|the\s+(?:selected|current|attached|uploaded))\s+"
+    r"(?:image|figure|plot|topomap|spectrogram|heatmap)\b"
+)
 
 
 def _last_user_assistant(
@@ -203,6 +210,9 @@ def _has_visual_inspection_semantics(question: str) -> bool:
     q = question.strip()
     if not q:
         return False
+    # explain + deictic + artifact noun ("explain this image") — not "Explain ERD."
+    if _EXPLAIN_DEICTIC_ARTIFACT.search(q):
+        return True
     inspect = bool(_VISUAL_INSPECT_ACT.search(q))
     content = bool(_VISIBLE_CONTENT.search(q))
     deictic = bool(_DEICTIC_PRESENT.search(q))
