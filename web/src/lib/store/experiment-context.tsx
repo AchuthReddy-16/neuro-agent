@@ -56,7 +56,13 @@ import {
   applyAnswerToVisionState,
   visionStateFromSelectedImage,
 } from "@/lib/merge-analysis-results";
-
+import {
+  captureSurfaceSnapshot,
+  emptySurfaceSnapshot,
+  stripUserFiguresForLinkedSample,
+  type SurfaceSnapshot,
+} from "@/lib/surface-session";
+import { migrateClientStorage } from "@/lib/storage-migration";
 /** Which product surface owns the current client session. */
 export type ExperienceMode = "chat" | "workspace";
 
@@ -86,15 +92,17 @@ interface ExperimentContextValue {
   visionState: VisionState;
   setActiveTab: (tab: VisualizationTab) => void;
   focusVisualization: (id: string, tab?: VisualizationTab) => void;
-  /** Enter live Chat — empty experiment session, no fixtures. */
+  /** Enter live Chat — isolated session; never inherits workspace figures/selection. */
   beginChatSession: () => Promise<void>;
   /** @deprecated use beginChatSession */
   beginDemoSession: () => Promise<void>;
-  /** Enter Research Workspace — clears session; starts clean. */
+  /** Enter / restore Research Workspace surface (does not wipe prior workspace snap). */
   beginWorkspaceSession: () => void;
   /** Load linked live sample from API when available (workspace helper). */
   loadDemo: () => void | Promise<void>;
-  uploadEEG: (file: File) => Promise<void>;
+  /** Stable ids for dual-surface isolation (debug / tests). */
+  chatSessionId: string | null;
+  workspaceExperimentId: string | null;  uploadEEG: (file: File) => Promise<void>;
   uploadFigure: (file: File) => Promise<void>;
   uploadMetadata: (file: File) => Promise<void>;
   removeFile: (fileId: string) => void;
@@ -302,6 +310,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
   const [workspaceEpoch, setWorkspaceEpoch] = useState(0);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResultsState>(emptyAnalysisResults);
   const [visionState, setVisionState] = useState<VisionState>(emptyVisionState);
+  const [chatSessionId, setChatSessionId] = useState<string | null>(null);
+  const [workspaceExperimentId, setWorkspaceExperimentId] = useState<string | null>(null);
   const experimentRef = useRef<Experiment | null>(null);
   experimentRef.current = experiment;
   const answersRef = useRef<AgentAnswer[]>([]);
@@ -310,6 +320,16 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
   analysisResultsRef.current = analysisResults;
   const visionStateRef = useRef(visionState);
   visionStateRef.current = visionState;
+  const experienceModeRef = useRef(experienceMode);
+  experienceModeRef.current = experienceMode;
+  const chatSnapRef = useRef<SurfaceSnapshot>(emptySurfaceSnapshot());
+  const workspaceSnapRef = useRef<SurfaceSnapshot>(emptySurfaceSnapshot());
+  const chatSessionIdRef = useRef<string | null>(null);
+  const workspaceExperimentIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    migrateClientStorage();
+  }, []);
 
   const currentAnswer = useMemo(() => {
     if (activeAnswerId) {
@@ -404,44 +424,93 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const ensureLiveExperiment = useCallback(async (): Promise<Experiment | null> => {
-    const health = await checkHealth();
-    if (health.status !== "ok" && health.status !== "degraded") {
-      setBackendMode("unavailable");
-      setHealthInfo(health);
-      return null;
-    }
-    setBackendMode("live");
-    setHealthInfo(health);
+  const captureCurrent = useCallback((): SurfaceSnapshot => {
+    return captureSurfaceSnapshot({
+      sessionId:
+        experienceModeRef.current === "chat"
+          ? chatSessionIdRef.current
+          : workspaceExperimentIdRef.current,
+      experiment: experimentRef.current,
+      answers: answersRef.current,
+      activeAnswerId,
+      analysisResults: analysisResultsRef.current,
+      visionState: visionStateRef.current,
+      focusedVizId,
+      activeTab,
+    });
+  }, [activeAnswerId, focusedVizId, activeTab]);
 
-    const current = experimentRef.current;
-    const expId = current?.experiment_id ?? current?.id;
-    if (expId && /^exp_/.test(expId) && !current?.isDemo) {
-      return current;
-    }
-
-    const raw = await createExperiment();
-    const mapped = mapExperimentFromApi(raw);
-    const next = { ...mapped, isDemo: false };
-    experimentRef.current = next;
-    setExperiment(next);
-    return next;
+  const applySnapshot = useCallback((snap: SurfaceSnapshot) => {
+    experimentRef.current = snap.experiment;
+    setExperiment(snap.experiment);
+    setAnswers(snap.answers);
+    setActiveAnswerId(snap.activeAnswerId);
+    setAnalysisResults(snap.analysisResults);
+    setVisionState(snap.visionState);
+    setFocusedVizId(snap.focusedVizId);
+    setActiveTab(snap.activeTab);
   }, []);
+
+  const clearActiveSurface = useCallback(() => {
+    // Critical: clear ref synchronously before any async ensureLiveExperiment
+    experimentRef.current = null;
+    setExperiment(null);
+    setAnswers([]);
+    setActiveAnswerId(null);
+    setIsAnalyzing(false);
+    setAnalysisResults(emptyAnalysisResults());
+    setVisionState(emptyVisionState());
+    setFocusedVizId(null);
+    setUploadError(null);
+    setAnalysisError(null);
+    setExplorerError(null);
+  }, []);
+
+  /**
+   * Ensure a live backend experiment for the *current* surface.
+   * forceNew: always create — never reuse another surface's experiment.
+   */
+  const ensureLiveExperiment = useCallback(
+    async (opts?: { forceNew?: boolean }): Promise<Experiment | null> => {
+      const health = await checkHealth();
+      if (health.status !== "ok" && health.status !== "degraded") {
+        setBackendMode("unavailable");
+        setHealthInfo(health);
+        return null;
+      }
+      setBackendMode("live");
+      setHealthInfo(health);
+
+      if (!opts?.forceNew) {
+        const current = experimentRef.current;
+        const expId = current?.experiment_id ?? current?.id;
+        if (expId && /^exp_/.test(expId) && !current?.isDemo) {
+          return current;
+        }
+      }
+
+      const raw = await createExperiment();
+      const mapped = mapExperimentFromApi(raw, { selectedImageId: null });
+      const next = {
+        ...mapped,
+        isDemo: false,
+        image_files: [],
+        selected_image_id: null,
+        figure: undefined,
+      };
+      experimentRef.current = next;
+      setExperiment(next);
+      return next;
+    },
+    [],
+  );
 
   /** Workspace helper: attach the API-linked sample experiment (live only). */
   const loadDemo = useCallback(async () => {
     revokeBlobUrls(experimentRef.current);
-    setUploadError(null);
-    setAnalysisError(null);
-    setExplorerError(null);
+    clearActiveSurface();
     setExplorerLoading(true);
-    setAnswers([]);
-    setActiveAnswerId(null);
-    setIsAnalyzing(false);
     setWorkspaceEpoch((e) => e + 1);
-    setExperiment(null);
-    setAnalysisResults(emptyAnalysisResults());
-    setVisionState(emptyVisionState());
 
     try {
       const health = await checkHealth();
@@ -449,17 +518,22 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         setBackendMode("live");
         setHealthInfo(health);
         const raw = await getExperiment(LIVE_DEMO_EXPERIMENT_ID);
-        const mapped = mapExperimentFromApi(raw);
-        // Linked sample provides dataset context; do not treat as offline fixture.
-        setExperiment({ ...mapped, isDemo: false });
+        const mapped = stripUserFiguresForLinkedSample(
+          mapExperimentFromApi(raw, { selectedImageId: null }),
+        );
+        // Linked sample: EEG/metadata + sample visualizations only — never user figures
+        experimentRef.current = mapped;
+        setExperiment(mapped);
+        const wid = mapped.experiment_id ?? mapped.id;
+        workspaceExperimentIdRef.current = wid;
+        setWorkspaceExperimentId(wid);
         setAnalysisResults(
           analysisResultsFromVisualizations(mapped.visualizations, {
-            experimentId: mapped.experiment_id ?? mapped.id,
+            experimentId: wid,
             sampleId: mapped.metadata?.sampleId ?? null,
             source: "linked_sample",
           }),
         );
-        // Seed waveform live slot when EEG metadata present
         if (mapped.eeg) {
           setAnalysisResults((prev) => ({
             ...prev,
@@ -471,7 +545,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
                 samplingRateHz: mapped.eeg?.samplingRateHz,
               },
               {
-                experimentId: mapped.experiment_id ?? mapped.id,
+                experimentId: wid,
                 sampleId: mapped.metadata?.sampleId ?? null,
                 source: "linked_sample_eeg",
               },
@@ -497,58 +571,127 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       setAnalysisError("Live API unavailable — cannot load sample.");
     }
     setExplorerLoading(false);
-  }, []);
+  }, [clearActiveSurface]);
 
   const beginChatSession = useCallback(async () => {
+    // Remount while already on Chat with an active session — keep it
+    if (
+      experienceModeRef.current === "chat" &&
+      experimentRef.current &&
+      chatSessionIdRef.current
+    ) {
+      chatSnapRef.current = captureCurrent();
+      return;
+    }
+
+    // Persist workspace before switching so return navigation restores it
+    if (experienceModeRef.current === "workspace") {
+      workspaceSnapRef.current = captureCurrent();
+      const wid =
+        experimentRef.current?.experiment_id ?? experimentRef.current?.id ?? null;
+      workspaceExperimentIdRef.current = wid;
+      setWorkspaceExperimentId(wid);
+    }
+
     setExperienceMode("chat");
-    revokeBlobUrls(experimentRef.current);
-    setUploadError(null);
-    setAnalysisError(null);
-    setExplorerError(null);
-    setAnswers([]);
-    setActiveAnswerId(null);
-    setIsAnalyzing(false);
-    setExperiment(null);
-    setAnalysisResults(emptyAnalysisResults());
-    setVisionState(emptyVisionState());
-    setFocusedVizId(null);
+
+    // Prefer restoring an existing *chat* session (never workspace artifacts)
+    const priorChat = chatSnapRef.current;
+    if (priorChat.experiment && priorChat.sessionId) {
+      experimentRef.current = null;
+      applySnapshot(priorChat);
+      chatSessionIdRef.current = priorChat.sessionId;
+      setChatSessionId(priorChat.sessionId);
+      setWorkspaceEpoch((e) => e + 1);
+      setExplorerLoading(false);
+      setIsAnalyzing(false);
+      setUploadError(null);
+      setAnalysisError(null);
+      setExplorerError(null);
+      return;
+    }
+
+    // Fresh chat — clear sync + always create a new backend experiment
+    clearActiveSurface();
     setExplorerLoading(true);
     setWorkspaceEpoch((e) => e + 1);
     try {
-      await ensureLiveExperiment();
+      const next = await ensureLiveExperiment({ forceNew: true });
+      const sid = next?.experiment_id ?? next?.id ?? newLocalId("chat");
+      chatSessionIdRef.current = sid;
+      setChatSessionId(sid);
+      chatSnapRef.current = captureSurfaceSnapshot({
+        sessionId: sid,
+        experiment: next,
+        answers: [],
+        activeAnswerId: null,
+        analysisResults: emptyAnalysisResults(),
+        visionState: emptyVisionState(),
+        focusedVizId: null,
+        activeTab: "waveform",
+      });
     } catch {
       setBackendMode("unavailable");
       setAnalysisError("Live API unavailable.");
+      chatSessionIdRef.current = null;
+      setChatSessionId(null);
     }
     setExplorerLoading(false);
-  }, [ensureLiveExperiment]);
+  }, [captureCurrent, clearActiveSurface, applySnapshot, ensureLiveExperiment]);
 
   const beginDemoSession = beginChatSession;
 
   const beginWorkspaceSession = useCallback(() => {
-    revokeBlobUrls(experimentRef.current);
-    setExperienceMode("workspace");
-    setExperiment(null);
-    setAnswers([]);
-    setActiveAnswerId(null);
-    setFocusedVizId(null);
-    setActiveTab("waveform");
-    setAnalysisResults(emptyAnalysisResults());
-    setVisionState(emptyVisionState());
-    setUploadError(null);
-    setAnalysisError(null);
-    setExplorerError(null);
-    setIsAnalyzing(false);
-    setExplorerLoading(false);
-    setWorkspaceEpoch((e) => e + 1);
-  }, []);
+    // Remount while already on Workspace with live state — keep it
+    if (experienceModeRef.current === "workspace" && experimentRef.current) {
+      workspaceSnapRef.current = captureCurrent();
+      const wid =
+        experimentRef.current.experiment_id ?? experimentRef.current.id ?? null;
+      workspaceExperimentIdRef.current = wid;
+      setWorkspaceExperimentId(wid);
+      return;
+    }
 
-  /** Workspace helper: load built-in sample without leaving workspace mode. */
+    // Persist chat before switching (keep blob URLs for later chat restore)
+    if (experienceModeRef.current === "chat") {
+      chatSnapRef.current = captureCurrent();
+      chatSessionIdRef.current =
+        experimentRef.current?.experiment_id ??
+        experimentRef.current?.id ??
+        chatSessionIdRef.current;
+      setChatSessionId(chatSessionIdRef.current);
+    }
+
+    setExperienceMode("workspace");
+    setWorkspaceEpoch((e) => e + 1);
+
+    const prior = workspaceSnapRef.current;
+    if (prior.experiment) {
+      experimentRef.current = null;
+      applySnapshot(prior);
+      const wid = prior.sessionId ?? prior.experiment.experiment_id ?? prior.experiment.id;
+      workspaceExperimentIdRef.current = wid;
+      setWorkspaceExperimentId(wid);
+      setExplorerLoading(false);
+      setIsAnalyzing(false);
+      setUploadError(null);
+      setAnalysisError(null);
+      setExplorerError(null);
+      return;
+    }
+
+    // First visit / empty workspace
+    clearActiveSurface();
+    setActiveTab("waveform");
+    workspaceExperimentIdRef.current = null;
+    setWorkspaceExperimentId(null);
+    setExplorerLoading(false);
+  }, [captureCurrent, applySnapshot, clearActiveSurface]);  /** Workspace helper: load built-in sample without leaving workspace mode. */
   const loadWorkspaceDemoSample = useCallback(async () => {
     setExperienceMode("workspace");
     await loadDemo();
-  }, [loadDemo]);
-
+    workspaceSnapRef.current = captureCurrent();
+  }, [loadDemo, captureCurrent]);
   const patchFileProgress = useCallback(
     (kind: "eeg" | "figure" | "metadata", fileId: string, patch: Partial<ExperimentFile>) => {
       setExperiment((prev) => {
@@ -1168,6 +1311,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       clearUploadError,
       clearAnalysisError,
       healthInfo,
+      chatSessionId,
+      workspaceExperimentId,
     }),
     [
       experienceMode,
@@ -1212,6 +1357,8 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       clearUploadError,
       clearAnalysisError,
       healthInfo,
+      chatSessionId,
+      workspaceExperimentId,
     ],
   );
 

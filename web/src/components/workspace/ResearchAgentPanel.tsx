@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useExperiment } from "@/lib/store/experiment-context";
 import { STARTER_PROMPTS } from "@/lib/constants";
 import { describeBackendStatus } from "@/lib/config";
+import { consumeComposerDraft } from "@/lib/composer";
 import { Button } from "@/components/ui/Button";
 import { Collapsible } from "@/components/ui/Collapsible";
 import { AgentResponseView } from "@/components/agent/AgentResponse";
@@ -33,15 +34,24 @@ export function ResearchAgentPanel() {
   } = useExperiment();
   const [question, setQuestion] = useState("");
   const [showExamples, setShowExamples] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     setQuestion("");
     setShowExamples(false);
   }, [workspaceEpoch]);
 
+  useEffect(() => {
+    if (!isAnalyzing) inputRef.current?.focus();
+  }, [isAnalyzing]);
+
   const handleSend = () => {
-    if (!question.trim()) return;
-    void analyze(question);
+    const taken = consumeComposerDraft(question);
+    if (!taken || isAnalyzing) return;
+    setQuestion(taken.nextDraft);
+    setShowExamples(false);
+    void analyze(taken.question);
+    queueMicrotask(() => inputRef.current?.focus());
   };
 
   const conversationStarted = !!currentAnswer || isAnalyzing;
@@ -89,6 +99,7 @@ export function ResearchAgentPanel() {
         <div className="space-y-2 shrink-0">
           <div className="flex gap-2 items-end">
             <textarea
+              ref={inputRef}
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask a research question…"

@@ -14,6 +14,7 @@ import {
   STARTER_PROMPTS,
 } from "@/lib/constants";
 import { describeBackendStatus } from "@/lib/config";
+import { consumeComposerDraft } from "@/lib/composer";
 import { AgentResponseView } from "@/components/agent/AgentResponse";
 import { AgentSkeleton } from "@/components/ui/Skeleton";
 import { Button } from "@/components/ui/Button";
@@ -46,6 +47,7 @@ export function ChatInterface() {
   const [attachOpen, setAttachOpen] = useState(false);
   const [showExamples, setShowExamples] = useState(false);
   const threadRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const eegRef = useRef<HTMLInputElement>(null);
   const figRef = useRef<HTMLInputElement>(null);
   const metaRef = useRef<HTMLInputElement>(null);
@@ -62,6 +64,10 @@ export function ChatInterface() {
     if (!el) return;
     el.scrollTop = el.scrollHeight;
   }, [answers, isAnalyzing, analysisError]);
+
+  useEffect(() => {
+    if (!isAnalyzing && backendMode !== "unavailable") inputRef.current?.focus();
+  }, [isAnalyzing, backendMode]);
 
   const conversationStarted = answers.length > 0 || isAnalyzing;
 
@@ -80,12 +86,13 @@ export function ChatInterface() {
   })();
 
   const send = () => {
-    const q = question.trim();
-    if (!q || isAnalyzing) return;
-    setQuestion("");
+    const taken = consumeComposerDraft(question);
+    if (!taken || isAnalyzing) return;
+    setQuestion(taken.nextDraft);
     setShowExamples(false);
     setAttachOpen(false);
-    void analyze(q);
+    void analyze(taken.question);
+    queueMicrotask(() => inputRef.current?.focus());
   };
 
   const onAttach = (kind: AttachKind, file: File | undefined) => {
@@ -255,6 +262,7 @@ export function ChatInterface() {
               )}
             </div>
             <textarea
+              ref={inputRef}
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               onKeyDown={(e) => {
