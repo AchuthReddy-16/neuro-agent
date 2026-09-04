@@ -1,0 +1,112 @@
+{
+  "base_variant": "base_BF16",
+  "sft_variant": "sft_QLoRA_BF16",
+  "overall": {
+    "base_pass_rate": 0.6,
+    "sft_pass_rate": 0.717,
+    "delta": 0.11699999999999999
+  },
+  "parse_refusal": {
+    "base_invalid_parse_rate": 0.0,
+    "sft_invalid_parse_rate": 0.0,
+    "invalid_parse_delta": 0.0,
+    "base_empty_refusal_rate": 0.0,
+    "sft_empty_refusal_rate": 0.0,
+    "empty_refusal_delta": 0.0
+  },
+  "runtime": {
+    "base_runtime_s": 197.12003386765718,
+    "sft_runtime_s": 0.02999001368880272,
+    "base_peak_vram_mb": 8039.9384765625,
+    "sft_peak_vram_mb": 7930.392578125
+  },
+  "unsupported_claim": {
+    "base_rate": 0.0,
+    "sft_rate": 0.0,
+    "delta": 0.0
+  },
+  "per_task": {
+    "band_power_analysis": {
+      "base_pass_rate": 0.576,
+      "sft_pass_rate": 0.88,
+      "delta": 0.30400000000000005,
+      "base_count": 125,
+      "sft_count": 125
+    },
+    "channel_ranking": {
+      "base_pass_rate": 0.664,
+      "sft_pass_rate": 0.824,
+      "delta": 0.15999999999999992,
+      "base_count": 125,
+      "sft_count": 125
+    },
+    "execution_vs_imagery": {
+      "base_pass_rate": 0.56,
+      "sft_pass_rate": 0.296,
+      "delta": -0.26400000000000007,
+      "base_count": 125,
+      "sft_count": 125
+    },
+    "factual_grounding": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "delta": 0.0,
+      "base_count": 125,
+      "sft_count": 125
+    },
+    "movement_task_classification": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.736,
+      "delta": 0.736,
+      "base_count": 125,
+      "sft_count": 125
+    },
+    "numerical_reasoning": {
+      "base_pass_rate": 1.0,
+      "sft_pass_rate": 1.0,
+      "delta": 0.0,
+      "base_count": 125,
+      "sft_count": 125
+    },
+    "statistical_comparison": {
+      "base_pass_rate": 1.0,
+      "sft_pass_rate": 1.0,
+      "delta": 0.0,
+      "base_count": 125,
+      "sft_count": 125
+    },
+    "tool_selection": {
+      "base_pass_rate": 1.0,
+      "sft_pass_rate": 1.0,
+      "delta": 0.0,
+      "base_count": 125,
+      "sft_count": 125
+    }
+  },
+  "per_verifier_type": {
+    "categorical": {
+      "base_pass_rate": 0.512,
+      "sft_pass_rate": 0.6064,
+      "delta": 0.09440000000000004
+    },
+    "numeric": {
+      "base_pass_rate": 1.0,
+      "sft_pass_rate": 1.0,
+      "delta": 0.0
+    },
+    "ranking": {
+      "base_pass_rate": 0.62,
+      "sft_pass_rate": 0.852,
+      "delta": 0.23199999999999998
+    }
+  },
+  "quality_check": {
+    "weak_tasks_improved": [
+      "movement_task_classification",
+      "band_power_analysis",
+      "channel_ranking"
+    ],
+    "strong_tasks_substantially_regressed": [],
+    "tradeoff_flag": false
+  }
+}

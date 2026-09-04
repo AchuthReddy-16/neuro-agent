@@ -1,0 +1,59 @@
+{
+  "model_name": "Qwen/Qwen2.5-VL-3B-Instruct",
+  "variant": "multimodal_sft_corrected_gate",
+  "dtype": "bfloat16",
+  "total_examples": 342,
+  "verifier_pass_rate": 0.543859649122807,
+  "task_accuracy": 0.543859649122807,
+  "invalid_parse_rate": 0.0,
+  "empty_refusal_rate": 0.0,
+  "avg_generated_tokens": 5.845029239766082,
+  "runtime_s": 89.95807432476431,
+  "examples_per_second": 3.801771020190144,
+  "avg_latency_ms": 255.1212909560629,
+  "peak_torch_allocated_mb": 7763.4443359375,
+  "peak_torch_reserved_mb": 7984.0,
+  "nvidia_smi_peak_mb": 8462.0,
+  "held_out_subjects": [
+    "S026",
+    "S027",
+    "S028",
+    "S029",
+    "S030"
+  ],
+  "task_distribution": {
+    "band_power_beta_top3": 25,
+    "psd_peak_frequency": 34,
+    "spectrogram_dominant_band": 34,
+    "topomap_strongest_alpha_mu": 34,
+    "waveform_highest_rms": 9,
+    "band_power_weakest_alpha_mu": 25,
+    "psd_dominant_band": 33,
+    "spectrogram_peak_frequency": 33,
+    "topomap_beta_top3": 33,
+    "waveform_rms_order": 8,
+    "psd_band_order": 33,
+    "spectrogram_strongest_vs_weakest": 33,
+    "waveform_max_rms_numeric": 8
+  },
+  "verification_type_distribution": {
+    "ranking": 99,
+    "numeric": 75,
+    "categorical": 168
+  },
+  "unsupported_claim_available": true,
+  "unsupported_claim_rate": 0.08,
+  "metadata": {
+    "model_load_time_s": 34.36580790858716,
+    "weight_memory_mb": 7303.1015625,
+    "num_parameters": 3791775744,
+    "failure_count": 156,
+    "seed": 42,
+    "max_new_tokens": 32,
+    "do_sample": false,
+    "multimodal": true,
+    "vision_parameters": 675903488,
+    "frozen_vision_tower": true,
+    "text_checkpoint_reused": true
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "timestamp_utc": "2026-09-03T19:32:21.321489+00:00",
+  "backend": "vllm_w8a8_int8",
+  "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "n": 1000,
+  "verifier_pass_rate": 0.843,
+  "invalid_parse_rate": 0.0,
+  "avg_generated_tokens": 7.718,
+  "runtime_s": 79.3,
+  "per_task": {
+    "band_power_analysis": {
+      "n": 125,
+      "verifier_pass_rate": 0.888,
+      "invalid_parse_rate": 0.0,
+      "avg_generated_tokens": 9.0
+    },
+    "channel_ranking": {
+      "n": 125,
+      "verifier_pass_rate": 0.832,
+      "invalid_parse_rate": 0.0,
+      "avg_generated_tokens": 8.992
+    },
+    "execution_vs_imagery": {
+      "n": 125,
+      "verifier_pass_rate": 0.784,
+      "invalid_parse_rate": 0.0,
+      "avg_generated_tokens": 2.488
+    },
+    "factual_grounding": {
+      "n": 125,
+      "verifier_pass_rate": 0.512,
+      "invalid_parse_rate": 0.0,
+      "avg_generated_tokens": 3.632
+    },
+    "movement_task_classification": {
+      "n": 125,
+      "verifier_pass_rate": 0.728,
+      "invalid_parse_rate": 0.0,
+      "avg_generated_tokens": 6.744
+    },
+    "numerical_reasoning": {
+      "n": 125,
+      "verifier_pass_rate": 1.0,
+      "invalid_parse_rate": 0.0,
+      "avg_generated_tokens": 14.896
+    },
+    "statistical_comparison": {
+      "n": 125,
+      "verifier_pass_rate": 1.0,
+      "invalid_parse_rate": 0.0,
+      "avg_generated_tokens": 7.992
+    },
+    "tool_selection": {
+      "n": 125,
+      "verifier_pass_rate": 1.0,
+      "invalid_parse_rate": 0.0,
+      "avg_generated_tokens": 8.0
+    }
+  },
+  "reference": {
+    "bf16_corrected_sft": 0.864,
+    "bnb_int8": 0.866
+  },
+  "integrity": {
+    "confirmed_subjects": [
+      "S026",
+      "S027",
+      "S028",
+      "S029",
+      "S030"
+    ],
+    "example_count": 1000,
+    "integrity_passed": true
+  },
+  "task_distribution": {
+    "numerical_reasoning": 125,
+    "channel_ranking": 125,
+    "band_power_analysis": 125,
+    "movement_task_classification": 125,
+    "execution_vs_imagery": 125,
+    "statistical_comparison": 125,
+    "tool_selection": 125,
+    "factual_grounding": 125
+  },
+  "delta_vs_bf16_full": {
+    "overall": -0.021,
+    "execution_vs_imagery": -0.216,
+    "band_power_analysis": 0.008,
+    "channel_ranking": 0.016,
+    "factual_grounding": 0.024,
+    "movement_task_classification": 0.0,
+    "numerical_reasoning": 0.0,
+    "statistical_comparison": 0.0,
+    "tool_selection": 0.0
+  },
+  "material_family_regression": {
+    "task": "execution_vs_imagery",
+    "bf16": 1.0,
+    "w8a8": 0.784,
+    "delta": -0.216,
+    "note": "Largest family drop. Other seven families are flat or slightly up. Invalid parse remains 0.0."
+  },
+  "quality_gate": {
+    "overall_close_to_bf16": true,
+    "invalid_output_regression": false,
+    "catastrophic_overall": false,
+    "material_family_drop": true
+  }
+}

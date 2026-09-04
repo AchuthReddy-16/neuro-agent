@@ -1,0 +1,43 @@
+{
+  "root_cause_hypothesis": "SFT regression on execution_vs_imagery is negative transfer from movement classification training, not overfitting. The model was never trained on execution_vs_imagery or factual_grounding, but learned to emit movement labels (especially 'rest') that collide with the execution/imagery label space. factual_grounding stays at 0% because eval prompts omit the metadata required to form compound ground-truth labels.",
+  "issue_classification": {
+    "execution_vs_imagery": "data_coverage_gap_plus_negative_transfer",
+    "factual_grounding": "dataset_design_issue",
+    "movement_task_classification": "resolved_by_sft",
+    "band_power_analysis": "partial_generalization",
+    "channel_ranking": "partial_generalization"
+  },
+  "model_overfitting_vs_data_design": {
+    "execution_vs_imagery": "data_design_and_coverage (negative transfer, not overfitting)",
+    "factual_grounding": "dataset_design (unlearnable prompt; 0% for base and SFT)"
+  },
+  "recommended_smallest_fix": [
+    {
+      "priority": 1,
+      "action": "Add execution_vs_imagery SFT examples with answers in {baseline, execution, imagery} label space",
+      "details": "Use eval-style question and context fields (condition, movement). Teach that *_rest conditions map to parent task_type, not movement label 'rest'.",
+      "estimated_examples": "125-250 balanced across baseline/execution/imagery"
+    },
+    {
+      "priority": 2,
+      "action": "Fix factual_grounding eval and/or training context",
+      "details": "Include task_type and movement (or condition) in eval context, OR change ground truth to movement-only labels if that is the intended task. Do not train on compound labels without supplying both components.",
+      "estimated_examples": "dataset relabel/regen only; no model change required for eval fix"
+    },
+    {
+      "priority": 3,
+      "action": "Disambiguate movement SFT supervision",
+      "details": "If movement and execution_vs_imagery tasks coexist, avoid training identical answers for different task_types at the same event_code. Either split tasks cleanly or include explicit task_type in the answer."
+    }
+  ],
+  "short_corrective_sft_pass_needed": {
+    "execution_vs_imagery": true,
+    "factual_grounding": false,
+    "rationale": "execution_vs_imagery needs a short targeted SFT slice after dataset fixes. factual_grounding should be fixed at the dataset/prompt level first; corrective SFT is not justified until the prompt exposes answerable metadata."
+  },
+  "do_not_do_yet": [
+    "Full SFT retrain",
+    "RLVR",
+    "Corrective training in this investigation pass"
+  ]
+}

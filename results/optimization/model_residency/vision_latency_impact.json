@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-09-03T22:47:42.457715+00:00",
+  "baseline_full_swap": {
+    "swap_overhead_mean_ms": 58008.954,
+    "vision_e2e_with_swap_ms": {
+      "E": 174727.799,
+      "F": 177006.378
+    },
+    "components": {
+      "text_unload": 910.803,
+      "vlm_load": 33473.923,
+      "vlm_infer_generate": 4817.908,
+      "vlm_unload": 1070.446,
+      "text_restore": 22524.383
+    }
+  },
+  "co_resident_warm": {
+    "0.40": {
+      "n": 4,
+      "e2e_ms_p50": 156.089,
+      "e2e_ms_mean": 155.461,
+      "combined_total_e2e_ms": 884.955,
+      "swap_overhead_ms": 0.0
+    },
+    "0.40_rows": {
+      "topomap": {
+        "e2e_ms": 174.755,
+        "preprocess_ms": 11.813,
+        "generate_ms": 162.943
+      },
+      "spectrogram": {
+        "e2e_ms": 118.72,
+        "preprocess_ms": 13.096,
+        "generate_ms": 105.624
+      },
+      "psd": {
+        "e2e_ms": 190.945,
+        "preprocess_ms": 21.494,
+        "generate_ms": 169.451
+      },
+      "waveform": {
+        "e2e_ms": 137.424,
+        "preprocess_ms": 11.334,
+        "generate_ms": 126.09
+      },
+      "vision_tool_combined": {
+        "e2e_ms": 107.867,
+        "preprocess_ms": 11.09,
+        "generate_ms": 96.777
+      }
+    }
+  },
+  "fair_comparison": {
+    "swap_overhead_before_ms": 58008.954,
+    "swap_overhead_after_ms": 0.0,
+    "swap_reduction_pct": 100.0,
+    "vision_e2e_before_swap_plus_infer_ms": 62826.862,
+    "vision_e2e_after_warm_mean_ms": 155.461,
+    "note": "Before = K.1 measured swap (~58s) + mean VLM generate (~4.8s). After = warm co-resident VLM E2E mean (no load/unload). K.1 full wall ~175s also included subprocess import cold-start and is not the fairest before metric."
+  }
+}

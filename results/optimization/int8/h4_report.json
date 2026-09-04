@@ -1,0 +1,1146 @@
+{
+  "stage": "H.4",
+  "timestamp": "2026-09-03T18:03:31.296434+00:00",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "adapter": "/workspace/neuro-agent/checkpoints/sft_corrected_v2/final",
+  "contract": {
+    "prompt_tokens_target": 512,
+    "generated_tokens": 64,
+    "warmup": 2,
+    "timed_iters": 5,
+    "backend": "bitsandbytes load_in_8bit (not replaced)"
+  },
+  "gpu_preflight": {
+    "nvidia_smi_compute_apps": [],
+    "clear": true,
+    "raw": "pid, process_name, used_gpu_memory [MiB]\n"
+  },
+  "h4_1": {
+    "what_changed": "Non-quantized tensors (embeddings, RMSNorm, LoRA, biases) cast to FP16 so Linear8bitLt / MatMul8bitLt receive FP16 activations. A.to(float16) inside bitsandbytes becomes a no-op instead of BF16\u2192FP16.",
+    "before": {
+      "ttft_ms": 79.3,
+      "decode_tok_per_s": 18.73,
+      "latency_per_token_ms": 53.41,
+      "e2e_ms": 3497.46,
+      "peak_vram_mb": 4697.1,
+      "cast_count": 122187,
+      "bf16_copy_cast_count": 16128,
+      "kernel_launch_count": 936556
+    },
+    "after": {
+      "ttft_ms": 81.5,
+      "decode_tok_per_s": 17.39,
+      "latency_per_token_ms": 57.59,
+      "e2e_ms": 3767.56,
+      "peak_vram_mb": 4567.4,
+      "cast_count": 39250,
+      "bf16_copy_cast_count": 0,
+      "kernel_launch_count": 788714
+    },
+    "kept": false,
+    "decode_gain_pct": -7.15,
+    "warning_note": "Timings taken with MatMul8bitLt BF16\u2192FP16 log spam suppressed."
+  },
+  "h4_2": {
+    "cuda_graph_compatible": false,
+    "reason": "CUDA Graph capture failed on the bitsandbytes INT8 + HF decode step. AcceleratorError: CUDA error: operation failed due to a previous error during capture\nSearch for `cudaErrorStreamCaptureInvalidated' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nFor more detailed error information, run with CUDA_LOG_FILE=stderr\n",
+    "likely_causes": [
+      "MatMul8bitLt uses data-dependent LLM.int8() outlier columns (llm_int8_threshold=6.0)",
+      "int8_vectorwise_quant / int8_mixed_scaled_mm allocate and branch per forward",
+      "Dynamic / Static cache updates plus bitsandbytes state mutations are not graph-safe"
+    ],
+    "before_decode_tok_per_s": 18.73,
+    "after": null,
+    "kept": false
+  },
+  "h4_3": {
+    "torch_compile_compatible": true,
+    "mode": "default",
+    "error": null,
+    "before": {
+      "decode_tok_per_s": 18.73,
+      "e2e_ms": 3497.46,
+      "kernel_launch_count": 936556
+    },
+    "after": {
+      "ttft_ms": 93.36,
+      "decode_tok_per_s": 14.92,
+      "e2e_ms": 4383.27,
+      "kernel_launch_count": 805167
+    },
+    "kept": false,
+    "note": "reduce-overhead incompatible; measured with mode=default on RMSNorm/rotary only."
+  },
+  "best_combined": {
+    "flags": {
+      "fp16_compute": false,
+      "compile_surrounding": false,
+      "cuda_graphs": false
+    },
+    "note": "No independently successful change; keep original bitsandbytes INT8 path",
+    "metrics": {
+      "ttft_ms": 79.3,
+      "prefill_ms": 79.27,
+      "decode_tok_per_s": 18.73,
+      "latency_per_token_ms": 53.41,
+      "e2e_ms": 3497.46,
+      "allocated_vram_mb": 4476.9,
+      "peak_vram_mb": 4697.1,
+      "kernel_launch_count": 936556,
+      "cast_count": 122187,
+      "bf16_copy_cast_count": 16128
+    }
+  },
+  "final_comparison": {
+    "original_int8_h1b": {
+      "source": "H.1B preserved baseline",
+      "quality": 0.866,
+      "ttft_ms": 112.5,
+      "decode_tok_per_s": 12.5,
+      "e2e_ms": 5450.0,
+      "peak_vram_gb": 4.6
+    },
+    "h3_reproduced_int8": {
+      "source": "H.3 bf16_vs_int8_profile.json",
+      "prefill_ms": 98.74,
+      "decode_tok_per_s": 13.08,
+      "ttft_ms": 98.74,
+      "e2e_ms": 4992.59,
+      "latency_per_token_ms": 76.47,
+      "peak_vram_mb": 4963.6,
+      "kernel_launches": 945473
+    },
+    "h4_baseline_remeasured": {
+      "ttft_ms": 79.3,
+      "decode_tok_per_s": 18.73,
+      "latency_per_token_ms": 53.41,
+      "e2e_ms": 3497.46,
+      "peak_vram_mb": 4697.1,
+      "cast_count": 122187,
+      "bf16_copy_cast_count": 16128,
+      "kernel_launch_count": 936556,
+      "load_path": "bitsandbytes load_in_8bit without torch_dtype (original)",
+      "warnings_suppressed": true
+    },
+    "optimized_int8": {
+      "ttft_ms": 79.3,
+      "prefill_ms": 79.27,
+      "decode_tok_per_s": 18.73,
+      "latency_per_token_ms": 53.41,
+      "e2e_ms": 3497.46,
+      "peak_vram_mb": 4697.1,
+      "allocated_vram_mb": 4476.9,
+      "quality_sanity_pass_rate": 0.875,
+      "flags": {
+        "fp16_compute": false,
+        "compile_surrounding": false,
+        "cuda_graphs": false
+      },
+      "same_as_unmodified_int8": true
+    }
+  },
+  "quality_sanity": {
+    "n": 32,
+    "pass_rate": 0.875,
+    "per_task": {
+      "numerical_reasoning": {
+        "n": 4,
+        "pass_rate": 1.0
+      },
+      "channel_ranking": {
+        "n": 4,
+        "pass_rate": 1.0
+      },
+      "band_power_analysis": {
+        "n": 4,
+        "pass_rate": 0.75
+      },
+      "movement_task_classification": {
+        "n": 4,
+        "pass_rate": 0.75
+      },
+      "execution_vs_imagery": {
+        "n": 4,
+        "pass_rate": 1.0
+      },
+      "statistical_comparison": {
+        "n": 4,
+        "pass_rate": 1.0
+      },
+      "tool_selection": {
+        "n": 4,
+        "pass_rate": 1.0
+      },
+      "factual_grounding": {
+        "n": 4,
+        "pass_rate": 0.5
+      }
+    },
+    "original_int8_quality": 0.866
+  },
+  "remaining_bottleneck": "Dominant cost remains bitsandbytes MatMul8bitLt: each decode step still launches quantize + INT8 GEMM + dequantize (+ LLM.int8 outlier mixed-precision) instead of a single Tensor-Core GEMM. FP16 activation alignment removes cast overhead but cannot fuse the INT8 multi-kernel linear path.",
+  "deeper_kernel_backend_required": true,
+  "h4_5_fusion": {
+    "investigated": true,
+    "reason_to_skip_or_run": "H4-1/2/3 finished and failed to materially improve decode (gain 0.0%). Documented fusion limits; did not replace bitsandbytes internals.",
+    "would_require_new_backend": true,
+    "notes": [
+      "H.3: MatMul8bitLt wrapper ~71.6% self CUDA; each linear is quantize\u2192int8_gemm\u2192dequant.",
+      "bitsandbytes implements this in C++/CUDA (int8_vectorwise_quant, int8_linear_matmul, int8_mm_dequant).",
+      "Fusing those three would mean replacing bitsandbytes internals or adding a new INT8 GEMM path.",
+      "That is a new quantization backend, which is out of scope for H.4. STOP \u2014 no Triton/CUDA rewrite."
+    ]
+  },
+  "variants": {
+    "baseline_int8": {
+      "description": "Existing bitsandbytes load_in_8bit; BF16 non-quantized compute",
+      "load_time_s": 14.19,
+      "allocated_after_load_mb": 4468.736328125,
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 245.48,
+      "prefill_ms": 245.43,
+      "decode_tok_per_s": 4.69,
+      "latency_per_token_ms": 213.31,
+      "e2e_ms": 13897.22,
+      "allocated_vram_mb": 4476.9,
+      "peak_vram_mb": 4697.1,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        238.69,
+        239.32,
+        277.07,
+        248.45,
+        223.85
+      ],
+      "all_prefill_ms": [
+        238.66,
+        239.29,
+        277.04,
+        248.42,
+        223.75
+      ],
+      "all_decode_tok_per_s": [
+        4.62,
+        4.64,
+        4.64,
+        4.78,
+        4.78
+      ],
+      "all_e2e_ms": [
+        14105.68,
+        14044.65,
+        14083.53,
+        13629.71,
+        13622.54
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 936556,
+      "prof_cast_count": 122187,
+      "prof_bf16_copy_cast_count": 16128,
+      "prof_cast_self_cuda_us": 232761.7,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 361032.5
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 348660.9
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 251027.7
+        },
+        {
+          "name": "aten::copy_",
+          "count": 92700,
+          "self_cuda_time_us": 172762.3
+        },
+        {
+          "name": "aten::mul",
+          "count": 64556,
+          "self_cuda_time_us": 114426.4
+        },
+        {
+          "name": "void gemv2T_kernel_val<int, int, float, float, float, float, 128, 16, 2, 2, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float>, float, float)",
+          "count": 2268,
+          "self_cuda_time_us": 83010.9
+        },
+        {
+          "name": "aten::any",
+          "count": 25238,
+          "self_cuda_time_us": 73231.9
+        },
+        {
+          "name": "aten::index",
+          "count": 18220,
+          "self_cuda_time_us": 58828.6
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "count": 25472,
+          "self_cuda_time_us": 56073.1
+        },
+        {
+          "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)",
+          "count": 63,
+          "self_cuda_time_us": 51297.5
+        }
+      ]
+    },
+    "h4_1_fp16_compute": {
+      "description": "Cast non-quantized params/activations to FP16; INT8 weights unchanged",
+      "load_time_s": 37.225,
+      "allocated_after_load_mb": 8815.92431640625,
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 79.54,
+      "prefill_ms": 79.51,
+      "decode_tok_per_s": 17.91,
+      "latency_per_token_ms": 55.85,
+      "e2e_ms": 3654.09,
+      "allocated_vram_mb": 4347.2,
+      "peak_vram_mb": 4567.4,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        80.1,
+        78.53,
+        80.02,
+        80.04,
+        79.03
+      ],
+      "all_prefill_ms": [
+        80.06,
+        78.5,
+        79.99,
+        80.01,
+        79.0
+      ],
+      "all_decode_tok_per_s": [
+        17.92,
+        17.93,
+        17.73,
+        18.09,
+        17.86
+      ],
+      "all_e2e_ms": [
+        3651.76,
+        3648.32,
+        3688.99,
+        3618.64,
+        3662.72
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 788714,
+      "prof_cast_count": 39250,
+      "prof_bf16_copy_cast_count": 0,
+      "prof_cast_self_cuda_us": 76284.7,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 361059.4
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 348714.2
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 144644.1
+        },
+        {
+          "name": "aten::mul",
+          "count": 64512,
+          "self_cuda_time_us": 111134.8
+        },
+        {
+          "name": "aten::any",
+          "count": 25216,
+          "self_cuda_time_us": 71995.8
+        },
+        {
+          "name": "aten::index",
+          "count": 18176,
+          "self_cuda_time_us": 58187.1
+        },
+        {
+          "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+          "count": 63,
+          "self_cuda_time_us": 51277.5
+        },
+        {
+          "name": "aten::nonzero",
+          "count": 9088,
+          "self_cuda_time_us": 48841.7
+        },
+        {
+          "name": "std::enable_if<true, void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, true, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+          "count": 21919,
+          "self_cuda_time_us": 46647.0
+        },
+        {
+          "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4> >(at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4>)",
+          "count": 16128,
+          "self_cuda_time_us": 42569.6
+        }
+      ],
+      "kept": true
+    },
+    "h4_2_cuda_graphs": {
+      "description": "CUDA Graph capture/replay of fixed-shape single-token INT8 decode",
+      "load_time_s": 13.107,
+      "compatible": false,
+      "reason": "CUDA Graph capture failed on the bitsandbytes INT8 + HF decode step. AcceleratorError: CUDA error: operation failed due to a previous error during capture\nSearch for `cudaErrorStreamCaptureInvalidated' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nFor more detailed error information, run with CUDA_LOG_FILE=stderr\n",
+      "exception": "Traceback (most recent call last):\n  File \"/workspace/neuro-agent/scripts/optimize_int8_runtime.py\", line 281, in test_cuda_graphs\n    step = model(input_ids=static_in, past_key_values=past, use_cache=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/peft/peft_model.py\", line 2101, in forward\n    return self.base_model(\n           ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/peft/tuners/tuners_utils.py\", line 333, in forward\n    return self.model.forward(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/transformers/utils/generic.py\", line 939, in wrapper\n    output = func(self, *args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.AcceleratorError: CUDA error: operation not permitted when stream is capturing\nSearch for `cudaErrorStreamCaptureUnsupported' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nFor more detailed error information, run with CUDA_LOG_FILE=stderr\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/workspace/neuro-agent/scripts/optimize_int8_runtime.py\", line 279, in test_cuda_graphs\n    with torch.cuda.graph(graph):\n  File \"/usr/local/lib/python3.12/dist-packages/torch/cuda/graphs.py\", line 477, in __exit__\n    self.cuda_graph.capture_end()\n  File \"/usr/local/lib/python3.12/dist-packages/torch/cuda/graphs.py\", line 169, in capture_end\n    super().capture_end()\ntorch.AcceleratorError: CUDA error: operation failed due to a previous error during capture\nSearch for `cudaErrorStreamCaptureInvalidated' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nFor more detailed error information, run with CUDA_LOG_FILE=stderr\n\n",
+      "static_cache_ok": true,
+      "capture_ok": false,
+      "benchmark": null,
+      "likely_causes": [
+        "MatMul8bitLt uses data-dependent LLM.int8() outlier columns (llm_int8_threshold=6.0)",
+        "int8_vectorwise_quant / int8_mixed_scaled_mm allocate and branch per forward",
+        "Dynamic / Static cache updates plus bitsandbytes state mutations are not graph-safe"
+      ],
+      "kept": false
+    },
+    "h4_3_torch_compile": {
+      "description": "torch.compile on RMSNorm/rotary only; Linear8bitLt eager",
+      "compatible": false,
+      "error": "RuntimeError: Error: accessing tensor output of CUDAGraphs that has been overwritten by a subsequent run. Stack trace: File \"/usr/local/lib/python3.12/dist-packages/transformers/models/qwen3/modeling_qwen3.py\", line 64, in forward\n    return self.weight * hidden_states.to(input_dtype)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^. To prevent overwriting, clone the tensor outside of torch.compile() or call torch.compiler.cudagraph_mark_step_begin() before each model invocation.\nTraceback (most recent call last):\n  File \"/workspace/neuro-agent/scripts/optimize_int8_runtime.py\", line 561, in main\n    generate_with_timings(model, tokenizer, prompt, cfg)\n  File \"/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py\", line 124, in decorate_context\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/neuro-agent/src/neuro_agent/inference/engine.py\", line 123, in generate_with_timings\n    outputs = model(input_ids=input_ids, use_cache=config.use_cache)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/peft/peft_model.py\", line 2101, in forward\n    return self.base_model(\n           ^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: Error: accessing tensor output of CUDAGraphs that has been overwritten by a subsequent run. Stack trace: File \"/usr/local/lib/python3.12/dist-packages/transformers/models/qwen3/modeling_qwen3.py\", line 64, in forward\n    return self.weight * hidden_states.to(input_dtype)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^. To prevent overwriting, clone the tensor outside of torch.compile() or call torch.compiler.cudagraph_mark_step_begin() before each model invocation.\n",
+      "kept": false
+    },
+    "h4_4_combined": {
+      "description": "Independently successful H4-1/H4-2/H4-3 flags only",
+      "flags": {
+        "fp16_compute": true,
+        "compile_surrounding": false,
+        "cuda_graphs": false
+      },
+      "load_time_s": 4.909,
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 78.93,
+      "prefill_ms": 78.9,
+      "decode_tok_per_s": 18.08,
+      "latency_per_token_ms": 55.32,
+      "e2e_ms": 3619.27,
+      "allocated_vram_mb": 4347.9,
+      "peak_vram_mb": 4568.5,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        78.03,
+        78.52,
+        79.51,
+        79.18,
+        79.42
+      ],
+      "all_prefill_ms": [
+        78.0,
+        78.49,
+        79.48,
+        79.15,
+        79.39
+      ],
+      "all_decode_tok_per_s": [
+        18.13,
+        18.1,
+        18.09,
+        17.97,
+        18.1
+      ],
+      "all_e2e_ms": [
+        3608.14,
+        3615.36,
+        3616.56,
+        3640.86,
+        3615.42
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 788714,
+      "prof_cast_count": 39250,
+      "prof_bf16_copy_cast_count": 0,
+      "prof_cast_self_cuda_us": 77304.2,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 362810.2
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 350476.8
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 145617.6
+        },
+        {
+          "name": "aten::mul",
+          "count": 64512,
+          "self_cuda_time_us": 112395.6
+        },
+        {
+          "name": "aten::any",
+          "count": 25216,
+          "self_cuda_time_us": 72499.1
+        },
+        {
+          "name": "aten::index",
+          "count": 18176,
+          "self_cuda_time_us": 58909.8
+        },
+        {
+          "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+          "count": 63,
+          "self_cuda_time_us": 51298.5
+        },
+        {
+          "name": "aten::nonzero",
+          "count": 9088,
+          "self_cuda_time_us": 49424.1
+        },
+        {
+          "name": "std::enable_if<true, void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, true, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+          "count": 21919,
+          "self_cuda_time_us": 47256.7
+        },
+        {
+          "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4> >(at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4>)",
+          "count": 16128,
+          "self_cuda_time_us": 42939.2
+        }
+      ]
+    },
+    "baseline_int8_original": {
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 83.13,
+      "prefill_ms": 83.1,
+      "decode_tok_per_s": 10.52,
+      "latency_per_token_ms": 430.98,
+      "e2e_ms": 27665.96,
+      "allocated_vram_mb": 4476.9,
+      "peak_vram_mb": 4697.1,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        82.97,
+        83.36,
+        82.43,
+        84.41,
+        82.47
+      ],
+      "all_prefill_ms": [
+        82.95,
+        83.33,
+        82.4,
+        84.39,
+        82.44
+      ],
+      "all_decode_tok_per_s": [
+        16.78,
+        16.88,
+        1.02,
+        1.0,
+        16.94
+      ],
+      "all_e2e_ms": [
+        3897.68,
+        3875.35,
+        62770.72,
+        63925.0,
+        3861.06
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 936556,
+      "prof_cast_count": 122187,
+      "prof_bf16_copy_cast_count": 16128,
+      "prof_cast_self_cuda_us": 228817.4,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 358849.6
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 347118.6
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 248375.0
+        },
+        {
+          "name": "aten::copy_",
+          "count": 92700,
+          "self_cuda_time_us": 169764.9
+        },
+        {
+          "name": "aten::mul",
+          "count": 64556,
+          "self_cuda_time_us": 112586.3
+        },
+        {
+          "name": "void gemv2T_kernel_val<int, int, float, float, float, float, 128, 16, 2, 2, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float>, float, float)",
+          "count": 2268,
+          "self_cuda_time_us": 82117.3
+        },
+        {
+          "name": "aten::any",
+          "count": 25238,
+          "self_cuda_time_us": 71940.3
+        },
+        {
+          "name": "aten::index",
+          "count": 18220,
+          "self_cuda_time_us": 58063.8
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "count": 25472,
+          "self_cuda_time_us": 55088.0
+        },
+        {
+          "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)",
+          "count": 63,
+          "self_cuda_time_us": 51294.3
+        }
+      ],
+      "load_time_s": 14.369,
+      "note": "true original INT8 path"
+    },
+    "h4_3_torch_compile_default": {
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 99.78,
+      "prefill_ms": 99.75,
+      "decode_tok_per_s": 13.4,
+      "latency_per_token_ms": 74.64,
+      "e2e_ms": 4877.01,
+      "allocated_vram_mb": 4478.8,
+      "peak_vram_mb": 4699.1,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        103.48,
+        99.29,
+        99.58,
+        97.91,
+        98.64
+      ],
+      "all_prefill_ms": [
+        103.45,
+        99.26,
+        99.55,
+        97.88,
+        98.61
+      ],
+      "all_decode_tok_per_s": [
+        13.41,
+        13.44,
+        13.4,
+        13.34,
+        13.39
+      ],
+      "all_e2e_ms": [
+        4876.54,
+        4859.64,
+        4874.05,
+        4895.87,
+        4878.95
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 805167,
+      "prof_cast_count": 112954,
+      "prof_bf16_copy_cast_count": 16128,
+      "prof_cast_self_cuda_us": 210053.5,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 360726.6
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 348351.7
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 251227.9
+        },
+        {
+          "name": "aten::copy_",
+          "count": 73943,
+          "self_cuda_time_us": 143621.5
+        },
+        {
+          "name": "aten::mul",
+          "count": 45858,
+          "self_cuda_time_us": 83931.4
+        },
+        {
+          "name": "void gemv2T_kernel_val<int, int, float, float, float, float, 128, 16, 2, 2, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float>, float, float)",
+          "count": 2268,
+          "self_cuda_time_us": 83158.4
+        },
+        {
+          "name": "aten::any",
+          "count": 25233,
+          "self_cuda_time_us": 73236.3
+        },
+        {
+          "name": "aten::index",
+          "count": 18210,
+          "self_cuda_time_us": 59153.2
+        },
+        {
+          "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)",
+          "count": 63,
+          "self_cuda_time_us": 51297.7
+        },
+        {
+          "name": "aten::nonzero",
+          "count": 9105,
+          "self_cuda_time_us": 49398.0
+        }
+      ],
+      "kept": true
+    },
+    "baseline_int8_fair": {
+      "load_time_s": 13.567,
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 79.3,
+      "prefill_ms": 79.27,
+      "decode_tok_per_s": 18.73,
+      "latency_per_token_ms": 53.41,
+      "e2e_ms": 3497.46,
+      "allocated_vram_mb": 4476.9,
+      "peak_vram_mb": 4697.1,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        78.05,
+        78.29,
+        78.98,
+        78.73,
+        82.47
+      ],
+      "all_prefill_ms": [
+        78.02,
+        78.26,
+        78.94,
+        78.69,
+        82.44
+      ],
+      "all_decode_tok_per_s": [
+        18.48,
+        19.02,
+        18.84,
+        18.66,
+        18.63
+      ],
+      "all_e2e_ms": [
+        3541.98,
+        3442.82,
+        3476.78,
+        3507.88,
+        3517.84
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 936556,
+      "prof_cast_count": 122187,
+      "prof_bf16_copy_cast_count": 16128,
+      "prof_cast_self_cuda_us": 222036.9,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 360726.6
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 348988.5
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 248475.5
+        },
+        {
+          "name": "aten::copy_",
+          "count": 92700,
+          "self_cuda_time_us": 164683.1
+        },
+        {
+          "name": "aten::mul",
+          "count": 64556,
+          "self_cuda_time_us": 109494.3
+        },
+        {
+          "name": "void gemv2T_kernel_val<int, int, float, float, float, float, 128, 16, 2, 2, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float>, float, float)",
+          "count": 2268,
+          "self_cuda_time_us": 80018.3
+        },
+        {
+          "name": "aten::any",
+          "count": 25238,
+          "self_cuda_time_us": 68850.4
+        },
+        {
+          "name": "aten::index",
+          "count": 18220,
+          "self_cuda_time_us": 56564.9
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "count": 25472,
+          "self_cuda_time_us": 53114.6
+        },
+        {
+          "name": "aten::nonzero",
+          "count": 9110,
+          "self_cuda_time_us": 52534.6
+        }
+      ]
+    },
+    "h4_1_fp16_fair": {
+      "load_time_s": 35.584,
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 81.5,
+      "prefill_ms": 81.46,
+      "decode_tok_per_s": 17.39,
+      "latency_per_token_ms": 57.59,
+      "e2e_ms": 3767.56,
+      "allocated_vram_mb": 4347.2,
+      "peak_vram_mb": 4567.4,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        80.5,
+        80.43,
+        80.11,
+        85.35,
+        81.1
+      ],
+      "all_prefill_ms": [
+        80.46,
+        80.4,
+        80.08,
+        85.31,
+        81.07
+      ],
+      "all_decode_tok_per_s": [
+        17.72,
+        17.65,
+        17.7,
+        16.03,
+        17.86
+      ],
+      "all_e2e_ms": [
+        3693.24,
+        3707.26,
+        3696.15,
+        4077.56,
+        3663.61
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 788714,
+      "prof_cast_count": 39250,
+      "prof_bf16_copy_cast_count": 0,
+      "prof_cast_self_cuda_us": 76904.3,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 362048.3
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 349669.0
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 145313.3
+        },
+        {
+          "name": "aten::mul",
+          "count": 64512,
+          "self_cuda_time_us": 112706.5
+        },
+        {
+          "name": "aten::any",
+          "count": 25216,
+          "self_cuda_time_us": 72446.5
+        },
+        {
+          "name": "aten::index",
+          "count": 18176,
+          "self_cuda_time_us": 58377.6
+        },
+        {
+          "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+          "count": 63,
+          "self_cuda_time_us": 51303.7
+        },
+        {
+          "name": "aten::nonzero",
+          "count": 9088,
+          "self_cuda_time_us": 49236.4
+        },
+        {
+          "name": "std::enable_if<true, void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, true, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+          "count": 21919,
+          "self_cuda_time_us": 47007.0
+        },
+        {
+          "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4> >(at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4>)",
+          "count": 16128,
+          "self_cuda_time_us": 42431.2
+        }
+      ]
+    },
+    "h4_3_compile_fair": {
+      "load_time_s": 13.487,
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 93.36,
+      "prefill_ms": 93.32,
+      "decode_tok_per_s": 14.92,
+      "latency_per_token_ms": 67.03,
+      "e2e_ms": 4383.27,
+      "allocated_vram_mb": 4479.7,
+      "peak_vram_mb": 4700.3,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        93.33,
+        93.56,
+        93.63,
+        93.3,
+        92.97
+      ],
+      "all_prefill_ms": [
+        93.29,
+        93.52,
+        93.6,
+        93.26,
+        92.94
+      ],
+      "all_decode_tok_per_s": [
+        14.93,
+        14.93,
+        14.89,
+        14.94,
+        14.9
+      ],
+      "all_e2e_ms": [
+        4379.89,
+        4378.91,
+        4391.56,
+        4378.44,
+        4387.56
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 805167,
+      "prof_cast_count": 112954,
+      "prof_bf16_copy_cast_count": 16128,
+      "prof_cast_self_cuda_us": 211077.2,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 361152.4
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 348811.7
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 251285.5
+        },
+        {
+          "name": "aten::copy_",
+          "count": 73943,
+          "self_cuda_time_us": 144422.0
+        },
+        {
+          "name": "aten::mul",
+          "count": 45858,
+          "self_cuda_time_us": 84617.2
+        },
+        {
+          "name": "void gemv2T_kernel_val<int, int, float, float, float, float, 128, 16, 2, 2, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float>, float, float)",
+          "count": 2268,
+          "self_cuda_time_us": 83105.3
+        },
+        {
+          "name": "aten::any",
+          "count": 25233,
+          "self_cuda_time_us": 73022.6
+        },
+        {
+          "name": "aten::index",
+          "count": 18210,
+          "self_cuda_time_us": 58976.5
+        },
+        {
+          "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)",
+          "count": 63,
+          "self_cuda_time_us": 51351.4
+        },
+        {
+          "name": "aten::nonzero",
+          "count": 9105,
+          "self_cuda_time_us": 49267.0
+        }
+      ]
+    },
+    "combined_fair": {
+      "load_time_s": 38.977,
+      "prompt_tokens": 499,
+      "generated_tokens": 64,
+      "ttft_ms": 87.79,
+      "prefill_ms": 87.75,
+      "decode_tok_per_s": 15.65,
+      "latency_per_token_ms": 63.92,
+      "e2e_ms": 4178.51,
+      "allocated_vram_mb": 4347.5,
+      "peak_vram_mb": 4567.9,
+      "warmup": 2,
+      "timed_iters": 5,
+      "all_ttft_ms": [
+        85.95,
+        94.0,
+        86.33,
+        86.21,
+        86.44
+      ],
+      "all_prefill_ms": [
+        85.92,
+        93.96,
+        86.3,
+        86.18,
+        86.41
+      ],
+      "all_decode_tok_per_s": [
+        15.57,
+        15.68,
+        15.7,
+        15.63,
+        15.65
+      ],
+      "all_e2e_ms": [
+        4197.48,
+        4176.61,
+        4162.36,
+        4180.92,
+        4175.17
+      ],
+      "decode_loop": "eager_generate_with_timings",
+      "prof_kernel_launch_count": 786481,
+      "prof_cast_count": 39154,
+      "prof_bf16_copy_cast_count": 0,
+      "prof_cast_self_cuda_us": 76209.7,
+      "prof_top10_ops": [
+        {
+          "name": "bitsandbytes::int8_linear_matmul",
+          "count": 16128,
+          "self_cuda_time_us": 363023.2
+        },
+        {
+          "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+          "count": 15876,
+          "self_cuda_time_us": 350571.0
+        },
+        {
+          "name": "aten::mm",
+          "count": 32320,
+          "self_cuda_time_us": 145574.0
+        },
+        {
+          "name": "aten::mul",
+          "count": 64210,
+          "self_cuda_time_us": 111953.6
+        },
+        {
+          "name": "aten::any",
+          "count": 25238,
+          "self_cuda_time_us": 72620.4
+        },
+        {
+          "name": "aten::index",
+          "count": 18220,
+          "self_cuda_time_us": 58688.9
+        },
+        {
+          "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+          "count": 63,
+          "self_cuda_time_us": 51350.3
+        },
+        {
+          "name": "aten::nonzero",
+          "count": 9110,
+          "self_cuda_time_us": 49502.9
+        },
+        {
+          "name": "std::enable_if<true, void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, true, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+          "count": 21907,
+          "self_cuda_time_us": 47115.9
+        },
+        {
+          "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4> >(at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4>)",
+          "count": 16128,
+          "self_cuda_time_us": 42455.7
+        }
+      ]
+    }
+  },
+  "pass_fail": "FAIL",
+  "pass_reasons": [
+    "No material decode improvement on existing bitsandbytes INT8: H4-1/H4-2/H4-3 all rejected; best = unmodified INT8",
+    "Fair decode gain vs H.4 baseline: 0.0% (below 15% material bar)",
+    "CUDA Graphs incompatible with bnb INT8; torch.compile surrounding regresses; FP16 compute zeros BF16 casts but slows decode ~7%",
+    "Remaining bottleneck MatMul8bitLt quantize\u2192int8_gemm\u2192dequant requires deeper kernel/backend change (out of H.4 scope)"
+  ],
+  "decode_gain_pct_vs_h4_baseline": 0.0,
+  "decode_gain_pct_vs_h1b_original": 49.84,
+  "decode_gain_pct_vs_h3_reproduced": 43.2,
+  "methodology_note": "Early runs without redirecting MatMul8bitLt BF16\u2192FP16 warnings were contaminated (baseline decode as low as ~4.7 tok/s). Fair numbers redirect warnings to results/optimization/int8/bnb_warnings.log. Fair baseline ~18.7 tok/s is faster than H.1B/H.3 published figures due to measurement hygiene, not a kept H.4 runtime change.",
+  "resume": {
+    "prior_agent": "29b30c63-9c8f-4d90-8e14-87e71c725426",
+    "failure": "resource_exhausted after fair remeasure completed",
+    "reused": [
+      "H4-1",
+      "H4-2",
+      "H4-3",
+      "H4-4",
+      "H4-5",
+      "quality_sanity"
+    ],
+    "gpu_remeasure_on_resume": false,
+    "resumed_at": "2026-09-03T18:03:31.296418+00:00"
+  }
+}

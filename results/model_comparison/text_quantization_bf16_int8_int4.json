@@ -1,0 +1,216 @@
+{
+  "stage": "H.1",
+  "scope": "text-only quantization benchmark",
+  "model": {
+    "base": "Qwen/Qwen3-4B-Instruct-2507",
+    "adapter": "checkpoints/sft_corrected_v2/final"
+  },
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 4090 24GB",
+    "libraries": {
+      "torch": "2.13.0+cu130",
+      "transformers": "5.16.1",
+      "peft": "0.20.0",
+      "bitsandbytes": "0.50.2"
+    }
+  },
+  "methods": {
+    "bf16": "Transformers AutoModelForCausalLM with torch_dtype=bfloat16 + PEFT LoRA adapter",
+    "int8": "bitsandbytes BitsAndBytesConfig(load_in_8bit=True) + PEFT LoRA adapter",
+    "int4": "bitsandbytes NF4 + double quant (load_in_4bit=True, bnb_4bit_quant_type=nf4, bnb_4bit_use_double_quant=True, bnb_4bit_compute_dtype=bfloat16) + PEFT LoRA adapter"
+  },
+  "compatibility": {
+    "bf16": { "supported": true, "adapter_loaded": true, "error": null },
+    "int8": {
+      "supported": true,
+      "adapter_loaded": true,
+      "error": null,
+      "note": "bitsandbytes emits repeated MatMul8bitLt BF16->FP16 cast warnings during generation (cosmetic only)"
+    },
+    "int4": { "supported": true, "adapter_loaded": true, "error": null }
+  },
+  "smoke": {
+    "bf16": {
+      "load_time_s": 32.94,
+      "allocated_after_load_mb": 7930.4,
+      "peak_allocated_mb": 7948.1,
+      "peak_reserved_mb": 8206.0,
+      "nvidia_smi_mb": 8680.0
+    },
+    "int8": {
+      "load_time_s": 6.19,
+      "allocated_after_load_mb": 4478.9,
+      "peak_allocated_mb": 4523.9,
+      "peak_reserved_mb": 4744.0,
+      "nvidia_smi_mb": 5228.0
+    },
+    "int4": {
+      "load_time_s": 3.51,
+      "allocated_after_load_mb": 2820.4,
+      "peak_allocated_mb": 2877.6,
+      "peak_reserved_mb": 3148.0,
+      "nvidia_smi_mb": 3632.0
+    }
+  },
+  "quality": {
+    "targeted_gate_80_examples": {
+      "bf16": { "pass_rate": 0.8875, "invalid_parse_rate": 0.0, "gate_passed": true },
+      "int8": { "pass_rate": 0.8875, "invalid_parse_rate": 0.0, "gate_passed": true },
+      "int4": {
+        "pass_rate": 0.825, "invalid_parse_rate": 0.0, "gate_passed": false,
+        "gate_failure_reason": "factual_grounding floor failed (0.20 < 0.30 minimum)"
+      }
+    },
+    "full_1000_examples": {
+      "bf16": {
+        "completed": true,
+        "pass_rate": 0.864,
+        "delta_vs_bf16": 0.0,
+        "invalid_parse_rate": 0.0,
+        "empty_refusal_rate": 0.0,
+        "avg_generated_tokens": 7.857,
+        "runtime_s": 416.6,
+        "peak_torch_allocated_mb": 8412.4,
+        "peak_torch_reserved_mb": 8662.0,
+        "nvidia_smi_peak_mb": 14861.0
+      },
+      "int8": {
+        "completed": true,
+        "pass_rate": 0.866,
+        "delta_vs_bf16": 0.002,
+        "invalid_parse_rate": 0.0,
+        "empty_refusal_rate": 0.0,
+        "avg_generated_tokens": 7.834,
+        "runtime_s": 410.5,
+        "peak_torch_allocated_mb": 4951.0,
+        "peak_torch_reserved_mb": 5248.0,
+        "nvidia_smi_peak_mb": 5732.0
+      },
+      "int4": {
+        "completed": false,
+        "reason": "Conservative plan: skipped full eval after targeted gate failure on factual_grounding"
+      }
+    },
+    "per_task_full": {
+      "bf16": {
+        "band_power_analysis": 0.88,
+        "channel_ranking": 0.816,
+        "execution_vs_imagery": 1.0,
+        "factual_grounding": 0.488,
+        "movement_task_classification": 0.728,
+        "numerical_reasoning": 1.0,
+        "statistical_comparison": 1.0,
+        "tool_selection": 1.0
+      },
+      "int8": {
+        "band_power_analysis": 0.88,
+        "channel_ranking": 0.816,
+        "execution_vs_imagery": 1.0,
+        "factual_grounding": 0.512,
+        "movement_task_classification": 0.72,
+        "numerical_reasoning": 1.0,
+        "statistical_comparison": 1.0,
+        "tool_selection": 1.0
+      },
+      "int4": null
+    },
+    "per_task_targeted_int4": {
+      "band_power_analysis": 0.9,
+      "channel_ranking": 0.8,
+      "execution_vs_imagery": 1.0,
+      "factual_grounding": 0.2,
+      "movement_task_classification": 0.7,
+      "numerical_reasoning": 1.0,
+      "statistical_comparison": 1.0,
+      "tool_selection": 1.0
+    }
+  },
+  "systems": {
+    "bf16": {
+      "load_time_s": 23.71,
+      "weight_memory_mb": 7924.2,
+      "allocated_after_load_mb": 7938.4,
+      "peak_vram_mb": 8164.2,
+      "nvidia_smi_after_load_mb": 8682.0,
+      "ttft_ms_mean": 51.05,
+      "prefill_ms_mean": 51.02,
+      "decode_latency_per_token_ms_mean": 18.96,
+      "decode_tps_mean": 52.74,
+      "e2e_ms_mean": 1264.5,
+      "gpu_util_pct_mean": 97.3,
+      "kv_cache_mb": 88.3,
+      "context_tokens": 512,
+      "generated_tokens": 64
+    },
+    "int8": {
+      "load_time_s": 6.15,
+      "weight_memory_mb": 4479.0,
+      "allocated_after_load_mb": 4479.0,
+      "peak_vram_mb": 4709.3,
+      "nvidia_smi_after_load_mb": 10465.0,
+      "ttft_ms_mean": 151.73,
+      "prefill_ms_mean": 151.61,
+      "decode_latency_per_token_ms_mean": 83.23,
+      "decode_tps_mean": 12.82,
+      "e2e_ms_mean": 5478.2,
+      "gpu_util_pct_mean": 86.0,
+      "kv_cache_mb": 84.9,
+      "context_tokens": 512,
+      "generated_tokens": 64,
+      "note": "bitsandbytes INT8 matmul does not use RTX 4090 Tensor Cores; decode throughput severely reduced vs BF16"
+    },
+    "int4": {
+      "load_time_s": 11.37,
+      "weight_memory_mb": 2820.4,
+      "allocated_after_load_mb": 2820.4,
+      "peak_vram_mb": 3045.7,
+      "nvidia_smi_after_load_mb": 3568.0,
+      "ttft_ms_mean": 61.24,
+      "prefill_ms_mean": 61.21,
+      "decode_latency_per_token_ms_mean": 22.60,
+      "decode_tps_mean": 44.25,
+      "e2e_ms_mean": 1507.5,
+      "gpu_util_pct_mean": 60.1,
+      "kv_cache_mb": 89.0,
+      "context_tokens": 512,
+      "generated_tokens": 64
+    },
+    "deltas_vs_bf16": {
+      "int8": {
+        "load_time_s": -17.56,
+        "peak_vram_mb": -3454.9,
+        "peak_vram_pct": -42.3,
+        "ttft_ms_mean": 100.68,
+        "decode_tps_mean": -39.92,
+        "decode_tps_pct": -75.7,
+        "e2e_ms_mean": 4213.7,
+        "e2e_pct": 333.2
+      },
+      "int4": {
+        "load_time_s": -12.34,
+        "peak_vram_mb": -5118.5,
+        "peak_vram_pct": -62.7,
+        "ttft_ms_mean": 10.20,
+        "decode_tps_mean": -8.49,
+        "decode_tps_pct": -16.1,
+        "e2e_ms_mean": 243.0,
+        "e2e_pct": 19.2
+      }
+    }
+  },
+  "recommendation": {
+    "choice": "A",
+    "label": "BF16",
+    "reason": "INT8 is disqualified on latency grounds: decode throughput collapsed from 52.7 tok/s to 12.8 tok/s (−75.7%) and E2E latency rose 4.3× because bitsandbytes LLM.int8() cannot use RTX 4090 Tensor Cores. INT4 preserved more speed (44.3 tok/s, −16%) and cut VRAM by 63%, but it failed the targeted factual_grounding gate and no full-1000 quality run was performed to confirm the extent of regression. BF16 is the only variant with fully validated quality and full Tensor Core throughput on this hardware. INT4 is the recommended quantized option if VRAM budget requires it, pending a re-run of INT4 full quality eval."
+  },
+  "stage_h1": {
+    "pass": true,
+    "evidence": "All three variants loaded with adapter. BF16 and INT8 completed full 1000-example held-out quality eval. INT4 passed smoke and load but soft-failed the targeted quality gate. All three variants completed reduced systems benchmarks (1 warmup, 3 iterations, 512-token prompt, 64 generated tokens). Comparison artifact produced.",
+    "caveats": [
+      "INT8 systems result is a caution: bitsandbytes LLM.int8() produces correct outputs but is ~4× slower than BF16 decode on RTX 4090 due to lack of Tensor Core utilization.",
+      "INT4 full quality eval was not run; targeted gate failure on factual_grounding (0.20) suggests meaningful regression on that task family.",
+      "Systems benchmark used 3 iterations (down from the standard 5) to conserve resources."
+    ],
+    "next_stage": "H.2 Multimodal quantization benchmark (separate; do not mix with text results)"
+  }
+}

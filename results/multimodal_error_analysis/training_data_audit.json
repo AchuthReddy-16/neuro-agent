@@ -1,0 +1,157 @@
+{
+  "total_examples": 700,
+  "train_subjects_only": 700,
+  "held_out_leakage": 0,
+  "by_image_family": {
+    "band_power": 148,
+    "psd": 148,
+    "spectrogram": 147,
+    "topomap": 147,
+    "condition_comparison": 60,
+    "waveform": 50
+  },
+  "by_task_family": {
+    "psd_peak_frequency": 50,
+    "spectrogram_dominant_band": 49,
+    "topomap_strongest_alpha_mu": 49,
+    "psd_dominant_band": 49,
+    "spectrogram_peak_frequency": 49,
+    "topomap_beta_top3": 49,
+    "psd_band_order": 49,
+    "spectrogram_strongest_vs_weakest": 49,
+    "topomap_high_delta_set": 49,
+    "band_power_beta_top3": 37,
+    "band_power_weakest_alpha_mu": 37,
+    "band_power_high_beta_set": 37,
+    "band_power_dominant_mean_band": 37,
+    "condition_higher_mean": 20,
+    "condition_percent_difference": 20,
+    "condition_largest_channel_difference": 20,
+    "waveform_highest_rms": 17,
+    "waveform_rms_order": 17,
+    "waveform_max_rms_numeric": 16
+  },
+  "by_task_class": {
+    "categorical": 238,
+    "ranking": 152,
+    "numeric": 135,
+    "comparison": 89,
+    "set_membership": 86
+  },
+  "by_answer_format": {
+    "verbose_grounded_template": 594,
+    "other": 86,
+    "numeric_other": 20
+  },
+  "by_ground_truth_top20": {
+    "delta_power": 130,
+    "T10": 34,
+    "beta_power": 30,
+    "1.5": 20,
+    "2.5": 19,
+    "1.875": 18,
+    "alpha_mu_power": 15,
+    "['delta_power', 'beta_power', 'theta_power', 'alpha_mu_power']": 14,
+    "['AF3', 'AF4', 'AF7', 'AF8', 'AFZ', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'FP1', 'FP2', 'FPZ']": 11,
+    "2.0": 10,
+    "C3": 9,
+    "['delta_power', 'theta_power', 'beta_power', 'alpha_mu_power']": 9,
+    "theta_power": 9,
+    "['CZ', 'C3', 'C4']": 8,
+    "CZ": 7,
+    "['C3', 'CZ', 'C4']": 6,
+    "AF8": 6,
+    "both_fists": 6,
+    "['delta_power', 'theta_power', 'alpha_mu_power', 'beta_power']": 6,
+    "3.125": 6
+  },
+  "waveform_categorical_count": 17,
+  "spectrogram_categorical_count": 49,
+  "verbose_answer_fraction": 0.8486,
+  "answer_only_fraction": 0.0,
+  "focus_family_coverage": {
+    "waveform_highest_rms": {
+      "count": 17,
+      "answer_formats": {
+        "verbose_grounded_template": 17
+      },
+      "sample_answers": [
+        "C3 is the grounded result (10.3563 in the stored units), computed across the supplied values.",
+        "C3 is the grounded result (24.5949 in the stored units), computed across the supplied values.",
+        "C3 is the grounded result (29.9148 in the stored units), computed across the supplied values."
+      ]
+    },
+    "waveform_max_rms_numeric": {
+      "count": 16,
+      "answer_formats": {
+        "verbose_grounded_template": 16
+      },
+      "sample_answers": [
+        "The computed result is 44.5818 uV.",
+        "The computed result is 18.1627 uV.",
+        "The computed result is 10.069 uV."
+      ]
+    },
+    "spectrogram_dominant_band": {
+      "count": 49,
+      "answer_formats": {
+        "verbose_grounded_template": 49
+      },
+      "sample_answers": [
+        "delta_power is the grounded result (370.308 in the stored units), computed across the supplied values.",
+        "delta_power is the grounded result (489.015 in the stored units), computed across the supplied values.",
+        "delta_power is the grounded result (880.304 in the stored units), computed across the supplied values."
+      ]
+    },
+    "spectrogram_strongest_vs_weakest": {
+      "count": 49,
+      "answer_formats": {
+        "verbose_grounded_template": 49
+      },
+      "sample_answers": [
+        "delta_power is the grounded result (44.5188 in the stored units), computed across the supplied values.",
+        "delta_power is the grounded result (773.939 in the stored units), computed across the supplied values.",
+        "beta_power is the grounded result (518.999 in the stored units), computed across the supplied values."
+      ]
+    },
+    "topomap_strongest_alpha_mu": {
+      "count": 49,
+      "answer_formats": {
+        "verbose_grounded_template": 49
+      },
+      "sample_answers": [
+        "F3 is the grounded result (78.1986 in the stored units), computed across the supplied values.",
+        "AF8 is the grounded result (98.0782 in the stored units), computed across the supplied values.",
+        "CP2 is the grounded result (35.3848 in the stored units), computed across the supplied values."
+      ]
+    },
+    "band_power_weakest_alpha_mu": {
+      "count": 37,
+      "answer_formats": {
+        "verbose_grounded_template": 37
+      },
+      "sample_answers": [
+        "TP8 is the grounded result (5.3026 in the stored units), computed across the supplied values.",
+        "T10 is the grounded result (15.8534 in the stored units), computed across the supplied values.",
+        "T10 is the grounded result (2.65959 in the stored units), computed across the supplied values."
+      ]
+    },
+    "psd_dominant_band": {
+      "count": 49,
+      "answer_formats": {
+        "verbose_grounded_template": 49
+      },
+      "sample_answers": [
+        "delta_power is the grounded result (122.539 in the stored units), computed across the supplied values.",
+        "delta_power is the grounded result (221.886 in the stored units), computed across the supplied values.",
+        "delta_power is the grounded result (1295.62 in the stored units), computed across the supplied values."
+      ]
+    }
+  },
+  "findings": [
+    "Training targets overwhelmingly use verbose grounded_answer templates.",
+    "Waveform categorical answers teach 'CHANNEL is the grounded result (...)' not channel-only labels.",
+    "Ranking tasks teach 'The grounded descending order is CH1, CH2, CH3; their values are ...'.",
+    "Eval verifiers expect concise parseable answers (channel name, label, number, or ranking)."
+  ]
+}

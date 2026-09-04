@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-09-03T22:11:28.301699+00:00",
+  "top5": [
+    {
+      "component": "text_vision_swap_unload_reload_overhead",
+      "measured_latency_ms": 58008.954,
+      "pct_of_request_e2e": 32.98,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "GPU+orchestration",
+      "optimization_opportunity": "Keep VLM warm at reduced text util; or persistent dual-process with util\u22480.40; or lazy/pool VLM",
+      "expected_complexity": "high (architecture) / medium (keep dual at reduced util)",
+      "evidence": "measured_k1",
+      "rank": 1
+    },
+    {
+      "component": "vlm_cold_load",
+      "measured_latency_ms": 33473.923,
+      "pct_of_request_e2e": 19.03,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "GPU",
+      "optimization_opportunity": "Persist VLM or accelerate load",
+      "expected_complexity": "high",
+      "evidence": "measured_k1",
+      "rank": 2
+    },
+    {
+      "component": "text_vllm_restore_after_vision",
+      "measured_latency_ms": 22524.383,
+      "pct_of_request_e2e": 12.81,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "GPU+orchestration",
+      "optimization_opportunity": "Sleep/wake engine instead of full restart if supported",
+      "expected_complexity": "medium-high",
+      "evidence": "measured_k1",
+      "rank": 3
+    },
+    {
+      "component": "vlm_inference_preprocess_generate",
+      "measured_latency_ms": 4947.692,
+      "pct_of_request_e2e": 2.81,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "GPU",
+      "optimization_opportunity": "Shorter generations; image resize; optional quant later",
+      "expected_complexity": "medium",
+      "evidence": "measured_k1",
+      "rank": 4
+    },
+    {
+      "component": "text_vllm_unload_for_vision",
+      "measured_latency_ms": 910.803,
+      "pct_of_request_e2e": 0.52,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "orchestration",
+      "optimization_opportunity": "Engine sleep API / reduced co-residency",
+      "expected_complexity": "medium",
+      "evidence": "measured_k1",
+      "rank": 5
+    }
+  ]
+}

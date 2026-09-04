@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-09-03T22:04:57.858299+00:00",
+  "classes": [
+    {
+      "id": "A_TEXT_SIMPLE_TOOL",
+      "description": "Text + single deterministic tool (channel ranking / beta)",
+      "question": "Rank channels by beta power for S001_R01_E000, top 3 descending."
+    },
+    {
+      "id": "B_TEXT_MULTI_TOOL",
+      "description": "Text + multiple tools (threshold_set = band_power + selection)",
+      "question": "Which channels have beta power at or above the upper quartile for S001_R01_E000?",
+      "forced_request": "threshold_set"
+    },
+    {
+      "id": "C_TEXT_VERIFIER",
+      "description": "Controlled multi-tool path that triggers conditional model verifier",
+      "question": "Which channels have beta power at or above the upper quartile for S001_R01_E000?",
+      "forced_request": "threshold_set",
+      "notes": "threshold_set yields tool_count=2 \u2192 should_trigger_verifier multi_tool"
+    },
+    {
+      "id": "D_TEXT_RECOVERY",
+      "description": "Controlled corrupted draft forcing recovery cycle",
+      "question": "What is the beta band power at channel C3 for sample S001_R01_E000?",
+      "corruption": "corrupted_numeric_99999"
+    },
+    {
+      "id": "E_VISION_REQUIRED",
+      "description": "Vision-required topomap interpretation with measured swap/unload",
+      "question": "Does this topomap visually support the measured beta-power ranking?",
+      "image": "/workspace/neuro-agent/data/processed/vision/images/test/img_topomap_06b9e5be484f99a7.png"
+    },
+    {
+      "id": "F_VISION_TOOL_COMBINED",
+      "description": "Deterministic ranking + VLM visual confirmation with full swap cycle",
+      "question": "Tools rank beta channels then ask if topomap visually supports ranking",
+      "image": "/workspace/neuro-agent/data/processed/vision/images/test/img_topomap_06b9e5be484f99a7.png"
+    }
+  ]
+}

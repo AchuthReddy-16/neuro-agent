@@ -1,0 +1,281 @@
+{
+  "timestamp": "2026-09-03T15:04:39.947437+00:00",
+  "config_snapshot": {
+    "model": {
+      "name": "Qwen/Qwen3-4B-Instruct-2507",
+      "variant": "sft_corrected_v2_INT4",
+      "dtype": "bfloat16",
+      "quantization": "int4",
+      "trust_remote_code": false,
+      "adapter_path": "checkpoints/sft_corrected_v2/final"
+    },
+    "inference": {
+      "seed": 42,
+      "do_sample": false,
+      "max_new_tokens": 128,
+      "use_cache": true,
+      "temperature": 0.0,
+      "top_p": 1.0
+    },
+    "evaluation": {
+      "dataset": "data/processed/eval_heldout_corrected.jsonl",
+      "held_out_subjects": [
+        "S026",
+        "S027",
+        "S028",
+        "S029",
+        "S030"
+      ],
+      "train_subjects": [
+        "S001",
+        "S002",
+        "S003",
+        "S004",
+        "S005",
+        "S006",
+        "S007",
+        "S008",
+        "S009",
+        "S010",
+        "S011",
+        "S012",
+        "S013",
+        "S014",
+        "S015",
+        "S016",
+        "S017",
+        "S018",
+        "S019",
+        "S020"
+      ],
+      "validation_subjects": [
+        "S021",
+        "S022",
+        "S023",
+        "S024",
+        "S025"
+      ],
+      "targeted_categories": [
+        "numerical_reasoning",
+        "channel_ranking",
+        "band_power_analysis",
+        "movement_task_classification",
+        "execution_vs_imagery",
+        "statistical_comparison",
+        "tool_selection",
+        "factual_grounding"
+      ],
+      "targeted_per_category": 10
+    },
+    "gate": {
+      "catastrophic_overall_drop": 0.15,
+      "catastrophic_invalid_parse_rate": 0.05,
+      "numerical_reasoning_min": 0.8,
+      "channel_ranking_min": 0.65,
+      "band_power_analysis_min": 0.7,
+      "movement_task_classification_min": 0.55,
+      "execution_vs_imagery_min": 0.8,
+      "statistical_comparison_min": 0.8,
+      "tool_selection_min": 0.8,
+      "factual_grounding_min": 0.3,
+      "reference": {
+        "numerical_reasoning": 1.0,
+        "channel_ranking": 0.816,
+        "band_power_analysis": 0.88,
+        "movement_task_classification": 0.728,
+        "execution_vs_imagery": 1.0,
+        "statistical_comparison": 1.0,
+        "tool_selection": 1.0,
+        "factual_grounding": 0.488
+      }
+    },
+    "prompt": {
+      "system": "You are a neuroscience research assistant. Answer using only the provided context. Respond with a concise direct answer only. Do not add unsupported interpretation.\n"
+    },
+    "output": {
+      "dir": "results/quantization/text/quality/int4",
+      "targeted_dir": "results/quantization/text/quality/int4_targeted"
+    },
+    "benchmark": {
+      "warmup_iterations": 2,
+      "benchmark_iterations": 5,
+      "prompt_token_length": 512,
+      "max_new_tokens": 64
+    }
+  },
+  "results": [
+    {
+      "model_name": "Qwen/Qwen3-4B-Instruct-2507",
+      "model_variant": "sft_corrected_v2_INT4",
+      "precision": "bfloat16",
+      "quantization": "int4",
+      "context_length": 512,
+      "generated_tokens": 64,
+      "use_cache": true,
+      "load_time_s": 11.365677621215582,
+      "weight_memory_mb": 2820.4052734375,
+      "peak_vram_mb": 3045.697265625,
+      "kv_cache_memory_mb": 89.00537109375,
+      "prompt_token_count": 512,
+      "prefill_latency_ms": {
+        "mean": 61.2122385452191,
+        "p50": 60.9938595443964,
+        "p95": 61.796240508556366,
+        "values": [
+          60.846615582704544,
+          60.9938595443964,
+          61.796240508556366
+        ]
+      },
+      "ttft_ms": {
+        "mean": 61.24088944246372,
+        "p50": 61.02428678423166,
+        "p95": 61.82016618549824,
+        "values": [
+          60.87821535766125,
+          61.02428678423166,
+          61.82016618549824
+        ]
+      },
+      "decode_latency_per_token_ms": {
+        "mean": 22.597633724217303,
+        "p50": 22.52170635620132,
+        "p95": 22.770503230276518,
+        "values": [
+          22.50069158617407,
+          22.52170635620132,
+          22.770503230276518
+        ]
+      },
+      "decode_tokens_per_second": {
+        "mean": 44.25371734951366,
+        "p50": 44.401609015946136,
+        "p95": 44.443078390286765,
+        "values": [
+          43.91646464230806,
+          44.401609015946136,
+          44.443078390286765
+        ]
+      },
+      "end_to_end_latency_ms": {
+        "mean": 1507.520055398345,
+        "p50": 1502.2967671975493,
+        "p95": 1518.368854187429,
+        "values": [
+          1501.8945448100567,
+          1502.2967671975493,
+          1518.368854187429
+        ]
+      },
+      "gpu_utilization_pct": {
+        "mean": 60.13235294117647,
+        "p50": 60.0,
+        "p95": 61.0,
+        "values": [
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          60.0,
+          61.0,
+          61.0,
+          61.0,
+          61.0,
+          61.0,
+          61.0,
+          61.0,
+          61.0,
+          61.0
+        ]
+      },
+      "hardware": {
+        "gpu": {
+          "name": "NVIDIA GeForce RTX 4090",
+          "vram_total_mb": 24564,
+          "driver_version": "580.173.02",
+          "compute_capability": "8.9"
+        },
+        "cuda_version": "13.0",
+        "driver_version": "580.173.02"
+      },
+      "timestamp": "2026-09-03T15:04:39.897897+00:00",
+      "experiment": "text_quant_int4",
+      "metadata": {
+        "model_variant": "sft_corrected_v2_INT4",
+        "quantization": "int4",
+        "adapter_path": "/workspace/neuro-agent/checkpoints/sft_corrected_v2/final",
+        "warmup_iterations": 1,
+        "benchmark_iterations": 3,
+        "allocated_after_load_mb": 2820.4052734375,
+        "peak_reserved_after_load_mb": 3100.0,
+        "nvidia_smi_after_load_mb": 3568.0,
+        "peak_vram_stats": {
+          "mean": 3045.697265625,
+          "p50": 3045.697265625,
+          "p95": 3045.697265625,
+          "values": [
+            3045.697265625,
+            3045.697265625,
+            3045.697265625
+          ]
+        },
+        "kv_cache_measured_mb": 89.00537109375,
+        "iterations": 3
+      }
+    }
+  ]
+}

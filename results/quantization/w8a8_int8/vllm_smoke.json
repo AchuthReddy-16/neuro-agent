@@ -1,0 +1,81 @@
+{
+  "timestamp_utc": "2026-09-03T19:29:59.160664+00:00",
+  "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "enable_lora": false,
+  "quantization_arg": null,
+  "checkpoint_quantization_config": {
+    "config_groups": {
+      "group_0": {
+        "format": "int-quantized",
+        "input_activations": {
+          "actorder": null,
+          "block_structure": null,
+          "dynamic": true,
+          "group_size": null,
+          "num_bits": 8,
+          "observer": null,
+          "observer_kwargs": {},
+          "scale_dtype": null,
+          "strategy": "token",
+          "symmetric": true,
+          "type": "int",
+          "zp_dtype": null
+        },
+        "output_activations": null,
+        "targets": [
+          "Linear"
+        ],
+        "weights": {
+          "actorder": "static",
+          "block_structure": null,
+          "dynamic": false,
+          "group_size": null,
+          "num_bits": 8,
+          "observer": "memoryless_minmax",
+          "observer_kwargs": {},
+          "scale_dtype": null,
+          "strategy": "channel",
+          "symmetric": true,
+          "type": "int",
+          "zp_dtype": null
+        }
+      }
+    },
+    "format": "int-quantized",
+    "global_compression_ratio": null,
+    "ignore": [
+      "lm_head"
+    ],
+    "kv_cache_scheme": null,
+    "quant_method": "compressed-tensors",
+    "quantization_status": "compressed",
+    "sparsity_config": {},
+    "transform_config": {},
+    "version": "0.18.0"
+  },
+  "quant_method": "compressed-tensors",
+  "bench_prompt_tokens": 344,
+  "module_scan_error": "'LLMEngine' object has no attribute 'model_executor'",
+  "status": "ok",
+  "load_time_s": 14.22,
+  "generation_ok": true,
+  "sample_text": " What comes to mind? The brain? The mind? The science of the brain? The study of the nervous system? The study of the brain and the nervous",
+  "sample_tokens": 32,
+  "vllm_quant_config": "<vllm.model_executor.layers.quantization.compressed_tensors.compressed_tensors.CompressedTensorsConfig object at 0x76e0c9377830>",
+  "vllm_quant_config_class": "CompressedTensorsConfig",
+  "bitsandbytes_modules": [],
+  "lora_applied_at_runtime": false,
+  "allocated_after_load_mb": null,
+  "reserved_after_load_mb": null,
+  "enginecore_model_load_gib": 4.27,
+  "enginecore_consumed_weights_non_torch_gib": 4.72,
+  "enginecore_peak_activation_gib": 0.67,
+  "enginecore_kv_cache_gib": 15.77,
+  "nvidia_smi_after_load": {
+    "nvidia_smi_mb": 22022.0,
+    "gpu_util_pct": 0.0,
+    "note": "nvidia-smi includes vLLM KV-cache reservation at gpu_memory_utilization=0.90; not model-weight peak"
+  },
+  "kernel_selected": "CutlassInt8ScaledMMLinearKernel for CompressedTensorsW8A8Int8",
+  "silent_bf16_fallback": false
+}

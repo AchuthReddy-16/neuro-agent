@@ -1,0 +1,26 @@
+{
+  "categorical": {
+    "count": 625,
+    "verifier_pass_rate": 0.8384,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 5.9936,
+    "unsupported_claim_rate": null
+  },
+  "numeric": {
+    "count": 125,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 14.896,
+    "unsupported_claim_rate": 0.0
+  },
+  "ranking": {
+    "count": 250,
+    "verifier_pass_rate": 0.848,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 8.996,
+    "unsupported_claim_rate": null
+  }
+}

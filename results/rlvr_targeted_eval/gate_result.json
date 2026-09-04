@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "checks": {
+    "execution_vs_imagery": {
+      "rate": 1.0,
+      "minimum": 0.95,
+      "reference": 1.0,
+      "passed": true
+    },
+    "movement_task_classification": {
+      "rate": 0.728,
+      "minimum": 0.68,
+      "reference": 0.728,
+      "passed": true
+    },
+    "channel_ranking": {
+      "rate": 0.816,
+      "minimum": 0.77,
+      "reference": 0.816,
+      "passed": true
+    },
+    "band_power_analysis": {
+      "rate": 0.88,
+      "minimum": 0.83,
+      "reference": 0.88,
+      "passed": true
+    }
+  }
+}

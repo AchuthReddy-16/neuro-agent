@@ -1,0 +1,148 @@
+{
+  "answer_latency_ms": 0.0,
+  "category": "insufficient_evidence",
+  "draft_answer": null,
+  "errors": [
+    "No feature rows for sample: S999_R99_E999"
+  ],
+  "evidence_bundle": {
+    "condition_evidence": null,
+    "error": "No feature rows for sample: S999_R99_E999",
+    "metadata": null,
+    "numeric_evidence": {},
+    "provenance": [],
+    "question_type": "band_power",
+    "ranked_evidence": null,
+    "request_id": "req_2beefeff69a6",
+    "set_evidence": null,
+    "success": false,
+    "tool_invocations": [
+      {
+        "error": "No feature rows for sample: S999_R99_E999",
+        "inputs": {
+          "channels": [
+            "C3"
+          ],
+          "comparator": null,
+          "condition_a": null,
+          "condition_b": null,
+          "epoch": null,
+          "extra": {},
+          "frequency_band": "beta",
+          "frequency_range": null,
+          "image_id": null,
+          "include_vision_evidence": false,
+          "metric": null,
+          "question_type": "band_power",
+          "requested_visual_type": null,
+          "run_id": null,
+          "sample_id": "S999_R99_E999",
+          "sort_direction": "descending",
+          "subject_id": null,
+          "threshold": null,
+          "threshold_mode": "absolute",
+          "top_k": null
+        },
+        "name": "route_band_power",
+        "outputs": {},
+        "provenance": [],
+        "runtime_ms": 0.0,
+        "success": false
+      }
+    ],
+    "uncertainty_notes": [],
+    "units": null,
+    "vision_evidence": [],
+    "warnings": [
+      "metadata lookup skipped: Sample not found: S999_R99_E999"
+    ]
+  },
+  "expect_recovery": false,
+  "expect_verifier_trigger": null,
+  "failure_category": "B_tool_exec",
+  "final_answer": null,
+  "final_verification": null,
+  "first_pass_verification": null,
+  "grounding": null,
+  "id": "g3b_018",
+  "intent_latency_ms": 798.4196152538061,
+  "intent_valid": true,
+  "model_calls": 1,
+  "original_question": "What is the beta band power at channel C3 for sample S999_R99_E999?",
+  "parsed_intent": {
+    "channels": [
+      "C3"
+    ],
+    "comparator": null,
+    "condition_a": null,
+    "condition_b": null,
+    "epoch": null,
+    "extra": {},
+    "frequency_band": "beta",
+    "frequency_range": null,
+    "image_id": null,
+    "include_vision_evidence": false,
+    "metric": null,
+    "question_type": "band_power",
+    "requested_visual_type": null,
+    "run_id": null,
+    "sample_id": "S999_R99_E999",
+    "sort_direction": "descending",
+    "subject_id": null,
+    "threshold": null,
+    "threshold_mode": "absolute",
+    "top_k": null
+  },
+  "path_mode": "NORMAL",
+  "peak_vram_mb": 8070.388671875,
+  "question": "What is the beta band power at channel C3 for sample S999_R99_E999?",
+  "recovery": null,
+  "recovery_latency_ms": 0.0,
+  "request_id": "req_2beefeff69a6",
+  "routing_result": {
+    "error": "No feature rows for sample: S999_R99_E999",
+    "success": false
+  },
+  "runtime_ms": 807.8219899907708,
+  "success": false,
+  "tool_invocations": [
+    {
+      "error": "No feature rows for sample: S999_R99_E999",
+      "inputs": {
+        "channels": [
+          "C3"
+        ],
+        "comparator": null,
+        "condition_a": null,
+        "condition_b": null,
+        "epoch": null,
+        "extra": {},
+        "frequency_band": "beta",
+        "frequency_range": null,
+        "image_id": null,
+        "include_vision_evidence": false,
+        "metric": null,
+        "question_type": "band_power",
+        "requested_visual_type": null,
+        "run_id": null,
+        "sample_id": "S999_R99_E999",
+        "sort_direction": "descending",
+        "subject_id": null,
+        "threshold": null,
+        "threshold_mode": "absolute",
+        "top_k": null
+      },
+      "name": "route_band_power",
+      "outputs": {},
+      "provenance": [],
+      "runtime_ms": 0.0,
+      "success": false
+    }
+  ],
+  "trigger_reason": [],
+  "verification_triggered": false,
+  "verifier_latency_ms": 0.0,
+  "warnings": [
+    "metadata lookup skipped: Sample not found: S999_R99_E999"
+  ]
+}

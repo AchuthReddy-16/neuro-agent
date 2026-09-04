@@ -1,0 +1,51 @@
+{
+  "stage": "K.2",
+  "timestamp": "2026-09-03T22:45:38.650927+00:00",
+  "gpu_memory_utilization": 0.45,
+  "safe": false,
+  "oom": true,
+  "error": "OutOfMemoryError: CUDA out of memory. Tried to allocate 6.92 GiB. GPU 0 has a total capacity of 23.52 GiB of which 4.45 GiB is free. Including non-PyTorch memory, this process has 7.67 GiB memory in use. Process 566836 has 11.38 GiB memory in use. Of the allocated memory 7.14 GiB is allocated by PyTorch, and 76.73 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
+  "clean_gpu": {
+    "nvidia_smi_used_mb": 7866.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "nvidia_smi_free_mb": 16698.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 7311.3,
+    "torch_reserved_mb": 7388.0,
+    "timestamp": "2026-09-03T22:45:38.667805+00:00"
+  },
+  "text_load_ok": true,
+  "text_boot_ms": 22515.248,
+  "after_text_load": {
+    "nvidia_smi_used_mb": 19525.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "nvidia_smi_free_mb": 5039.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 7311.3,
+    "torch_reserved_mb": 7388.0,
+    "timestamp": "2026-09-03T22:46:01.252767+00:00"
+  },
+  "text_request_ok": true,
+  "text_smoke": {
+    "ok": true,
+    "error": null,
+    "ttft_ms": 30.081,
+    "e2e_ms": 247.168,
+    "completion_tokens": 24,
+    "decode_tok_s": 110.55,
+    "preview": " Mu-band ERD is a key marker of motor imagery, reflecting the suppression of resting activity in the contralateral senso"
+  },
+  "vision_load_ok": false,
+  "vision_load_ms": 5570.052,
+  "vision_load_error": "OutOfMemoryError: CUDA out of memory. Tried to allocate 6.92 GiB. GPU 0 has a total capacity of 23.52 GiB of which 4.45 GiB is free. Including non-PyTorch memory, this process has 7.67 GiB memory in use. Process 566836 has 11.38 GiB memory in use. Of the allocated memory 7.14 GiB is allocated by PyTorch, and 76.73 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
+  "after_both_idle": {
+    "nvidia_smi_used_mb": 19527.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "nvidia_smi_free_mb": 5037.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 7311.3,
+    "torch_reserved_mb": 7388.0,
+    "timestamp": "2026-09-03T22:46:07.126547+00:00"
+  },
+  "vision_info": null
+}

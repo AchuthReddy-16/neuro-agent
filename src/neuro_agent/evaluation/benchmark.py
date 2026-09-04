@@ -119,7 +119,11 @@ def aggregate_benchmark(
         model_name=model_info.model_name,
         model_variant=metadata.get("model_variant", "base_BF16") if metadata else "base_BF16",
         precision=config.dtype,
-        quantization="none",
+        quantization=(
+            metadata.get("quantization", getattr(config, "quantization", "none"))
+            if metadata
+            else getattr(config, "quantization", "none")
+        ),
         context_length=context_length,
         generated_tokens=results[-1].timings.generated_token_count if results else 0,
         use_cache=config.use_cache,

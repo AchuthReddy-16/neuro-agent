@@ -1,0 +1,158 @@
+{
+  "stage": "J",
+  "timestamp": "2026-09-03T21:18:41.869934+00:00",
+  "verdict": "PARTIAL PASS",
+  "co_residency": {
+    "production_util_0.90": "FAIL (OOM loading vision; free ~1.1GB)",
+    "reduced_util_0.40": "PASS",
+    "combined_idle_mb_at_0.40": 18487.0,
+    "safety_margin_mb_at_0.40": 5595.0,
+    "recommended_strategy": "swap_unload_for_production",
+    "attempts_summary": [
+      {
+        "label": "production_util_0.90",
+        "util": 0.9,
+        "text_ok": true,
+        "vision_ok": false,
+        "text_req": false,
+        "vision_req": false,
+        "oom": true,
+        "combined_idle_mb": null,
+        "free_mb": null,
+        "error": "CUDA OOM loading vision: CUDA out of memory. Tried to allocate 6.99 GiB. GPU 0 has a total capacity of 23.52 GiB of which 1.13 GiB is free. Including non-PyTorch memory, this process has 386.00 MiB me"
+      },
+      {
+        "label": "coreside_util_0.40",
+        "util": 0.4,
+        "text_ok": true,
+        "vision_ok": true,
+        "text_req": true,
+        "vision_req": true,
+        "oom": false,
+        "combined_idle_mb": 18487.0,
+        "free_mb": 5595.0,
+        "error": null
+      }
+    ]
+  },
+  "vision_serving_config": {
+    "model_architecture": "Qwen2_5_VLForConditionalGeneration",
+    "dtype": "bfloat16",
+    "quantization": null,
+    "vision_tower_dtype": "bfloat16",
+    "device": "cuda:0",
+    "serving_runtime_backend": "HuggingFace Transformers + PEFT + qwen_vl_utils",
+    "vram_idle_mb": 8000.0,
+    "vram_peak_torch_mb": 7453.7
+  },
+  "quality": {
+    "targeted_pass_rate": 0.5385,
+    "n": 39,
+    "per_gate_group": {
+      "waveform": {
+        "n": 9,
+        "pass_rate": 0.3333
+      },
+      "categorical": {
+        "n": 15,
+        "pass_rate": 0.7333
+      },
+      "ranking": {
+        "n": 9,
+        "pass_rate": 0.4444
+      },
+      "numeric": {
+        "n": 6,
+        "pass_rate": 0.5
+      }
+    },
+    "reference": {
+      "base": 0.114,
+      "initial_sft": 0.164,
+      "corrected_sft": 0.493,
+      "multimodal_rlvr": 0.482
+    },
+    "full_440_rerun_needed": false
+  },
+  "vision_latency": {
+    "preprocess_ms": {
+      "p50": 9.688,
+      "p95": 17.3972,
+      "mean": 11.362,
+      "n": 25
+    },
+    "ttft_proxy_ms": {
+      "p50": 208.028,
+      "p95": 642.0888,
+      "mean": 258.121,
+      "n": 25
+    },
+    "e2e_ms": {
+      "p50": 210.728,
+      "p95": 651.1066,
+      "mean": 260.561,
+      "n": 25
+    },
+    "decode_tok_s": {
+      "p50": 4878.67,
+      "p95": 8302.452,
+      "mean": 4761.264,
+      "n": 25
+    },
+    "peak_torch_mb": {
+      "p50": 7429.1,
+      "p95": 7757.5,
+      "mean": 7534.404,
+      "n": 25
+    },
+    "nvidia_smi_mb": {
+      "p50": 8806.0,
+      "p95": 8806.0,
+      "mean": 8806.0,
+      "n": 25
+    }
+  },
+  "text_vs_vision_cost": {
+    "e2e_ratio_vision_over_text": 0.57,
+    "vram_ratio_vision_over_text": 0.35,
+    "why_vision_only_when_needed": "Vision uses a separate ~3B VLM (bf16+LoRA), image preprocess, and multimodal prefill with much higher VRAM than W8A8 text. Keep orchestration on text; call vision only when an image is required.",
+    "text_e2e_ms_mean": 454.944,
+    "vision_e2e_ms_mean": 260.561,
+    "text_vram_mb": 22536.0,
+    "vision_vram_mb": 8000.0
+  },
+  "production_decision": {
+    "stage": "J",
+    "timestamp": "2026-09-03T21:18:41.839014+00:00",
+    "can_text_and_vision_remain_resident": {
+      "with_production_text_util_0.90": false,
+      "with_reduced_text_util_0.40": true
+    },
+    "co_residency_verdict_production_config": "FAIL",
+    "co_residency_verdict_reduced_kv": "PASS",
+    "recommended_strategy": "swap_unload_for_production_text_kv",
+    "safe_combined_vram_budget_mb_reduced_kv": 18487.0,
+    "safety_margin_mb_reduced_kv": 5595.0,
+    "swap_policy": {
+      "default_resident": "text_w8a8_vllm @ gpu_memory_utilization=0.90",
+      "on_vision_request": [
+        "stop/sleep text vLLM to release KV reservation",
+        "load corrected Qwen2.5-VL-3B LoRA (bf16 HF)",
+        "serve vision request(s) at low concurrency",
+        "unload VLM",
+        "restart text vLLM at util=0.90"
+      ],
+      "optional_demo_coresidency": "Both can co-reside if text util\u22480.40 (combined idle ~18487.0 MB, free ~5595.0 MB) with much smaller text KV.",
+      "rationale": "Production text util=0.90 reserves ~22GB; VLM needs ~7\u20138GB torch \u2014 OOM beside production text."
+    },
+    "vision_suitable_for_low_concurrency_production": true,
+    "vision_quality_pass_rate_targeted": 0.5385,
+    "reference_corrected_sft": 0.493,
+    "additional_multimodal_quantization_needed_now": false,
+    "quantization_guidance": "Do not open a quantization saga now. Corrected VLM is usable in bf16+LoRA for low-concurrency vision. Memory blocks production-util co-residency; use swap/unload (or reduced text KV), not immediate VLM quant.",
+    "scope_boundary": "Text-path concurrency, prefix caching, and SLA were benchmarked separately. Vision-path concurrency is outside this stage unless required for basic correctness.",
+    "j_verdict": "PARTIAL PASS",
+    "interpretation": "PARTIAL PASS: corrected vision branch is production-usable at low concurrency, but text+vision cannot remain resident under production text util=0.90. Use swap/unload for production; reduced text util only when accepting smaller KV."
+  },
+  "scope_boundary": "Text-path concurrency, prefix caching, and SLA were benchmarked separately. Vision-path concurrency is outside this stage unless required for basic correctness."
+}

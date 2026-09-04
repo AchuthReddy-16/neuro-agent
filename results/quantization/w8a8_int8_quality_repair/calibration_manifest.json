@@ -1,0 +1,70 @@
+{
+  "sample_count": 512,
+  "target_count": 512,
+  "held_out_subjects_excluded": [
+    "S026",
+    "S027",
+    "S028",
+    "S029",
+    "S030"
+  ],
+  "subjects_present": [
+    "S001",
+    "S002",
+    "S003",
+    "S004",
+    "S005",
+    "S006",
+    "S007",
+    "S008",
+    "S009",
+    "S010",
+    "S011",
+    "S012",
+    "S013",
+    "S014",
+    "S015",
+    "S016",
+    "S017",
+    "S018",
+    "S019",
+    "S020"
+  ],
+  "category_counts": {
+    "execution_vs_imagery": 252,
+    "movement_task_classification": 52,
+    "band_power_analysis": 52,
+    "channel_ranking": 52,
+    "numerical_reasoning": 52,
+    "statistical_comparison": 18,
+    "tool_selection": 17,
+    "factual_grounding": 17
+  },
+  "execution_vs_imagery_share": 0.4921875,
+  "hard_rest_not_baseline_upsampled": 78,
+  "prompt_length_tokens": {
+    "min": 72,
+    "max": 1656,
+    "mean": 395.6,
+    "median": 80.0,
+    "p90": 1631
+  },
+  "eval_contract_formatting": true,
+  "generic_datasets_used": false,
+  "sources": [
+    "sft_corrective_v2_mixed.jsonl (execution/movement)",
+    "features.parquet split=train (band/ranking/numeric/statistical)",
+    "samples.jsonl split=train (factual)",
+    "constructed tool prompts on train sample ids"
+  ],
+  "calibration_prompts_path": "/workspace/neuro-agent/results/quantization/w8a8_int8_quality_repair/calibration_prompts.jsonl",
+  "vs_h7": {
+    "h7_execution_vs_imagery": 103,
+    "h8_execution_vs_imagery": 252,
+    "h7_missing_families_now_included": [
+      "statistical_comparison",
+      "tool_selection",
+      "factual_grounding"
+    ]
+  }
+}

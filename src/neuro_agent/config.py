@@ -21,3 +21,7 @@ def load_config(name: str = "base") -> dict[str, Any]:
 
 def load_benchmark_config() -> dict[str, Any]:
     return load_yaml(CONFIGS_DIR / "benchmark.yaml")
+
+
+def load_eval_config() -> dict[str, Any]:
+    return load_yaml(CONFIGS_DIR / "eval.yaml")

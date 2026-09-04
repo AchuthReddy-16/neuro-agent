@@ -1,0 +1,22 @@
+{
+  "stage": "H.8 step1",
+  "h7_calibration": {
+    "n": 512,
+    "source": "data/processed/sft_corrective_v2_mixed.jsonl",
+    "held_out_used": false,
+    "category_counts": {
+      "execution_vs_imagery": 103,
+      "movement_task_classification": 103,
+      "channel_ranking": 102,
+      "band_power_analysis": 102,
+      "numerical_reasoning": 102,
+      "statistical_comparison": 0,
+      "tool_selection": 0,
+      "factual_grounding": 0
+    },
+    "execution_vs_imagery_share": 0.201,
+    "underrepresented": false,
+    "missing": false,
+    "finding": "execution_vs_imagery was present at 103/512 (~20%), not missing. H.7 W8A8 exec failures are 27/125, all answering 'baseline' (rest→baseline collapse). statistical/tool/factual have no native labeled rows in mixed or sft_train."
+  }
+}

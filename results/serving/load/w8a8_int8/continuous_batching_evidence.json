@@ -1,0 +1,156 @@
+{
+  "method": "Staggered OpenAI streaming completions against a live vLLM server: 4\u00d764-token requests at t=0, 4\u00d716-token at t=200ms, 2\u00d732-token at t=450ms. Client timestamps for submit / first token / end plus polled vllm:num_requests_running.",
+  "not_static_batch_claim": "Offline LLM.generate() of a fixed prompt list would be a static batch. This experiment uses independently arriving HTTP requests on the online server.",
+  "all_ok": true,
+  "shorts_finished_before_longs": true,
+  "shorts_joined_during_long_decode": true,
+  "mids_joined_while_others_active": true,
+  "max_observed_running": 8.0,
+  "running_exceeded_one": true,
+  "request_timeline": [
+    {
+      "req_id": "cb-long-0",
+      "max_tokens": 64,
+      "ok": true,
+      "rel_submit_ms": 0.22,
+      "rel_first_ms": 53.6,
+      "rel_end_ms": 699.76,
+      "e2e_ms": 699.539,
+      "completion_tokens": 62
+    },
+    {
+      "req_id": "cb-long-1",
+      "max_tokens": 64,
+      "ok": true,
+      "rel_submit_ms": 0.31,
+      "rel_first_ms": 76.89,
+      "rel_end_ms": 707.52,
+      "e2e_ms": 707.216,
+      "completion_tokens": 62
+    },
+    {
+      "req_id": "cb-long-2",
+      "max_tokens": 64,
+      "ok": true,
+      "rel_submit_ms": 0.35,
+      "rel_first_ms": 115.97,
+      "rel_end_ms": 720.3,
+      "e2e_ms": 719.948,
+      "completion_tokens": 62
+    },
+    {
+      "req_id": "cb-long-3",
+      "max_tokens": 64,
+      "ok": true,
+      "rel_submit_ms": 0.39,
+      "rel_first_ms": 115.93,
+      "rel_end_ms": 718.56,
+      "e2e_ms": 718.172,
+      "completion_tokens": 62
+    },
+    {
+      "req_id": "cb-short-0",
+      "max_tokens": 16,
+      "ok": true,
+      "rel_submit_ms": 200.56,
+      "rel_first_ms": 256.3,
+      "rel_end_ms": 427.69,
+      "e2e_ms": 227.133,
+      "completion_tokens": 16
+    },
+    {
+      "req_id": "cb-short-1",
+      "max_tokens": 16,
+      "ok": true,
+      "rel_submit_ms": 200.67,
+      "rel_first_ms": 281.06,
+      "rel_end_ms": 435.83,
+      "e2e_ms": 235.161,
+      "completion_tokens": 16
+    },
+    {
+      "req_id": "cb-short-2",
+      "max_tokens": 16,
+      "ok": true,
+      "rel_submit_ms": 200.74,
+      "rel_first_ms": 321.8,
+      "rel_end_ms": 446.95,
+      "e2e_ms": 246.206,
+      "completion_tokens": 16
+    },
+    {
+      "req_id": "cb-short-3",
+      "max_tokens": 16,
+      "ok": true,
+      "rel_submit_ms": 200.8,
+      "rel_first_ms": 321.74,
+      "rel_end_ms": 443.78,
+      "e2e_ms": 242.983,
+      "completion_tokens": 16
+    },
+    {
+      "req_id": "cb-mid-0",
+      "max_tokens": 32,
+      "ok": true,
+      "rel_submit_ms": 450.53,
+      "rel_first_ms": 491.59,
+      "rel_end_ms": 754.25,
+      "e2e_ms": 303.715,
+      "completion_tokens": 32
+    },
+    {
+      "req_id": "cb-mid-1",
+      "max_tokens": 32,
+      "ok": true,
+      "rel_submit_ms": 450.67,
+      "rel_first_ms": 516.29,
+      "rel_end_ms": 759.85,
+      "e2e_ms": 309.18,
+      "completion_tokens": 32
+    }
+  ],
+  "scheduler_samples": [
+    {
+      "rel_ms": 0.1,
+      "running": 0.0,
+      "waiting": 0.0
+    },
+    {
+      "rel_ms": 122.1,
+      "running": 4.0,
+      "waiting": 0.0
+    },
+    {
+      "rel_ms": 234.1,
+      "running": 5.0,
+      "waiting": 0.0
+    },
+    {
+      "rel_ms": 349.2,
+      "running": 8.0,
+      "waiting": 0.0
+    },
+    {
+      "rel_ms": 457.6,
+      "running": 4.0,
+      "waiting": 0.0
+    },
+    {
+      "rel_ms": 569.9,
+      "running": 6.0,
+      "waiting": 0.0
+    },
+    {
+      "rel_ms": 675.6,
+      "running": 6.0,
+      "waiting": 0.0
+    }
+  ],
+  "conclusions": [
+    "Shorter (16-token) requests completed while longer (64-token) requests were still active \u2014 not a static batch barrier.",
+    "New short requests were submitted after long requests had already produced first tokens and before those longs finished \u2014 requests joined an in-flight decode batch.",
+    "A third arrival wave joined while earlier sequences were still running.",
+    "vllm:num_requests_running peaked at 8.0, showing multiple sequences in the execution batch."
+  ],
+  "continuous_batching_supported_by_evidence": true
+}

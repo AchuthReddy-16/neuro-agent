@@ -1,0 +1,17 @@
+{
+  "variant": "bf16",
+  "status": "ok",
+  "load_time_s": 12.125,
+  "alloc_after_load_mb": 7930.39,
+  "reserved_after_load_mb": 8206.0,
+  "nvidia_smi_after_load_mb": 8664.0,
+  "prompt_tokens": 282,
+  "ttft_ms": 36.155,
+  "decode_tps": 50.432,
+  "latency_per_token_ms": 19.829,
+  "e2e_ms": 1285.373,
+  "generated_tokens_avg": 64.0,
+  "peak_alloc_mb": 8019.05,
+  "peak_reserved_mb": 8206.0,
+  "nvidia_smi_during_gen_mb": 8680.0
+}

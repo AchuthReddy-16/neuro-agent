@@ -1,0 +1,3799 @@
+{
+  "answer_latency_ms": 4040.789842605591,
+  "category": "normal_easy",
+  "draft_answer": "The channels meeting the criterion are: AF3, AF4, AF7, AFZ, C1, C2, C3, C5, C6, CP1, CP3, CP5, CPZ, CZ, F1, F2, F5, F6, FC1, FC2, FC3, FC4, FCZ, FT7, FZ, IZ, O1, O2, OZ, P1, P2, P3, P5, P7, PO3, PO4, PO7, PO8, POZ, PZ, T7, T8, T9, TP7.",
+  "errors": [],
+  "evidence_bundle": {
+    "condition_evidence": null,
+    "error": null,
+    "metadata": {
+      "array_ref": {
+        "array_index": 0,
+        "array_path": "data/processed/arrays/S001_R01.h5",
+        "n_channels": 64,
+        "n_samples": 640
+      },
+      "channels": [
+        "FC5",
+        "FC3",
+        "FC1",
+        "FCZ",
+        "FC2",
+        "FC4",
+        "FC6",
+        "C5",
+        "C3",
+        "C1",
+        "CZ",
+        "C2",
+        "C4",
+        "C6",
+        "CP5",
+        "CP3",
+        "CP1",
+        "CPZ",
+        "CP2",
+        "CP4",
+        "CP6",
+        "FP1",
+        "FPZ",
+        "FP2",
+        "AF7",
+        "AF3",
+        "AFZ",
+        "AF4",
+        "AF8",
+        "F7",
+        "F5",
+        "F3",
+        "F1",
+        "FZ",
+        "F2",
+        "F4",
+        "F6",
+        "F8",
+        "FT7",
+        "FT8",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "TP7",
+        "TP8",
+        "P7",
+        "P5",
+        "P3",
+        "P1",
+        "PZ",
+        "P2",
+        "P4",
+        "P6",
+        "P8",
+        "PO7",
+        "PO3",
+        "POZ",
+        "PO4",
+        "PO8",
+        "O1",
+        "OZ",
+        "O2",
+        "IZ"
+      ],
+      "condition": "baseline_rest",
+      "epoch_index": 0,
+      "event_code": "T0",
+      "extra": {
+        "end_time_s": 4.0,
+        "preprocessing": {
+          "epoch_seconds": 4.0,
+          "filter_hz": [
+            1.0,
+            40.0
+          ],
+          "source_file": "data/raw/S001/S001R01.edf"
+        },
+        "start_time_s": 0.0
+      },
+      "feature_refs": {
+        "available_columns": [
+          "mean",
+          "variance",
+          "std",
+          "rms",
+          "peak_to_peak",
+          "delta_power",
+          "theta_power",
+          "alpha_mu_power",
+          "beta_power"
+        ],
+        "feature_path": "data/processed/features.parquet"
+      },
+      "movement": "rest",
+      "protocol": "eyes_open",
+      "router_version": "g.2.v1",
+      "run_id": "R01",
+      "sample_id": "S001_R01_E000",
+      "sampling_rate_hz": 160.0,
+      "split": "train",
+      "subject_id": "S001",
+      "task_type": "baseline",
+      "vision_assets": [
+        {
+          "frequency_band": "alpha_mu_power",
+          "image_id": "img_comparison_22055210f8479220",
+          "image_path": "data/processed/vision/images/train/img_comparison_22055210f8479220.png",
+          "visualization_type": "condition_comparison"
+        },
+        {
+          "frequency_band": "alpha_mu_power",
+          "image_id": "img_comparison_73b4d7bd9e2b35ae",
+          "image_path": "data/processed/vision/images/train/img_comparison_73b4d7bd9e2b35ae.png",
+          "visualization_type": "condition_comparison"
+        },
+        {
+          "frequency_band": "alpha_mu_power",
+          "image_id": "img_comparison_d92ae2c560083838",
+          "image_path": "data/processed/vision/images/train/img_comparison_d92ae2c560083838.png",
+          "visualization_type": "condition_comparison"
+        }
+      ]
+    },
+    "numeric_evidence": {
+      "n_selected": 16,
+      "threshold_used": 138.67868041992188
+    },
+    "provenance": [
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FC5",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FC3",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FC1",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FCZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FC2",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FC4",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FC6",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.C5",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.C3",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.C1",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.CZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.C2",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.C4",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.C6",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.CP5",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.CP3",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.CP1",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.CPZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.CP2",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.CP4",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.CP6",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FP1",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FPZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FP2",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.AF7",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.AF3",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.AFZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.AF4",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.AF8",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.F7",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.F5",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.F3",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.F1",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.F2",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.F4",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.F6",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.F8",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FT7",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.FT8",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.T7",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.T8",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.T9",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.T10",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.TP7",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.TP8",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.P7",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.P5",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.P3",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.P1",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.PZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.P2",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.P4",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.P6",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.P8",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.PO7",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.PO3",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.POZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.PO4",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.PO8",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.O1",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.OZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.O2",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "features.parquet band column lookup",
+        "field": "band_power.IZ",
+        "method": "features_parquet_lookup",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      },
+      {
+        "artifact_path": "data/processed/features.parquet",
+        "detail": "Threshold policy upper_quartile_ge on beta_power",
+        "field": "threshold_set",
+        "method": "upper_quartile_ge",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "stored_feature"
+      }
+    ],
+    "question_type": "threshold_set",
+    "ranked_evidence": null,
+    "request_id": "req_58ad768c8de9",
+    "set_evidence": {
+      "channels": [
+        "CP3",
+        "CP5",
+        "IZ",
+        "O1",
+        "O2",
+        "OZ",
+        "P3",
+        "P5",
+        "P7",
+        "PO3",
+        "PO7",
+        "POZ",
+        "T7",
+        "T8",
+        "T9",
+        "TP7"
+      ],
+      "comparator": "ge",
+      "metric": "beta_power",
+      "n_selected": 16,
+      "threshold_mode": "upper_quartile",
+      "threshold_used": 138.67868041992188,
+      "values": {
+        "AF3": 98.3633804321289,
+        "AF4": 99.20914459228516,
+        "AF7": 102.91433715820312,
+        "AF8": 90.09981536865234,
+        "AFZ": 102.15464782714844,
+        "C1": 120.05699157714844,
+        "C2": 108.99632263183594,
+        "C3": 134.54469299316406,
+        "C4": 93.90325927734375,
+        "C5": 124.6951675415039,
+        "C6": 103.80110931396484,
+        "CP1": 130.5276641845703,
+        "CP2": 101.84281158447266,
+        "CP3": 143.6204071044922,
+        "CP4": 94.38301086425781,
+        "CP5": 158.15902709960938,
+        "CP6": 81.93207550048828,
+        "CPZ": 122.84259796142578,
+        "CZ": 115.0340347290039,
+        "F1": 106.06219482421875,
+        "F2": 112.19720458984375,
+        "F3": 93.9388198852539,
+        "F4": 96.84693145751953,
+        "F5": 108.51123046875,
+        "F6": 110.69151306152344,
+        "F7": 95.65522766113281,
+        "F8": 94.78277587890625,
+        "FC1": 115.95178985595703,
+        "FC2": 122.83829498291016,
+        "FC3": 110.7191162109375,
+        "FC4": 113.53789520263672,
+        "FC5": 93.48087310791016,
+        "FC6": 99.40153503417969,
+        "FCZ": 130.97506713867188,
+        "FP1": 99.32945251464844,
+        "FP2": 81.11024475097656,
+        "FPZ": 79.53923034667969,
+        "FT7": 103.89774322509766,
+        "FT8": 86.81141662597656,
+        "FZ": 115.57994079589844,
+        "IZ": 239.53125,
+        "O1": 207.8683624267578,
+        "O2": 212.8015899658203,
+        "OZ": 203.44598388671875,
+        "P1": 136.34605407714844,
+        "P2": 111.79737854003906,
+        "P3": 151.54721069335938,
+        "P4": 101.87818908691406,
+        "P5": 163.85189819335938,
+        "P6": 95.90399169921875,
+        "P7": 208.7153778076172,
+        "P8": 90.32306671142578,
+        "PO3": 162.25819396972656,
+        "PO4": 117.39220428466797,
+        "PO7": 179.83872985839844,
+        "PO8": 132.74464416503906,
+        "POZ": 140.60055541992188,
+        "PZ": 120.5484619140625,
+        "T10": 70.99275207519531,
+        "T7": 155.56365966796875,
+        "T8": 278.5670471191406,
+        "T9": 138.67868041992188,
+        "TP7": 167.27920532226562,
+        "TP8": 59.292781829833984
+      }
+    },
+    "success": true,
+    "tool_invocations": [
+      {
+        "error": null,
+        "inputs": {
+          "band": "beta",
+          "channels": "all",
+          "sample_id": "S001_R01_E000",
+          "source": "features"
+        },
+        "name": "compute_band_power",
+        "outputs": {
+          "results": [
+            {
+              "band": "beta",
+              "channel": "FC5",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 93.48087310791016,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FC3",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 110.7191162109375,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FC1",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 115.95178985595703,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FCZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 130.97506713867188,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FC2",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 122.83829498291016,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FC4",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 113.53789520263672,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FC6",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 99.40153503417969,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "C5",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 124.6951675415039,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "C3",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 134.54469299316406,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "C1",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 120.05699157714844,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "CZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 115.0340347290039,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "C2",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 108.99632263183594,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "C4",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 93.90325927734375,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "C6",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 103.80110931396484,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "CP5",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 158.15902709960938,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "CP3",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 143.6204071044922,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "CP1",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 130.5276641845703,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "CPZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 122.84259796142578,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "CP2",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 101.84281158447266,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "CP4",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 94.38301086425781,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "CP6",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 81.93207550048828,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FP1",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 99.32945251464844,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FPZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 79.53923034667969,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FP2",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 81.11024475097656,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "AF7",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 102.91433715820312,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "AF3",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 98.3633804321289,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "AFZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 102.15464782714844,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "AF4",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 99.20914459228516,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "AF8",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 90.09981536865234,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "F7",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 95.65522766113281,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "F5",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 108.51123046875,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "F3",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 93.9388198852539,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "F1",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 106.06219482421875,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 115.57994079589844,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "F2",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 112.19720458984375,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "F4",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 96.84693145751953,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "F6",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 110.69151306152344,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "F8",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 94.78277587890625,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FT7",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 103.89774322509766,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "FT8",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 86.81141662597656,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "T7",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 155.56365966796875,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "T8",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 278.5670471191406,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "T9",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 138.67868041992188,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "T10",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 70.99275207519531,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "TP7",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 167.27920532226562,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "TP8",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 59.292781829833984,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "P7",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 208.7153778076172,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "P5",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 163.85189819335938,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "P3",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 151.54721069335938,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "P1",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 136.34605407714844,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "PZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 120.5484619140625,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "P2",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 111.79737854003906,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "P4",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 101.87818908691406,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "P6",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 95.90399169921875,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "P8",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 90.32306671142578,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "PO7",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 179.83872985839844,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "PO3",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 162.25819396972656,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "POZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 140.60055541992188,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "PO4",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 117.39220428466797,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "PO8",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 132.74464416503906,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "O1",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 207.8683624267578,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "OZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 203.44598388671875,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "O2",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 212.8015899658203,
+              "units": "uV2"
+            },
+            {
+              "band": "beta",
+              "channel": "IZ",
+              "freq_hz": [
+                13.0,
+                30.0
+              ],
+              "method": "features_parquet_lookup",
+              "power": 239.53125,
+              "units": "uV2"
+            }
+          ],
+          "sample_id": "S001_R01_E000",
+          "source": "features"
+        },
+        "provenance": [
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FC5",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FC3",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FC1",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FCZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FC2",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FC4",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FC6",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.C5",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.C3",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.C1",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.CZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.C2",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.C4",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.C6",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.CP5",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.CP3",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.CP1",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.CPZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.CP2",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.CP4",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.CP6",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FP1",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FPZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FP2",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.AF7",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.AF3",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.AFZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.AF4",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.AF8",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.F7",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.F5",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.F3",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.F1",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.F2",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.F4",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.F6",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.F8",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FT7",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.FT8",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.T7",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.T8",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.T9",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.T10",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.TP7",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.TP8",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.P7",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.P5",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.P3",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.P1",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.PZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.P2",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.P4",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.P6",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.P8",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.PO7",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.PO3",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.POZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.PO4",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.PO8",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.O1",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.OZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.O2",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          },
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "features.parquet band column lookup",
+            "field": "band_power.IZ",
+            "method": "features_parquet_lookup",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          }
+        ],
+        "runtime_ms": 0.0,
+        "success": true
+      },
+      {
+        "error": null,
+        "inputs": {
+          "comparator": "ge",
+          "threshold": 0.0,
+          "threshold_mode": "upper_quartile",
+          "values": {
+            "AF3": 98.3633804321289,
+            "AF4": 99.20914459228516,
+            "AF7": 102.91433715820312,
+            "AF8": 90.09981536865234,
+            "AFZ": 102.15464782714844,
+            "C1": 120.05699157714844,
+            "C2": 108.99632263183594,
+            "C3": 134.54469299316406,
+            "C4": 93.90325927734375,
+            "C5": 124.6951675415039,
+            "C6": 103.80110931396484,
+            "CP1": 130.5276641845703,
+            "CP2": 101.84281158447266,
+            "CP3": 143.6204071044922,
+            "CP4": 94.38301086425781,
+            "CP5": 158.15902709960938,
+            "CP6": 81.93207550048828,
+            "CPZ": 122.84259796142578,
+            "CZ": 115.0340347290039,
+            "F1": 106.06219482421875,
+            "F2": 112.19720458984375,
+            "F3": 93.9388198852539,
+            "F4": 96.84693145751953,
+            "F5": 108.51123046875,
+            "F6": 110.69151306152344,
+            "F7": 95.65522766113281,
+            "F8": 94.78277587890625,
+            "FC1": 115.95178985595703,
+            "FC2": 122.83829498291016,
+            "FC3": 110.7191162109375,
+            "FC4": 113.53789520263672,
+            "FC5": 93.48087310791016,
+            "FC6": 99.40153503417969,
+            "FCZ": 130.97506713867188,
+            "FP1": 99.32945251464844,
+            "FP2": 81.11024475097656,
+            "FPZ": 79.53923034667969,
+            "FT7": 103.89774322509766,
+            "FT8": 86.81141662597656,
+            "FZ": 115.57994079589844,
+            "IZ": 239.53125,
+            "O1": 207.8683624267578,
+            "O2": 212.8015899658203,
+            "OZ": 203.44598388671875,
+            "P1": 136.34605407714844,
+            "P2": 111.79737854003906,
+            "P3": 151.54721069335938,
+            "P4": 101.87818908691406,
+            "P5": 163.85189819335938,
+            "P6": 95.90399169921875,
+            "P7": 208.7153778076172,
+            "P8": 90.32306671142578,
+            "PO3": 162.25819396972656,
+            "PO4": 117.39220428466797,
+            "PO7": 179.83872985839844,
+            "PO8": 132.74464416503906,
+            "POZ": 140.60055541992188,
+            "PZ": 120.5484619140625,
+            "T10": 70.99275207519531,
+            "T7": 155.56365966796875,
+            "T8": 278.5670471191406,
+            "T9": 138.67868041992188,
+            "TP7": 167.27920532226562,
+            "TP8": 59.292781829833984
+          }
+        },
+        "name": "select_channels_above_threshold",
+        "outputs": {
+          "channels": [
+            "CP3",
+            "CP5",
+            "IZ",
+            "O1",
+            "O2",
+            "OZ",
+            "P3",
+            "P5",
+            "P7",
+            "PO3",
+            "PO7",
+            "POZ",
+            "T7",
+            "T8",
+            "T9",
+            "TP7"
+          ],
+          "comparator": "ge",
+          "n_selected": 16,
+          "policy": "upper_quartile_ge",
+          "threshold_mode": "upper_quartile",
+          "threshold_used": 138.67868041992188,
+          "units": "uV2"
+        },
+        "provenance": [
+          {
+            "artifact_path": "data/processed/features.parquet",
+            "detail": "Threshold policy upper_quartile_ge on beta_power",
+            "field": "threshold_set",
+            "method": "upper_quartile_ge",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "stored_feature"
+          }
+        ],
+        "runtime_ms": 2.5666123256087303,
+        "success": true
+      }
+    ],
+    "uncertainty_notes": [],
+    "units": "uV2",
+    "vision_evidence": [],
+    "warnings": [
+      "Band power production uses source='features' (features.parquet). Welch recompute from raw EEG may differ for low-frequency bands (delta/theta) due to integration window and filter edge effects."
+    ]
+  },
+  "expect_recovery": null,
+  "expect_verifier_trigger": false,
+  "failure_category": null,
+  "final_answer": "Answer: Selected channels: CP3, CP5, IZ, O1, O2, OZ, P3, P5, P7, PO3, PO7, POZ, T7, T8, T9, TP7\nEvidence: threshold=138.67868041992188 uV2, channels=['CP3', 'CP5', 'IZ', 'O1', 'O2', 'OZ', 'P3', 'P5', 'P7', 'PO3', 'PO7', 'POZ', 'T7', 'T8', 'T9', 'TP7']\nTools used: compute_band_power, select_channels_above_threshold\nUncertainty: Band power production uses source='features' (features.parquet). Welch recompute from raw EEG may differ for low-frequency bands (delta/theta) due to integration window and filter edge effects.",
+  "final_verification": {
+    "condition_mismatch": [],
+    "confidence_score": 0.95,
+    "deterministic": {
+      "ambiguous": false,
+      "condition_mismatches": [],
+      "evidence_conflicts": [],
+      "failure_codes": [],
+      "grounding": {
+        "numeric_claims": [
+          138.67868041992188
+        ],
+        "passed": true,
+        "supported_claims": [
+          138.67868041992188
+        ],
+        "unsupported_claims": []
+      },
+      "missing_channels": [],
+      "missing_evidence": [],
+      "passed": true,
+      "unit_issues": [],
+      "unsupported_candidates": []
+    },
+    "evidence_conflicts": [],
+    "failure_codes": [],
+    "missing_evidence": [],
+    "model_verified": false,
+    "passed": true,
+    "raw_model_json": null,
+    "recommendation": "ACCEPT",
+    "unit_issues": [],
+    "unsupported_claims": []
+  },
+  "first_pass_verification": {
+    "condition_mismatch": [],
+    "confidence_score": 0.3,
+    "deterministic": {
+      "ambiguous": false,
+      "condition_mismatches": [],
+      "evidence_conflicts": [],
+      "failure_codes": [
+        "missing_answer_sections"
+      ],
+      "grounding": {
+        "numeric_claims": [],
+        "passed": true,
+        "supported_claims": [],
+        "unsupported_claims": []
+      },
+      "missing_channels": [],
+      "missing_evidence": [],
+      "passed": false,
+      "unit_issues": [],
+      "unsupported_candidates": []
+    },
+    "evidence_conflicts": [],
+    "failure_codes": [
+      "missing_answer_sections"
+    ],
+    "missing_evidence": [],
+    "model_verified": false,
+    "passed": false,
+    "raw_model_json": null,
+    "recommendation": "REWRITE",
+    "unit_issues": [],
+    "unsupported_claims": []
+  },
+  "grounding": {
+    "numeric_claims": [
+      138.67868041992188
+    ],
+    "passed": true,
+    "supported_claims": [
+      138.67868041992188
+    ],
+    "unsupported_claims": []
+  },
+  "id": "g3b_006",
+  "intent_latency_ms": 2163.9833822846413,
+  "intent_valid": true,
+  "model_calls": 2,
+  "original_question": "Which channels have beta power at or above the upper quartile for S001_R01_E000?",
+  "parsed_intent": {
+    "channels": "all",
+    "comparator": "ge",
+    "condition_a": null,
+    "condition_b": null,
+    "epoch": 0,
+    "extra": {},
+    "frequency_band": "beta",
+    "frequency_range": [
+      1.0,
+      40.0
+    ],
+    "image_id": null,
+    "include_vision_evidence": false,
+    "metric": "beta_power",
+    "question_type": "threshold_set",
+    "requested_visual_type": null,
+    "run_id": "R01",
+    "sample_id": "S001_R01_E000",
+    "sort_direction": "descending",
+    "subject_id": "S001",
+    "threshold": 0.0,
+    "threshold_mode": "upper_quartile",
+    "top_k": null
+  },
+  "path_mode": "NORMAL",
+  "peak_vram_mb": 10263.67578125,
+  "question": "Which channels have beta power at or above the upper quartile for S001_R01_E000?",
+  "recovery": null,
+  "recovery_latency_ms": 0.1492183655500412,
+  "request_id": "req_58ad768c8de9",
+  "routing_result": {
+    "error": null,
+    "success": true
+  },
+  "runtime_ms": 6569.2225359380245,
+  "success": true,
+  "tool_invocations": [
+    {
+      "error": null,
+      "inputs": {
+        "band": "beta",
+        "channels": "all",
+        "sample_id": "S001_R01_E000",
+        "source": "features"
+      },
+      "name": "compute_band_power",
+      "outputs": {
+        "results": [
+          {
+            "band": "beta",
+            "channel": "FC5",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 93.48087310791016,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FC3",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 110.7191162109375,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FC1",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 115.95178985595703,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FCZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 130.97506713867188,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FC2",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 122.83829498291016,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FC4",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 113.53789520263672,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FC6",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 99.40153503417969,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "C5",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 124.6951675415039,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "C3",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 134.54469299316406,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "C1",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 120.05699157714844,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "CZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 115.0340347290039,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "C2",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 108.99632263183594,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "C4",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 93.90325927734375,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "C6",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 103.80110931396484,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "CP5",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 158.15902709960938,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "CP3",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 143.6204071044922,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "CP1",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 130.5276641845703,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "CPZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 122.84259796142578,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "CP2",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 101.84281158447266,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "CP4",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 94.38301086425781,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "CP6",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 81.93207550048828,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FP1",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 99.32945251464844,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FPZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 79.53923034667969,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FP2",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 81.11024475097656,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "AF7",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 102.91433715820312,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "AF3",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 98.3633804321289,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "AFZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 102.15464782714844,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "AF4",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 99.20914459228516,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "AF8",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 90.09981536865234,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "F7",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 95.65522766113281,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "F5",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 108.51123046875,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "F3",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 93.9388198852539,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "F1",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 106.06219482421875,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 115.57994079589844,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "F2",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 112.19720458984375,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "F4",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 96.84693145751953,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "F6",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 110.69151306152344,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "F8",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 94.78277587890625,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FT7",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 103.89774322509766,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "FT8",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 86.81141662597656,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "T7",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 155.56365966796875,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "T8",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 278.5670471191406,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "T9",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 138.67868041992188,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "T10",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 70.99275207519531,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "TP7",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 167.27920532226562,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "TP8",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 59.292781829833984,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "P7",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 208.7153778076172,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "P5",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 163.85189819335938,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "P3",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 151.54721069335938,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "P1",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 136.34605407714844,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "PZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 120.5484619140625,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "P2",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 111.79737854003906,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "P4",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 101.87818908691406,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "P6",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 95.90399169921875,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "P8",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 90.32306671142578,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "PO7",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 179.83872985839844,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "PO3",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 162.25819396972656,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "POZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 140.60055541992188,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "PO4",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 117.39220428466797,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "PO8",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 132.74464416503906,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "O1",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 207.8683624267578,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "OZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 203.44598388671875,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "O2",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 212.8015899658203,
+            "units": "uV2"
+          },
+          {
+            "band": "beta",
+            "channel": "IZ",
+            "freq_hz": [
+              13.0,
+              30.0
+            ],
+            "method": "features_parquet_lookup",
+            "power": 239.53125,
+            "units": "uV2"
+          }
+        ],
+        "sample_id": "S001_R01_E000",
+        "source": "features"
+      },
+      "provenance": [
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FC5",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FC3",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FC1",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FCZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FC2",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FC4",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FC6",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.C5",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.C3",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.C1",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.CZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.C2",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.C4",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.C6",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.CP5",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.CP3",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.CP1",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.CPZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.CP2",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.CP4",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.CP6",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FP1",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FPZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FP2",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.AF7",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.AF3",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.AFZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.AF4",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.AF8",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.F7",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.F5",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.F3",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.F1",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.F2",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.F4",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.F6",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.F8",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FT7",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.FT8",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.T7",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.T8",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.T9",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.T10",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.TP7",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.TP8",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.P7",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.P5",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.P3",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.P1",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.PZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.P2",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.P4",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.P6",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.P8",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.PO7",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.PO3",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.POZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.PO4",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.PO8",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.O1",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.OZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.O2",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        },
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "features.parquet band column lookup",
+          "field": "band_power.IZ",
+          "method": "features_parquet_lookup",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        }
+      ],
+      "runtime_ms": 0.0,
+      "success": true
+    },
+    {
+      "error": null,
+      "inputs": {
+        "comparator": "ge",
+        "threshold": 0.0,
+        "threshold_mode": "upper_quartile",
+        "values": {
+          "AF3": 98.3633804321289,
+          "AF4": 99.20914459228516,
+          "AF7": 102.91433715820312,
+          "AF8": 90.09981536865234,
+          "AFZ": 102.15464782714844,
+          "C1": 120.05699157714844,
+          "C2": 108.99632263183594,
+          "C3": 134.54469299316406,
+          "C4": 93.90325927734375,
+          "C5": 124.6951675415039,
+          "C6": 103.80110931396484,
+          "CP1": 130.5276641845703,
+          "CP2": 101.84281158447266,
+          "CP3": 143.6204071044922,
+          "CP4": 94.38301086425781,
+          "CP5": 158.15902709960938,
+          "CP6": 81.93207550048828,
+          "CPZ": 122.84259796142578,
+          "CZ": 115.0340347290039,
+          "F1": 106.06219482421875,
+          "F2": 112.19720458984375,
+          "F3": 93.9388198852539,
+          "F4": 96.84693145751953,
+          "F5": 108.51123046875,
+          "F6": 110.69151306152344,
+          "F7": 95.65522766113281,
+          "F8": 94.78277587890625,
+          "FC1": 115.95178985595703,
+          "FC2": 122.83829498291016,
+          "FC3": 110.7191162109375,
+          "FC4": 113.53789520263672,
+          "FC5": 93.48087310791016,
+          "FC6": 99.40153503417969,
+          "FCZ": 130.97506713867188,
+          "FP1": 99.32945251464844,
+          "FP2": 81.11024475097656,
+          "FPZ": 79.53923034667969,
+          "FT7": 103.89774322509766,
+          "FT8": 86.81141662597656,
+          "FZ": 115.57994079589844,
+          "IZ": 239.53125,
+          "O1": 207.8683624267578,
+          "O2": 212.8015899658203,
+          "OZ": 203.44598388671875,
+          "P1": 136.34605407714844,
+          "P2": 111.79737854003906,
+          "P3": 151.54721069335938,
+          "P4": 101.87818908691406,
+          "P5": 163.85189819335938,
+          "P6": 95.90399169921875,
+          "P7": 208.7153778076172,
+          "P8": 90.32306671142578,
+          "PO3": 162.25819396972656,
+          "PO4": 117.39220428466797,
+          "PO7": 179.83872985839844,
+          "PO8": 132.74464416503906,
+          "POZ": 140.60055541992188,
+          "PZ": 120.5484619140625,
+          "T10": 70.99275207519531,
+          "T7": 155.56365966796875,
+          "T8": 278.5670471191406,
+          "T9": 138.67868041992188,
+          "TP7": 167.27920532226562,
+          "TP8": 59.292781829833984
+        }
+      },
+      "name": "select_channels_above_threshold",
+      "outputs": {
+        "channels": [
+          "CP3",
+          "CP5",
+          "IZ",
+          "O1",
+          "O2",
+          "OZ",
+          "P3",
+          "P5",
+          "P7",
+          "PO3",
+          "PO7",
+          "POZ",
+          "T7",
+          "T8",
+          "T9",
+          "TP7"
+        ],
+        "comparator": "ge",
+        "n_selected": 16,
+        "policy": "upper_quartile_ge",
+        "threshold_mode": "upper_quartile",
+        "threshold_used": 138.67868041992188,
+        "units": "uV2"
+      },
+      "provenance": [
+        {
+          "artifact_path": "data/processed/features.parquet",
+          "detail": "Threshold policy upper_quartile_ge on beta_power",
+          "field": "threshold_set",
+          "method": "upper_quartile_ge",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "stored_feature"
+        }
+      ],
+      "runtime_ms": 2.5666123256087303,
+      "success": true
+    }
+  ],
+  "trigger_reason": [
+    "missing_answer_sections",
+    "multi_tool"
+  ],
+  "verification_triggered": false,
+  "verifier_latency_ms": 0.0,
+  "warnings": [
+    "Band power production uses source='features' (features.parquet). Welch recompute from raw EEG may differ for low-frequency bands (delta/theta) due to integration window and filter edge effects."
+  ]
+}

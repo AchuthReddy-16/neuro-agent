@@ -1,0 +1,342 @@
+{
+  "total_examples": 440,
+  "base_pass_count": 50,
+  "sft_pass_count": 72,
+  "regressed_count": 33,
+  "improved_count": 55,
+  "unchanged_pass": 17,
+  "unchanged_fail": 335,
+  "avg_base_tokens": 24.193181818181817,
+  "avg_sft_tokens": 40.01136363636363,
+  "regression_analysis": {
+    "total_regressions": 33,
+    "by_group": {
+      "A": 23,
+      "B": 10
+    },
+    "by_task_family": {
+      "spectrogram_strongest_vs_weakest": 10,
+      "topomap_beta_top3": 6,
+      "waveform_highest_rms": 6,
+      "waveform_max_rms_numeric": 5,
+      "band_power_beta_top3": 2,
+      "topomap_strongest_alpha_mu": 1,
+      "spectrogram_dominant_band": 1,
+      "psd_peak_frequency": 1,
+      "band_power_weakest_alpha_mu": 1
+    },
+    "by_verifier_type": {
+      "categorical": 19,
+      "ranking": 8,
+      "numeric": 6
+    },
+    "representative_examples": {
+      "A": [
+        {
+          "id": "veval_01265707694e3f0d",
+          "task_family": "topomap_beta_top3",
+          "verification_type": "ranking",
+          "ground_truth": [
+            "FC6",
+            "AF4",
+            "F6"
+          ],
+          "base_response": "1. AF4 (28.45)\n2. CP5 (19.65)\n3. CP3 (18.04)",
+          "sft_response": "The grounded descending order is AF4, CP2, C5; their values are AF4=28.4537, CP2=16.2404, C5=22.2596.",
+          "sft_parsed": [
+            "CP2",
+            "AF4",
+            "C5"
+          ]
+        },
+        {
+          "id": "veval_16740e713504f671",
+          "task_family": "spectrogram_strongest_vs_weakest",
+          "verification_type": "categorical",
+          "ground_truth": "delta_power",
+          "base_response": "delta_power",
+          "sft_response": "delta_power is the grounded result (1216.85 in the stored units), computed across the supplied values.",
+          "sft_parsed": "delta_power_is_the_grounded_result_121685_in_the_stored_units_computed_across_the_supplied_values"
+        },
+        {
+          "id": "veval_2e2fcfed18323657",
+          "task_family": "waveform_highest_rms",
+          "verification_type": "categorical",
+          "ground_truth": "C4",
+          "base_response": "C4",
+          "sft_response": "C4 is the grounded result (101.218 in the stored units), computed across the supplied values.",
+          "sft_parsed": "c4_is_the_grounded_result_101218_in_the_stored_units_computed_across_the_supplied_values"
+        },
+        {
+          "id": "veval_319c550d57c1e38e",
+          "task_family": "waveform_max_rms_numeric",
+          "verification_type": "numeric",
+          "ground_truth": 13.761534690856934,
+          "base_response": "13.761534690856934 uV",
+          "sft_response": "The computed result is 13.7615 uV.",
+          "sft_parsed": 13.7615
+        },
+        {
+          "id": "veval_330a28ab1bab97b7",
+          "task_family": "spectrogram_strongest_vs_weakest",
+          "verification_type": "categorical",
+          "ground_truth": "beta_power",
+          "base_response": "Beta power",
+          "sft_response": "beta_power is the grounded result (332.38 in the stored units), computed across the supplied values.",
+          "sft_parsed": "beta_power_is_the_grounded_result_33238_in_the_stored_units_computed_across_the_supplied_values"
+        }
+      ],
+      "B": [
+        {
+          "id": "veval_112d12dccec5fc96",
+          "task_family": "waveform_max_rms_numeric",
+          "verification_type": "numeric",
+          "ground_truth": 14.240033149719238,
+          "base_response": "14.240033149719238 uV",
+          "sft_response": "The computed result is 11.6941 uV.",
+          "sft_parsed": 11.6941
+        },
+        {
+          "id": "veval_11b5722f8e8d67dd",
+          "task_family": "waveform_highest_rms",
+          "verification_type": "categorical",
+          "ground_truth": "C3",
+          "base_response": "C3",
+          "sft_response": "CZ is the grounded result (11.3156 in the stored units), computed across the supplied values.",
+          "sft_parsed": "cz_is_the_grounded_result_113156_in_the_stored_units_computed_across_the_supplied_values"
+        },
+        {
+          "id": "veval_1d77b45e23d74431",
+          "task_family": "waveform_max_rms_numeric",
+          "verification_type": "numeric",
+          "ground_truth": 31.3739070892334,
+          "base_response": "31.3739070892334 uV",
+          "sft_response": "The computed result is 28.9511 uV.",
+          "sft_parsed": 28.9511
+        },
+        {
+          "id": "veval_1e0b9a720c93c7ee",
+          "task_family": "topomap_beta_top3",
+          "verification_type": "ranking",
+          "ground_truth": [
+            "FT7",
+            "TP7",
+            "T9"
+          ],
+          "base_response": "1. T9 (281.4907531738281 Hz)\n2. TP7 (291.7746887207031 Hz)\n3. T8 (140.85072326660156 Hz)",
+          "sft_response": "The grounded descending order is AF7, CP3, C5; their values are AF7=166.5818, CP3=156.3996, C5=175.1765.",
+          "sft_parsed": [
+            "AF7",
+            "CP3",
+            "C5"
+          ]
+        },
+        {
+          "id": "veval_4a717e904a941b98",
+          "task_family": "topomap_strongest_alpha_mu",
+          "verification_type": "categorical",
+          "ground_truth": "C4",
+          "base_response": "C4",
+          "sft_response": "C2 is the grounded result (103.454 in the stored units), computed across the supplied values.",
+          "sft_parsed": "c2_is_the_grounded_result_103454_in_the_stored_units_computed_across_the_supplied_values"
+        }
+      ]
+    },
+    "group_definitions": {
+      "A": "semantically correct but parser failed",
+      "B": "wrong format (verbose grounded-answer template)",
+      "C": "wrong label vocab",
+      "D": "genuine visual reasoning failure",
+      "E": "overly verbose",
+      "F": "other"
+    }
+  },
+  "per_task_delta": {
+    "band_power_beta_top3": {
+      "count": 25,
+      "base_pass_rate": 0.2,
+      "sft_pass_rate": 0.2,
+      "delta": 0.0,
+      "regressed": 2,
+      "improved": 2
+    },
+    "band_power_dominant_mean_band": {
+      "count": 25,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "improved": 0
+    },
+    "band_power_high_beta_set": {
+      "count": 25,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "improved": 0
+    },
+    "band_power_weakest_alpha_mu": {
+      "count": 25,
+      "base_pass_rate": 0.04,
+      "sft_pass_rate": 0.0,
+      "delta": -0.04,
+      "regressed": 1,
+      "improved": 0
+    },
+    "condition_higher_mean": {
+      "count": 5,
+      "base_pass_rate": 1.0,
+      "sft_pass_rate": 1.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "improved": 0
+    },
+    "condition_largest_channel_difference": {
+      "count": 5,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "improved": 0
+    },
+    "condition_percent_difference": {
+      "count": 5,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "improved": 0
+    },
+    "psd_band_order": {
+      "count": 33,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 1.0,
+      "delta": 1.0,
+      "regressed": 0,
+      "improved": 33
+    },
+    "psd_dominant_band": {
+      "count": 33,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "improved": 0
+    },
+    "psd_peak_frequency": {
+      "count": 34,
+      "base_pass_rate": 0.0294,
+      "sft_pass_rate": 0.0882,
+      "delta": 0.0588,
+      "regressed": 1,
+      "improved": 3
+    },
+    "spectrogram_dominant_band": {
+      "count": 34,
+      "base_pass_rate": 0.0294,
+      "sft_pass_rate": 0.0,
+      "delta": -0.0294,
+      "regressed": 1,
+      "improved": 0
+    },
+    "spectrogram_peak_frequency": {
+      "count": 33,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.3939,
+      "delta": 0.3939,
+      "regressed": 0,
+      "improved": 13
+    },
+    "spectrogram_strongest_vs_weakest": {
+      "count": 33,
+      "base_pass_rate": 0.303,
+      "sft_pass_rate": 0.0,
+      "delta": -0.303,
+      "regressed": 10,
+      "improved": 0
+    },
+    "topomap_beta_top3": {
+      "count": 33,
+      "base_pass_rate": 0.2121,
+      "sft_pass_rate": 0.1515,
+      "delta": -0.0606,
+      "regressed": 6,
+      "improved": 4
+    },
+    "topomap_high_delta_set": {
+      "count": 33,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "improved": 0
+    },
+    "topomap_strongest_alpha_mu": {
+      "count": 34,
+      "base_pass_rate": 0.0294,
+      "sft_pass_rate": 0.0,
+      "delta": -0.0294,
+      "regressed": 1,
+      "improved": 0
+    },
+    "waveform_highest_rms": {
+      "count": 9,
+      "base_pass_rate": 0.6667,
+      "sft_pass_rate": 0.0,
+      "delta": -0.6667,
+      "regressed": 6,
+      "improved": 0
+    },
+    "waveform_max_rms_numeric": {
+      "count": 8,
+      "base_pass_rate": 0.625,
+      "sft_pass_rate": 0.0,
+      "delta": -0.625,
+      "regressed": 5,
+      "improved": 0
+    },
+    "waveform_rms_order": {
+      "count": 8,
+      "base_pass_rate": 1.0,
+      "sft_pass_rate": 1.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "improved": 0
+    }
+  },
+  "per_verifier_delta": {
+    "categorical": {
+      "count": 203,
+      "base_pass_rate": 0.1182,
+      "sft_pass_rate": 0.0246,
+      "delta": -0.0936,
+      "regressed": 19,
+      "verbose_sft_failures": 198
+    },
+    "numeric": {
+      "count": 80,
+      "base_pass_rate": 0.075,
+      "sft_pass_rate": 0.2,
+      "delta": 0.125,
+      "regressed": 6,
+      "verbose_sft_failures": 59
+    },
+    "ranking": {
+      "count": 99,
+      "base_pass_rate": 0.202,
+      "sft_pass_rate": 0.5152,
+      "delta": 0.3131,
+      "regressed": 8,
+      "verbose_sft_failures": 48
+    },
+    "set": {
+      "count": 58,
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "delta": 0.0,
+      "regressed": 0,
+      "verbose_sft_failures": 0
+    }
+  }
+}

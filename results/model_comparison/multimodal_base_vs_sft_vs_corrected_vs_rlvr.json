@@ -1,0 +1,274 @@
+{
+  "base_variant": "base_BF16",
+  "sft_variant": "multimodal_sft",
+  "corrected_variant": "multimodal_sft_corrected",
+  "rlvr_variant": "multimodal_rlvr",
+  "overall": {
+    "base_pass_rate": 0.11363636363636363,
+    "sft_pass_rate": 0.16363636363636364,
+    "corrected_pass_rate": 0.49318181818181817,
+    "rlvr_pass_rate": 0.4818181818181818,
+    "corrected_delta": 0.3795454545454545,
+    "rlvr_delta": 0.36818181818181817,
+    "rlvr_vs_corrected_delta": -0.011363636363636354
+  },
+  "runtime": {
+    "base_runtime_s": 163.6357645029202,
+    "sft_runtime_s": 353.118630181998,
+    "corrected_runtime_s": 0.03346287179738283,
+    "rlvr_runtime_s": 138.44607319496572,
+    "base_peak_vram_mb": 7455.0078125,
+    "sft_peak_vram_mb": 7762.5126953125,
+    "corrected_peak_vram_mb": 7303.146484375,
+    "rlvr_peak_vram_mb": 7757.10986328125
+  },
+  "per_task": {
+    "band_power_beta_top3": {
+      "base_pass_rate": 0.2,
+      "sft_pass_rate": 0.2,
+      "corrected_pass_rate": 0.24,
+      "rlvr_pass_rate": 0.16,
+      "sft_delta": 0.0,
+      "corrected_delta": 0.03999999999999998,
+      "rlvr_delta": -0.04000000000000001,
+      "rlvr_vs_corrected_delta": -0.07999999999999999,
+      "count": 25
+    },
+    "band_power_dominant_mean_band": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 1.0,
+      "rlvr_pass_rate": 1.0,
+      "sft_delta": 0.0,
+      "corrected_delta": 1.0,
+      "rlvr_delta": 1.0,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 25
+    },
+    "band_power_high_beta_set": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.0,
+      "rlvr_pass_rate": 0.0,
+      "sft_delta": 0.0,
+      "corrected_delta": 0.0,
+      "rlvr_delta": 0.0,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 25
+    },
+    "band_power_weakest_alpha_mu": {
+      "base_pass_rate": 0.04,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.92,
+      "rlvr_pass_rate": 0.92,
+      "sft_delta": -0.04,
+      "corrected_delta": 0.88,
+      "rlvr_delta": 0.88,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 25
+    },
+    "condition_higher_mean": {
+      "base_pass_rate": 1.0,
+      "sft_pass_rate": 1.0,
+      "corrected_pass_rate": 1.0,
+      "rlvr_pass_rate": 1.0,
+      "sft_delta": 0.0,
+      "corrected_delta": 0.0,
+      "rlvr_delta": 0.0,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 5
+    },
+    "condition_largest_channel_difference": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.0,
+      "rlvr_pass_rate": 0.0,
+      "sft_delta": 0.0,
+      "corrected_delta": 0.0,
+      "rlvr_delta": 0.0,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 5
+    },
+    "condition_percent_difference": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.0,
+      "rlvr_pass_rate": 0.0,
+      "sft_delta": 0.0,
+      "corrected_delta": 0.0,
+      "rlvr_delta": 0.0,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 5
+    },
+    "psd_band_order": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 1.0,
+      "corrected_pass_rate": 1.0,
+      "rlvr_pass_rate": 1.0,
+      "sft_delta": 1.0,
+      "corrected_delta": 1.0,
+      "rlvr_delta": 1.0,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 33
+    },
+    "psd_dominant_band": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.8484848484848485,
+      "rlvr_pass_rate": 0.8484848484848485,
+      "sft_delta": 0.0,
+      "corrected_delta": 0.8484848484848485,
+      "rlvr_delta": 0.8484848484848485,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 33
+    },
+    "psd_peak_frequency": {
+      "base_pass_rate": 0.029411764705882353,
+      "sft_pass_rate": 0.08823529411764706,
+      "corrected_pass_rate": 0.38235294117647056,
+      "rlvr_pass_rate": 0.35294117647058826,
+      "sft_delta": 0.05882352941176471,
+      "corrected_delta": 0.3529411764705882,
+      "rlvr_delta": 0.3235294117647059,
+      "rlvr_vs_corrected_delta": -0.029411764705882304,
+      "count": 34
+    },
+    "spectrogram_dominant_band": {
+      "base_pass_rate": 0.029411764705882353,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.7352941176470589,
+      "rlvr_pass_rate": 0.7058823529411765,
+      "sft_delta": -0.029411764705882353,
+      "corrected_delta": 0.7058823529411765,
+      "rlvr_delta": 0.6764705882352942,
+      "rlvr_vs_corrected_delta": -0.02941176470588236,
+      "count": 34
+    },
+    "spectrogram_peak_frequency": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.3939393939393939,
+      "corrected_pass_rate": 0.24242424242424243,
+      "rlvr_pass_rate": 0.21212121212121213,
+      "sft_delta": 0.3939393939393939,
+      "corrected_delta": 0.24242424242424243,
+      "rlvr_delta": 0.21212121212121213,
+      "rlvr_vs_corrected_delta": -0.030303030303030304,
+      "count": 33
+    },
+    "spectrogram_strongest_vs_weakest": {
+      "base_pass_rate": 0.30303030303030304,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.8787878787878788,
+      "rlvr_pass_rate": 0.8787878787878788,
+      "sft_delta": -0.30303030303030304,
+      "corrected_delta": 0.5757575757575757,
+      "rlvr_delta": 0.5757575757575757,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 33
+    },
+    "topomap_beta_top3": {
+      "base_pass_rate": 0.21212121212121213,
+      "sft_pass_rate": 0.15151515151515152,
+      "corrected_pass_rate": 0.18181818181818182,
+      "rlvr_pass_rate": 0.15151515151515152,
+      "sft_delta": -0.06060606060606061,
+      "corrected_delta": -0.030303030303030304,
+      "rlvr_delta": -0.06060606060606061,
+      "rlvr_vs_corrected_delta": -0.030303030303030304,
+      "count": 33
+    },
+    "topomap_high_delta_set": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.0,
+      "rlvr_pass_rate": 0.0,
+      "sft_delta": 0.0,
+      "corrected_delta": 0.0,
+      "rlvr_delta": 0.0,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 33
+    },
+    "topomap_strongest_alpha_mu": {
+      "base_pass_rate": 0.029411764705882353,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.08823529411764706,
+      "rlvr_pass_rate": 0.08823529411764706,
+      "sft_delta": -0.029411764705882353,
+      "corrected_delta": 0.05882352941176471,
+      "rlvr_delta": 0.05882352941176471,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 34
+    },
+    "waveform_highest_rms": {
+      "base_pass_rate": 0.6666666666666666,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.3333333333333333,
+      "rlvr_pass_rate": 0.4444444444444444,
+      "sft_delta": -0.6666666666666666,
+      "corrected_delta": -0.3333333333333333,
+      "rlvr_delta": -0.2222222222222222,
+      "rlvr_vs_corrected_delta": 0.1111111111111111,
+      "count": 9
+    },
+    "waveform_max_rms_numeric": {
+      "base_pass_rate": 0.625,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.25,
+      "rlvr_pass_rate": 0.25,
+      "sft_delta": -0.625,
+      "corrected_delta": -0.375,
+      "rlvr_delta": -0.375,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 8
+    },
+    "waveform_rms_order": {
+      "base_pass_rate": 1.0,
+      "sft_pass_rate": 1.0,
+      "corrected_pass_rate": 1.0,
+      "rlvr_pass_rate": 1.0,
+      "sft_delta": 0.0,
+      "corrected_delta": 0.0,
+      "rlvr_delta": 0.0,
+      "rlvr_vs_corrected_delta": 0.0,
+      "count": 8
+    }
+  },
+  "per_verifier_type": {
+    "categorical": {
+      "base_pass_rate": 0.11822660098522167,
+      "sft_pass_rate": 0.024630541871921183,
+      "corrected_pass_rate": 0.6945812807881774,
+      "rlvr_pass_rate": 0.6945812807881774,
+      "corrected_delta": 0.5763546798029557,
+      "rlvr_delta": 0.5763546798029557,
+      "rlvr_vs_corrected_delta": 0.0
+    },
+    "numeric": {
+      "base_pass_rate": 0.075,
+      "sft_pass_rate": 0.2,
+      "corrected_pass_rate": 0.2875,
+      "rlvr_pass_rate": 0.2625,
+      "corrected_delta": 0.21249999999999997,
+      "rlvr_delta": 0.1875,
+      "rlvr_vs_corrected_delta": -0.024999999999999967
+    },
+    "ranking": {
+      "base_pass_rate": 0.20202020202020202,
+      "sft_pass_rate": 0.5151515151515151,
+      "corrected_pass_rate": 0.5353535353535354,
+      "rlvr_pass_rate": 0.5050505050505051,
+      "corrected_delta": 0.33333333333333337,
+      "rlvr_delta": 0.3030303030303031,
+      "rlvr_vs_corrected_delta": -0.030303030303030276
+    },
+    "set": {
+      "base_pass_rate": 0.0,
+      "sft_pass_rate": 0.0,
+      "corrected_pass_rate": 0.0,
+      "rlvr_pass_rate": 0.0,
+      "corrected_delta": 0.0,
+      "rlvr_delta": 0.0,
+      "rlvr_vs_corrected_delta": 0.0
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "timestamp": "2026-09-03T22:53:05.960278+00:00",
+  "boot_s": 22.022,
+  "vram_awake": {
+    "used_mb": 22538.0,
+    "total_mb": 24564.0,
+    "free_mb": 2026.0
+  },
+  "awake_request_status": 200,
+  "sleep_url": "http://127.0.0.1:8000/sleep",
+  "sleep_status": 200,
+  "sleep_body": "",
+  "sleep_ms": 1189.522,
+  "vram_after_sleep": {
+    "used_mb": 710.0,
+    "total_mb": 24564.0,
+    "free_mb": 23854.0
+  },
+  "sleep_ok": true,
+  "sleep_error": null,
+  "wake_url": "http://127.0.0.1:8000/wake_up",
+  "wake_status": 200,
+  "wake_body": "",
+  "wake_ms": 961.328,
+  "vram_after_wake": {
+    "used_mb": 21962.0,
+    "total_mb": 24564.0,
+    "free_mb": 2602.0
+  },
+  "wake_ok": true,
+  "post_wake_request_status": 200,
+  "post_wake_preview": " OK again. OK",
+  "compare_to_full_restore_ms": 22524.0,
+  "note": "Bounded smoke only; not a full vision interleave experiment."
+}

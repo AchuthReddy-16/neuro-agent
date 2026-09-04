@@ -1,0 +1,45 @@
+{
+  "model_name": "Qwen/Qwen3-4B-Instruct-2507",
+  "variant": "rlvr_QLoRA_BF16",
+  "dtype": "bfloat16",
+  "total_examples": 500,
+  "verifier_pass_rate": 0.856,
+  "task_accuracy": 0.856,
+  "invalid_parse_rate": 0.0,
+  "empty_refusal_rate": 0.0,
+  "avg_generated_tokens": 7.086,
+  "runtime_s": 138.58623630180955,
+  "examples_per_second": 3.607861886884011,
+  "avg_latency_ms": 276.8712904378772,
+  "peak_torch_allocated_mb": 8409.4296875,
+  "peak_torch_reserved_mb": 8616.0,
+  "nvidia_smi_peak_mb": 9090.0,
+  "held_out_subjects": [
+    "S026",
+    "S027",
+    "S028",
+    "S029",
+    "S030"
+  ],
+  "task_distribution": {
+    "channel_ranking": 125,
+    "band_power_analysis": 125,
+    "movement_task_classification": 125,
+    "execution_vs_imagery": 125
+  },
+  "verification_type_distribution": {
+    "ranking": 250,
+    "categorical": 250
+  },
+  "unsupported_claim_available": false,
+  "unsupported_claim_rate": null,
+  "metadata": {
+    "model_load_time_s": 25.721891321241856,
+    "weight_memory_mb": 7924.2490234375,
+    "num_parameters": 4088528384,
+    "failure_count": 72,
+    "seed": 42,
+    "max_new_tokens": 128,
+    "do_sample": false
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "method": "GRPO",
+  "model_name": "Qwen/Qwen2.5-VL-3B-Instruct",
+  "base_adapter_path": "/workspace/neuro-agent/checkpoints/multimodal_sft_corrected/final",
+  "train_examples": 900,
+  "max_steps": 120,
+  "num_generations": 2,
+  "learning_rate": 5e-07,
+  "beta": 0.04,
+  "max_completion_length": 32,
+  "total_steps": 120,
+  "runtime_s": 883.6486035855487,
+  "peak_vram_mb": 4673.41748046875,
+  "adapter_size_mb": 223.6869068145752,
+  "checkpoint_path": "/workspace/neuro-agent/checkpoints/multimodal_rlvr/final",
+  "seed": 42,
+  "reward_mean": 0.3380087308275203,
+  "reward_std": 0.07412694654856412,
+  "reward_min": 0.19425245895981788,
+  "reward_max": 0.4552083358168602,
+  "kl_mean": 0.0022441307764943983,
+  "per_task_reward": {
+    "band_power_beta_top3": {
+      "count": 52.0,
+      "mean": 0.1544871794871795,
+      "min": 0.0,
+      "max": 0.6666666666666666
+    },
+    "band_power_dominant_mean_band": {
+      "count": 50.0,
+      "mean": 0.74,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "band_power_high_beta_set": {
+      "count": 44.0,
+      "mean": 0.21294858007412615,
+      "min": 0.0,
+      "max": 0.6923076923076923
+    },
+    "band_power_weakest_alpha_mu": {
+      "count": 44.0,
+      "mean": 0.6363636363636364,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "condition_higher_mean": {
+      "count": 18.0,
+      "mean": 0.7777777777777778,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "condition_largest_channel_difference": {
+      "count": 24.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "condition_percent_difference": {
+      "count": 28.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "psd_band_order": {
+      "count": 78.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "psd_dominant_band": {
+      "count": 76.0,
+      "mean": 0.75,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "psd_peak_frequency": {
+      "count": 76.0,
+      "mean": 0.34210526315789475,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "spectrogram_dominant_band": {
+      "count": 66.0,
+      "mean": 0.5303030303030303,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "spectrogram_peak_frequency": {
+      "count": 76.0,
+      "mean": 0.4440801315789474,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "spectrogram_strongest_vs_weakest": {
+      "count": 60.0,
+      "mean": 0.5666666666666667,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "topomap_beta_top3": {
+      "count": 64.0,
+      "mean": 0.08333333333333333,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "topomap_high_delta_set": {
+      "count": 68.0,
+      "mean": 0.15570104776547333,
+      "min": 0.0,
+      "max": 0.5384615384615384
+    },
+    "topomap_strongest_alpha_mu": {
+      "count": 66.0,
+      "mean": 0.015151515151515152,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "waveform_highest_rms": {
+      "count": 18.0,
+      "mean": 0.3888888888888889,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "waveform_max_rms_numeric": {
+      "count": 26.0,
+      "mean": 0.058239056645442384,
+      "min": 0.0,
+      "max": 1.0
+    },
+    "waveform_rms_order": {
+      "count": 26.0,
+      "mean": 0.6499999999999999,
+      "min": 0.3,
+      "max": 1.0
+    }
+  },
+  "reward_spec": {
+    "categorical": "1.0 on exact normalized label match, else 0.0",
+    "numeric": "1.0 within tolerance; linear partial credit to 0 at 3x tolerance band",
+    "ranking": "1.0 exact order; partial = 0.7 * position accuracy + 0.3 * set overlap",
+    "set": "F1 over predicted vs expected channel sets; 1.0 on exact match",
+    "waveform_numeric": "numeric reward with waveform RMS tolerance shaping",
+    "spectrogram_peak_frequency": "numeric reward with peak-frequency tolerance shaping"
+  }
+}

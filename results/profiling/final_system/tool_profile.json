@@ -1,0 +1,129 @@
+{
+  "timestamp": "2026-09-03T22:05:06.130313+00:00",
+  "n_warmup": 1,
+  "n_reps": 5,
+  "tools": {
+    "band_power": {
+      "n": 5,
+      "p50_ms": 9.233,
+      "mean_ms": 9.241,
+      "min_ms": 9.02,
+      "max_ms": 9.416,
+      "result_type": "BandPowerOutput"
+    },
+    "band_power_all_channels": {
+      "n": 5,
+      "p50_ms": 295.612,
+      "mean_ms": 330.12,
+      "min_ms": 295.44,
+      "max_ms": 466.492,
+      "result_type": "BandPowerOutput"
+    },
+    "rms": {
+      "n": 5,
+      "p50_ms": 4.674,
+      "mean_ms": 5.552,
+      "min_ms": 3.843,
+      "max_ms": 10.216,
+      "result_type": "RmsOutput"
+    },
+    "psd_peak": {
+      "n": 5,
+      "p50_ms": 5.162,
+      "mean_ms": 5.961,
+      "min_ms": 4.731,
+      "max_ms": 9.722,
+      "result_type": "PsdPeakResult"
+    },
+    "channel_ranking": {
+      "n": 5,
+      "p50_ms": 297.984,
+      "mean_ms": 298.337,
+      "min_ms": 294.624,
+      "max_ms": 301.397,
+      "result_type": "RankChannelsOutput"
+    },
+    "threshold_selection_incl_band_power": {
+      "n": 5,
+      "p50_ms": 301.234,
+      "mean_ms": 300.346,
+      "min_ms": 297.353,
+      "max_ms": 303.59,
+      "result_type": "ThresholdSelectionOutput"
+    },
+    "condition_comparison": {
+      "n": 5,
+      "p50_ms": 13.663,
+      "mean_ms": 14.134,
+      "min_ms": 13.123,
+      "max_ms": 15.41,
+      "result_type": "CompareConditionsOutput"
+    },
+    "evidence_json_serialization_band_power": {
+      "mean_ms": 0.049,
+      "p50_ms": 0.047
+    },
+    "router_threshold_set_end_to_end": {
+      "mean_ms": 310.109,
+      "p50_ms": 310.28,
+      "note": "includes compute_band_power + select_channels + evidence assembly"
+    }
+  },
+  "ranked_by_mean_ms": [
+    {
+      "tool": "band_power_all_channels",
+      "mean_ms": 330.12
+    },
+    {
+      "tool": "router_threshold_set_end_to_end",
+      "mean_ms": 310.109
+    },
+    {
+      "tool": "threshold_selection_incl_band_power",
+      "mean_ms": 300.346
+    },
+    {
+      "tool": "channel_ranking",
+      "mean_ms": 298.337
+    },
+    {
+      "tool": "condition_comparison",
+      "mean_ms": 14.134
+    },
+    {
+      "tool": "band_power",
+      "mean_ms": 9.241
+    },
+    {
+      "tool": "psd_peak",
+      "mean_ms": 5.961
+    },
+    {
+      "tool": "rms",
+      "mean_ms": 5.552
+    },
+    {
+      "tool": "evidence_json_serialization_band_power",
+      "mean_ms": 0.049
+    }
+  ],
+  "unexpectedly_expensive": [
+    {
+      "tool": "band_power_all_channels",
+      "mean_ms": 330.12
+    },
+    {
+      "tool": "router_threshold_set_end_to_end",
+      "mean_ms": 310.109
+    },
+    {
+      "tool": "threshold_selection_incl_band_power",
+      "mean_ms": 300.346
+    },
+    {
+      "tool": "channel_ranking",
+      "mean_ms": 298.337
+    }
+  ],
+  "binding": "CPU (pandas/numpy/h5 lookups); no GPU"
+}

@@ -1,37 +1,52 @@
-"""Agent tool interfaces (stub)."""
+"""Deterministic neuroscience tool layer."""
 
-from __future__ import annotations
+from neuro_agent.tools.comparison import compare_conditions, lookup_condition_summary
+from neuro_agent.tools.eeg_signal import compute_band_power, compute_rms, find_psd_peak
+from neuro_agent.tools.evidence import EvidenceBundle, ResearchToolRequest, new_request_id
+from neuro_agent.tools.metadata import lookup_sample_metadata
+from neuro_agent.tools.ranking import (
+    THRESHOLD_POLICIES,
+    rank_channels,
+    rank_channels_for_sample,
+    select_channels_above_threshold,
+    select_channels_for_multimodal_source_values,
+    select_channels_for_rlvr_context,
+)
+from neuro_agent.tools.router import route_research_request
+from neuro_agent.tools.schemas import (
+    BAND_DEFINITIONS,
+    BandPowerOutput,
+    CompareConditionsOutput,
+    PsdPeakResult,
+    RankChannelsOutput,
+    RmsOutput,
+    ThresholdSelectionOutput,
+)
+from neuro_agent.tools.vision_evidence import resolve_vision_evidence
 
-from abc import ABC, abstractmethod
-from typing import Any
-
-
-class Tool(ABC):
-    """Base class for agent-callable tools."""
-
-    name: str = "base_tool"
-    description: str = ""
-
-    @abstractmethod
-    def execute(self, **kwargs: Any) -> dict[str, Any]:
-        """Run the tool and return structured output."""
-
-
-class LiteratureSearchTool(Tool):
-    """Placeholder literature search tool."""
-
-    name = "literature_search"
-    description = "Search neuroscience literature databases."
-
-    def execute(self, query: str, max_results: int = 10, **kwargs: Any) -> dict[str, Any]:
-        raise NotImplementedError("Literature search will be implemented with the agent.")
-
-
-class DataAnalysisTool(Tool):
-    """Placeholder data analysis tool."""
-
-    name = "data_analysis"
-    description = "Analyze neuroscience datasets and produce summaries."
-
-    def execute(self, dataset_id: str, **kwargs: Any) -> dict[str, Any]:
-        raise NotImplementedError("Data analysis will be implemented with the agent.")
+__all__ = [
+    "BAND_DEFINITIONS",
+    "THRESHOLD_POLICIES",
+    "BandPowerOutput",
+    "CompareConditionsOutput",
+    "EvidenceBundle",
+    "PsdPeakResult",
+    "RankChannelsOutput",
+    "ResearchToolRequest",
+    "RmsOutput",
+    "ThresholdSelectionOutput",
+    "compare_conditions",
+    "compute_band_power",
+    "compute_rms",
+    "find_psd_peak",
+    "lookup_condition_summary",
+    "lookup_sample_metadata",
+    "new_request_id",
+    "rank_channels",
+    "rank_channels_for_sample",
+    "resolve_vision_evidence",
+    "route_research_request",
+    "select_channels_above_threshold",
+    "select_channels_for_multimodal_source_values",
+    "select_channels_for_rlvr_context",
+]

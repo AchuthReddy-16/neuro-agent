@@ -1,0 +1,58 @@
+{
+  "band_power_analysis": {
+    "count": 10,
+    "verifier_pass_rate": 0.9,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 9.0
+  },
+  "channel_ranking": {
+    "count": 10,
+    "verifier_pass_rate": 0.9,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 9.0
+  },
+  "execution_vs_imagery": {
+    "count": 10,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 2.6
+  },
+  "factual_grounding": {
+    "count": 10,
+    "verifier_pass_rate": 0.5,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 4.1
+  },
+  "movement_task_classification": {
+    "count": 10,
+    "verifier_pass_rate": 0.7,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 7.8
+  },
+  "numerical_reasoning": {
+    "count": 10,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 15.0
+  },
+  "statistical_comparison": {
+    "count": 10,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 8.0
+  },
+  "tool_selection": {
+    "count": 10,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 8.0
+  }
+}

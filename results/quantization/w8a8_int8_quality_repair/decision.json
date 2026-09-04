@@ -1,0 +1,9 @@
+{
+  "stage": "H.8",
+  "verdict": "FAIL",
+  "chosen_production_checkpoint": "checkpoints/text_w8a8_int8_compressed",
+  "h8_checkpoint_kept_on_disk_not_selected": "checkpoints/text_w8a8_int8_balanced_calibration",
+  "full_quality_skipped": true,
+  "systems_sanity_skipped": true,
+  "targeted_gate_passed": false
+}

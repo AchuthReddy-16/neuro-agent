@@ -1,0 +1,141 @@
+{
+  "stage": "H.5",
+  "phase": "correctness",
+  "hot_shape": {
+    "N": 9728,
+    "K": 2560
+  },
+  "cases": [
+    {
+      "case": "decode_m1",
+      "M": 1,
+      "N": 9728,
+      "K": 2560,
+      "threshold": 0.0,
+      "inject_outliers": false,
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "mean_relative_error": 0.0,
+      "tolerance_abs": 0.05,
+      "tolerance_mean": 0.01,
+      "passed": true
+    },
+    {
+      "case": "decode_m1_threshold",
+      "M": 1,
+      "N": 9728,
+      "K": 2560,
+      "threshold": 6.0,
+      "inject_outliers": true,
+      "max_abs_error": 0.003906,
+      "mean_abs_error": 0.0001764,
+      "mean_relative_error": 0.00016811,
+      "tolerance_abs": 0.15,
+      "tolerance_mean": 0.02,
+      "passed": true
+    },
+    {
+      "case": "small_batch_decode",
+      "M": 4,
+      "N": 9728,
+      "K": 2560,
+      "threshold": 0.0,
+      "inject_outliers": false,
+      "max_abs_error": 0.000488,
+      "mean_abs_error": 1e-08,
+      "mean_relative_error": 1e-08,
+      "tolerance_abs": 0.05,
+      "tolerance_mean": 0.01,
+      "passed": true
+    },
+    {
+      "case": "small_batch_threshold",
+      "M": 4,
+      "N": 9728,
+      "K": 2560,
+      "threshold": 6.0,
+      "inject_outliers": true,
+      "max_abs_error": 0.003906,
+      "mean_abs_error": 0.00017862,
+      "mean_relative_error": 0.00017058,
+      "tolerance_abs": 0.15,
+      "tolerance_mean": 0.02,
+      "passed": true
+    },
+    {
+      "case": "prefill_64",
+      "M": 64,
+      "N": 9728,
+      "K": 2560,
+      "threshold": 0.0,
+      "inject_outliers": false,
+      "max_abs_error": 0.000977,
+      "mean_abs_error": 1e-08,
+      "mean_relative_error": 2e-08,
+      "tolerance_abs": 0.05,
+      "tolerance_mean": 0.01,
+      "passed": true
+    },
+    {
+      "case": "prefill_512",
+      "M": 512,
+      "N": 9728,
+      "K": 2560,
+      "threshold": 0.0,
+      "inject_outliers": false,
+      "max_abs_error": 0.001953,
+      "mean_abs_error": 1e-08,
+      "mean_relative_error": 2e-08,
+      "tolerance_abs": 0.05,
+      "tolerance_mean": 0.01,
+      "passed": true
+    },
+    {
+      "case": "prefill_64_threshold",
+      "M": 64,
+      "N": 9728,
+      "K": 2560,
+      "threshold": 6.0,
+      "inject_outliers": true,
+      "max_abs_error": 0.003906,
+      "mean_abs_error": 0.00017848,
+      "mean_relative_error": 0.00017043,
+      "tolerance_abs": 0.15,
+      "tolerance_mean": 0.02,
+      "passed": true
+    },
+    {
+      "case": "other_q_proj",
+      "M": 1,
+      "N": 4096,
+      "K": 2560,
+      "threshold": 0.0,
+      "inject_outliers": false,
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "mean_relative_error": 0.0,
+      "tolerance_abs": 0.05,
+      "tolerance_mean": 0.01,
+      "passed": true
+    },
+    {
+      "case": "other_down_proj",
+      "M": 1,
+      "N": 2560,
+      "K": 9728,
+      "threshold": 0.0,
+      "inject_outliers": false,
+      "max_abs_error": 0.0,
+      "mean_abs_error": 0.0,
+      "mean_relative_error": 0.0,
+      "tolerance_abs": 0.05,
+      "tolerance_mean": 0.01,
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "notes": [
+    "Compared Triton fused path vs bitsandbytes MatMul8bitLt / int8_scaled_mm.",
+    "Threshold>0 cases include FP16 outlier correction matching bnb column semantics."
+  ]
+}

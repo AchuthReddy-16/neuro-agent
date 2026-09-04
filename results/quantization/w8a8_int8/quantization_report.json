@@ -1,0 +1,79 @@
+{
+  "status": "ok",
+  "timestamp_utc": "2026-09-03T19:29:37.766960+00:00",
+  "source_checkpoint": "/workspace/neuro-agent/checkpoints/text_merged_corrected_bf16",
+  "output_checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "quantization_runtime_s": 385.94,
+  "disk_checkpoint_bytes": 4425336557,
+  "disk_checkpoint_gb": 4.1214,
+  "parameters": {
+    "smoothquant_smoothing_strength": 0.8,
+    "smoothquant_alpha": 0.8,
+    "gptq_targets": "Linear",
+    "gptq_scheme": "W8A8",
+    "weight_quantization": "INT8 symmetric per-channel (W8A8 GPTQ)",
+    "activation_quantization": "INT8 symmetric dynamic per-token",
+    "per_channel_weights": true,
+    "per_token_activations": true,
+    "symmetric": true,
+    "calibration_samples": 512,
+    "max_seq_length": 2048,
+    "excluded_layers": [
+      "lm_head"
+    ]
+  },
+  "compression_config": {
+    "config_groups": {
+      "group_0": {
+        "format": "int-quantized",
+        "input_activations": {
+          "actorder": null,
+          "block_structure": null,
+          "dynamic": true,
+          "group_size": null,
+          "num_bits": 8,
+          "observer": null,
+          "observer_kwargs": {},
+          "scale_dtype": null,
+          "strategy": "token",
+          "symmetric": true,
+          "type": "int",
+          "zp_dtype": null
+        },
+        "output_activations": null,
+        "targets": [
+          "Linear"
+        ],
+        "weights": {
+          "actorder": "static",
+          "block_structure": null,
+          "dynamic": false,
+          "group_size": null,
+          "num_bits": 8,
+          "observer": "memoryless_minmax",
+          "observer_kwargs": {},
+          "scale_dtype": null,
+          "strategy": "channel",
+          "symmetric": true,
+          "type": "int",
+          "zp_dtype": null
+        }
+      }
+    },
+    "format": "int-quantized",
+    "global_compression_ratio": null,
+    "ignore": [
+      "lm_head"
+    ],
+    "kv_cache_scheme": null,
+    "quant_method": "compressed-tensors",
+    "quantization_status": "compressed",
+    "sparsity_config": {},
+    "transform_config": {},
+    "version": "0.18.0"
+  },
+  "warnings": [],
+  "fp8_used": false,
+  "bitsandbytes_used": false,
+  "int4_used": false
+}

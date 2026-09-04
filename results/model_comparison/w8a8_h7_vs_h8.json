@@ -1,0 +1,50 @@
+{
+  "stage": "H.8",
+  "verdict": "FAIL",
+  "chosen_production_checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "chosen_label": "A_h7_original_w8a8",
+  "rejected_checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_balanced_calibration",
+  "reason": "Balanced-calibration W8A8 did not recover execution_vs_imagery (targeted 0.70 vs H.7 targeted 0.70; H.7 full 0.784). Factual grounding dropped 0.60 → 0.40 on the same 90-example slice. Per instructions, stop after one failed repair and keep H.7.",
+  "full_1000_run": false,
+  "systems_sanity_run": false,
+  "calibration": {
+    "h7": {
+      "n": 512,
+      "execution_vs_imagery": 103,
+      "share": 0.201,
+      "missing_families": ["statistical_comparison", "tool_selection", "factual_grounding"],
+      "exec_underrepresented": false
+    },
+    "h8": {
+      "n": 512,
+      "execution_vs_imagery": 252,
+      "share": 0.492,
+      "hard_rest_not_baseline_upsampled": 78,
+      "eval_contract_formatting": true,
+      "families": {
+        "execution_vs_imagery": 252,
+        "movement_task_classification": 52,
+        "band_power_analysis": 52,
+        "channel_ranking": 52,
+        "numerical_reasoning": 52,
+        "statistical_comparison": 18,
+        "tool_selection": 17,
+        "factual_grounding": 17
+      }
+    }
+  },
+  "targeted_n": 90,
+  "targeted": {
+    "execution_vs_imagery": {"A_bf16": 1.0, "B_h7": 0.7, "C_h8": 0.7},
+    "overall": {"A_bf16": 0.9, "B_h7": 0.833, "C_h8": 0.811}
+  },
+  "h7_full_quality": {"overall": 0.843, "execution_vs_imagery": 0.784},
+  "bf16_full_quality": 0.864,
+  "production_int8_unchanged": {
+    "backend": "vllm compressed-tensors W8A8",
+    "kernel": "CutlassInt8ScaledMMLinearKernel",
+    "model_vram_gb": 4.27,
+    "decode_tok_s": 134.3,
+    "e2e_ms": 476.5
+  }
+}

@@ -1,0 +1,297 @@
+{
+  "stage": "K.2",
+  "timestamp": "2026-09-03T22:41:31.124266+00:00",
+  "gpu_memory_utilization": 0.4,
+  "safe": true,
+  "oom": false,
+  "error": null,
+  "clean_gpu": {
+    "nvidia_smi_used_mb": 1.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "nvidia_smi_free_mb": 24563.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 0.0,
+    "torch_reserved_mb": 0.0,
+    "timestamp": "2026-09-03T22:41:31.203053+00:00"
+  },
+  "text_load_ok": true,
+  "text_boot_ms": 22550.661,
+  "after_text_load": {
+    "nvidia_smi_used_mb": 10512.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "nvidia_smi_free_mb": 14052.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 0.0,
+    "torch_reserved_mb": 0.0,
+    "timestamp": "2026-09-03T22:41:53.802366+00:00"
+  },
+  "text_request_ok": true,
+  "text_smoke": {
+    "ok": true,
+    "error": null,
+    "ttft_ms": 35.728,
+    "e2e_ms": 250.904,
+    "completion_tokens": 24,
+    "decode_tok_s": 111.54,
+    "preview": " Mu-band ERD is a key marker of motor imagery, reflecting the suppression of resting activity in the contralateral senso"
+  },
+  "vision_load_ok": true,
+  "vision_load_ms": 28595.087,
+  "vision_load_error": null,
+  "after_both_idle": {
+    "nvidia_smi_used_mb": 18489.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "nvidia_smi_free_mb": 6075.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 7303.1,
+    "torch_reserved_mb": 7522.0,
+    "timestamp": "2026-09-03T22:43:41.383779+00:00"
+  },
+  "vision_info": {
+    "model_name": "Qwen/Qwen2.5-VL-3B-Instruct",
+    "dtype": "bfloat16",
+    "weight_memory_mb": 7303.1015625,
+    "load_time_s": 28.585285682231188
+  },
+  "safety_margin_mb": 6075.0,
+  "vision_request_ok": true,
+  "vision_smoke": {
+    "ok": true,
+    "preprocess_ms": 176.431,
+    "generate_ms": 6483.57,
+    "e2e_ms": 6660.001,
+    "completion_tokens": 6,
+    "output": "frontal and central regions",
+    "peak_torch_mb": 7402.5,
+    "gpu": {
+      "nvidia_smi_used_mb": 18569.0,
+      "nvidia_smi_total_mb": 24564.0,
+      "nvidia_smi_free_mb": 5995.0,
+      "gpu_util_pct": 0.0,
+      "torch_allocated_mb": 7317.9,
+      "torch_reserved_mb": 7582.0,
+      "timestamp": "2026-09-03T22:43:48.062423+00:00"
+    }
+  },
+  "peak_vram_after_vision_mb": 18569.0,
+  "text_capacity": {
+    "1": {
+      "concurrency": 1,
+      "n_submitted": 16,
+      "completed_requests": 16,
+      "failed_requests": 0,
+      "wall_s": 7.3,
+      "requests_per_sec": 2.1917,
+      "output_tokens_per_sec": 109.58,
+      "ttft_ms": {
+        "p50": 16.757,
+        "p95": 24.92,
+        "mean": 17.856
+      },
+      "e2e_ms": {
+        "p50": 454.958,
+        "p95": 463.363,
+        "mean": 456.239
+      },
+      "gpu_peak_during": {
+        "nvidia_smi_used_mb": 18571.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "nvidia_smi_free_mb": 5993.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 7311.3,
+        "torch_reserved_mb": 7582.0,
+        "timestamp": "2026-09-03T22:43:55.390820+00:00"
+      },
+      "failures": [],
+      "oom_suspected": false
+    },
+    "8": {
+      "concurrency": 8,
+      "n_submitted": 24,
+      "completed_requests": 24,
+      "failed_requests": 0,
+      "wall_s": 1.471,
+      "requests_per_sec": 16.3132,
+      "output_tokens_per_sec": 808.18,
+      "ttft_ms": {
+        "p50": 21.866,
+        "p95": 39.514,
+        "mean": 24.766
+      },
+      "e2e_ms": {
+        "p50": 485.368,
+        "p95": 498.857,
+        "mean": 486.779
+      },
+      "gpu_peak_during": {
+        "nvidia_smi_used_mb": 18571.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "nvidia_smi_free_mb": 5993.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 7311.3,
+        "torch_reserved_mb": 7582.0,
+        "timestamp": "2026-09-03T22:43:56.875676+00:00"
+      },
+      "failures": [],
+      "oom_suspected": false
+    },
+    "16": {
+      "concurrency": 16,
+      "n_submitted": 32,
+      "completed_requests": 32,
+      "failed_requests": 0,
+      "wall_s": 1.029,
+      "requests_per_sec": 31.106,
+      "output_tokens_per_sec": 1600.99,
+      "ttft_ms": {
+        "p50": 33.638,
+        "p95": 48.475,
+        "mean": 35.558
+      },
+      "e2e_ms": {
+        "p50": 503.339,
+        "p95": 522.429,
+        "mean": 504.625
+      },
+      "gpu_peak_during": {
+        "nvidia_smi_used_mb": 18571.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "nvidia_smi_free_mb": 5993.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 7311.3,
+        "torch_reserved_mb": 7582.0,
+        "timestamp": "2026-09-03T22:43:57.933530+00:00"
+      },
+      "failures": [],
+      "oom_suspected": false
+    }
+  },
+  "vision_warm": {
+    "rows": {
+      "topomap": {
+        "ok": true,
+        "preprocess_ms": 11.813,
+        "generate_ms": 162.943,
+        "e2e_ms": 174.755,
+        "completion_tokens": 6,
+        "output": "frontal and central regions",
+        "peak_torch_mb": 7400.5,
+        "gpu": {
+          "nvidia_smi_used_mb": 18571.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "nvidia_smi_free_mb": 5993.0,
+          "gpu_util_pct": 0.0,
+          "torch_allocated_mb": 7317.9,
+          "torch_reserved_mb": 7582.0,
+          "timestamp": "2026-09-03T22:44:01.034960+00:00"
+        }
+      },
+      "spectrogram": {
+        "ok": true,
+        "preprocess_ms": 13.096,
+        "generate_ms": 105.624,
+        "e2e_ms": 118.72,
+        "completion_tokens": 3,
+        "output": "delta_power",
+        "peak_torch_mb": 7382.2,
+        "gpu": {
+          "nvidia_smi_used_mb": 18571.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "nvidia_smi_free_mb": 5993.0,
+          "gpu_util_pct": 0.0,
+          "torch_allocated_mb": 7316.6,
+          "torch_reserved_mb": 7582.0,
+          "timestamp": "2026-09-03T22:44:01.171102+00:00"
+        }
+      },
+      "psd": {
+        "ok": true,
+        "preprocess_ms": 21.494,
+        "generate_ms": 169.451,
+        "e2e_ms": 190.945,
+        "completion_tokens": 7,
+        "output": "power is higher at lower frequencies",
+        "peak_torch_mb": 7387.0,
+        "gpu": {
+          "nvidia_smi_used_mb": 18571.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "nvidia_smi_free_mb": 5993.0,
+          "gpu_util_pct": 0.0,
+          "torch_allocated_mb": 7316.8,
+          "torch_reserved_mb": 7582.0,
+          "timestamp": "2026-09-03T22:44:01.378362+00:00"
+        }
+      },
+      "waveform": {
+        "ok": true,
+        "preprocess_ms": 11.334,
+        "generate_ms": 126.09,
+        "e2e_ms": 137.424,
+        "completion_tokens": 4,
+        "output": "sinusoidal",
+        "peak_torch_mb": 7396.4,
+        "gpu": {
+          "nvidia_smi_used_mb": 18571.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "nvidia_smi_free_mb": 5993.0,
+          "gpu_util_pct": 84.0,
+          "torch_allocated_mb": 7317.6,
+          "torch_reserved_mb": 7582.0,
+          "timestamp": "2026-09-03T22:44:01.532643+00:00"
+        }
+      },
+      "vision_tool_combined": {
+        "ok": true,
+        "preprocess_ms": 11.09,
+        "generate_ms": 96.777,
+        "e2e_ms": 107.867,
+        "completion_tokens": 2,
+        "output": "yes",
+        "peak_torch_mb": 7400.5,
+        "gpu": {
+          "nvidia_smi_used_mb": 18571.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "nvidia_smi_free_mb": 5993.0,
+          "gpu_util_pct": 27.0,
+          "torch_allocated_mb": 7317.9,
+          "torch_reserved_mb": 7582.0,
+          "timestamp": "2026-09-03T22:44:02.440641+00:00"
+        },
+        "tool_ms": 777.088,
+        "ranking": [
+          "T8",
+          "IZ",
+          "O2"
+        ],
+        "total_e2e_ms": 884.955,
+        "swap_overhead_ms": 0.0,
+        "note": "co-resident: no text unload / VLM load / text restore"
+      }
+    },
+    "summary": {
+      "n": 4,
+      "e2e_ms_p50": 156.089,
+      "e2e_ms_mean": 155.461,
+      "combined_total_e2e_ms": 884.955,
+      "swap_overhead_ms": 0.0
+    },
+    "gpu_after": {
+      "nvidia_smi_used_mb": 18571.0,
+      "nvidia_smi_total_mb": 24564.0,
+      "nvidia_smi_free_mb": 5993.0,
+      "gpu_util_pct": 27.0,
+      "torch_allocated_mb": 7311.3,
+      "torch_reserved_mb": 7582.0,
+      "timestamp": "2026-09-03T22:44:02.459539+00:00"
+    }
+  },
+  "gpu_final": {
+    "nvidia_smi_used_mb": 18571.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "nvidia_smi_free_mb": 5993.0,
+    "gpu_util_pct": 27.0,
+    "torch_allocated_mb": 7311.3,
+    "torch_reserved_mb": 7582.0,
+    "timestamp": "2026-09-03T22:44:02.473584+00:00"
+  }
+}

@@ -1,0 +1,46 @@
+# Conservative GRPO RLVR continuation from corrective SFT v2 adapter
+
+model:
+  name: Qwen/Qwen3-4B-Instruct-2507
+  trust_remote_code: false
+  adapter_path: checkpoints/sft_corrected_v2/final
+
+data:
+  train_path: data/processed/rlvr_train.jsonl
+
+prompt:
+  system: >
+    You are a neuroscience research assistant. Answer using only the provided
+    context. Respond with a concise direct answer only. Do not add unsupported
+    interpretation.
+
+qlora:
+  load_in_4bit: true
+  bnb_4bit_compute_dtype: bfloat16
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_use_double_quant: true
+
+training:
+  seed: 42
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  max_steps: 150
+  num_generations: 2
+  max_completion_length: 64
+  learning_rate: 5.0e-7
+  beta: 0.04
+  sync_ref_model: false
+  ref_model_sync_steps: 64
+  temperature: 1.0
+  top_p: 1.0
+  gradient_checkpointing: true
+  logging_steps: 5
+  save_strategy: steps
+  save_steps: 50
+  save_total_limit: 2
+  bf16: true
+  log_completions: false
+
+output:
+  checkpoint_dir: checkpoints/rlvr
+  results_dir: results/rlvr_training

@@ -1,0 +1,398 @@
+{
+  "baseline": {
+    "load_time_s": 13.567,
+    "prompt_tokens": 499,
+    "generated_tokens": 64,
+    "ttft_ms": 79.3,
+    "prefill_ms": 79.27,
+    "decode_tok_per_s": 18.73,
+    "latency_per_token_ms": 53.41,
+    "e2e_ms": 3497.46,
+    "allocated_vram_mb": 4476.9,
+    "peak_vram_mb": 4697.1,
+    "warmup": 2,
+    "timed_iters": 5,
+    "all_ttft_ms": [
+      78.05,
+      78.29,
+      78.98,
+      78.73,
+      82.47
+    ],
+    "all_prefill_ms": [
+      78.02,
+      78.26,
+      78.94,
+      78.69,
+      82.44
+    ],
+    "all_decode_tok_per_s": [
+      18.48,
+      19.02,
+      18.84,
+      18.66,
+      18.63
+    ],
+    "all_e2e_ms": [
+      3541.98,
+      3442.82,
+      3476.78,
+      3507.88,
+      3517.84
+    ],
+    "decode_loop": "eager_generate_with_timings",
+    "prof_kernel_launch_count": 936556,
+    "prof_cast_count": 122187,
+    "prof_bf16_copy_cast_count": 16128,
+    "prof_cast_self_cuda_us": 222036.9,
+    "prof_top10_ops": [
+      {
+        "name": "bitsandbytes::int8_linear_matmul",
+        "count": 16128,
+        "self_cuda_time_us": 360726.6
+      },
+      {
+        "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+        "count": 15876,
+        "self_cuda_time_us": 348988.5
+      },
+      {
+        "name": "aten::mm",
+        "count": 32320,
+        "self_cuda_time_us": 248475.5
+      },
+      {
+        "name": "aten::copy_",
+        "count": 92700,
+        "self_cuda_time_us": 164683.1
+      },
+      {
+        "name": "aten::mul",
+        "count": 64556,
+        "self_cuda_time_us": 109494.3
+      },
+      {
+        "name": "void gemv2T_kernel_val<int, int, float, float, float, float, 128, 16, 2, 2, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float>, float, float)",
+        "count": 2268,
+        "self_cuda_time_us": 80018.3
+      },
+      {
+        "name": "aten::any",
+        "count": 25238,
+        "self_cuda_time_us": 68850.4
+      },
+      {
+        "name": "aten::index",
+        "count": 18220,
+        "self_cuda_time_us": 56564.9
+      },
+      {
+        "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+        "count": 25472,
+        "self_cuda_time_us": 53114.6
+      },
+      {
+        "name": "aten::nonzero",
+        "count": 9110,
+        "self_cuda_time_us": 52534.6
+      }
+    ]
+  },
+  "h4_1_fp16": {
+    "load_time_s": 35.584,
+    "prompt_tokens": 499,
+    "generated_tokens": 64,
+    "ttft_ms": 81.5,
+    "prefill_ms": 81.46,
+    "decode_tok_per_s": 17.39,
+    "latency_per_token_ms": 57.59,
+    "e2e_ms": 3767.56,
+    "allocated_vram_mb": 4347.2,
+    "peak_vram_mb": 4567.4,
+    "warmup": 2,
+    "timed_iters": 5,
+    "all_ttft_ms": [
+      80.5,
+      80.43,
+      80.11,
+      85.35,
+      81.1
+    ],
+    "all_prefill_ms": [
+      80.46,
+      80.4,
+      80.08,
+      85.31,
+      81.07
+    ],
+    "all_decode_tok_per_s": [
+      17.72,
+      17.65,
+      17.7,
+      16.03,
+      17.86
+    ],
+    "all_e2e_ms": [
+      3693.24,
+      3707.26,
+      3696.15,
+      4077.56,
+      3663.61
+    ],
+    "decode_loop": "eager_generate_with_timings",
+    "prof_kernel_launch_count": 788714,
+    "prof_cast_count": 39250,
+    "prof_bf16_copy_cast_count": 0,
+    "prof_cast_self_cuda_us": 76904.3,
+    "prof_top10_ops": [
+      {
+        "name": "bitsandbytes::int8_linear_matmul",
+        "count": 16128,
+        "self_cuda_time_us": 362048.3
+      },
+      {
+        "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+        "count": 15876,
+        "self_cuda_time_us": 349669.0
+      },
+      {
+        "name": "aten::mm",
+        "count": 32320,
+        "self_cuda_time_us": 145313.3
+      },
+      {
+        "name": "aten::mul",
+        "count": 64512,
+        "self_cuda_time_us": 112706.5
+      },
+      {
+        "name": "aten::any",
+        "count": 25216,
+        "self_cuda_time_us": 72446.5
+      },
+      {
+        "name": "aten::index",
+        "count": 18176,
+        "self_cuda_time_us": 58377.6
+      },
+      {
+        "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+        "count": 63,
+        "self_cuda_time_us": 51303.7
+      },
+      {
+        "name": "aten::nonzero",
+        "count": 9088,
+        "self_cuda_time_us": 49236.4
+      },
+      {
+        "name": "std::enable_if<true, void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, true, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+        "count": 21919,
+        "self_cuda_time_us": 47007.0
+      },
+      {
+        "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4> >(at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4>)",
+        "count": 16128,
+        "self_cuda_time_us": 42431.2
+      }
+    ]
+  },
+  "h4_3_compile": {
+    "load_time_s": 13.487,
+    "prompt_tokens": 499,
+    "generated_tokens": 64,
+    "ttft_ms": 93.36,
+    "prefill_ms": 93.32,
+    "decode_tok_per_s": 14.92,
+    "latency_per_token_ms": 67.03,
+    "e2e_ms": 4383.27,
+    "allocated_vram_mb": 4479.7,
+    "peak_vram_mb": 4700.3,
+    "warmup": 2,
+    "timed_iters": 5,
+    "all_ttft_ms": [
+      93.33,
+      93.56,
+      93.63,
+      93.3,
+      92.97
+    ],
+    "all_prefill_ms": [
+      93.29,
+      93.52,
+      93.6,
+      93.26,
+      92.94
+    ],
+    "all_decode_tok_per_s": [
+      14.93,
+      14.93,
+      14.89,
+      14.94,
+      14.9
+    ],
+    "all_e2e_ms": [
+      4379.89,
+      4378.91,
+      4391.56,
+      4378.44,
+      4387.56
+    ],
+    "decode_loop": "eager_generate_with_timings",
+    "prof_kernel_launch_count": 805167,
+    "prof_cast_count": 112954,
+    "prof_bf16_copy_cast_count": 16128,
+    "prof_cast_self_cuda_us": 211077.2,
+    "prof_top10_ops": [
+      {
+        "name": "bitsandbytes::int8_linear_matmul",
+        "count": 16128,
+        "self_cuda_time_us": 361152.4
+      },
+      {
+        "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+        "count": 15876,
+        "self_cuda_time_us": 348811.7
+      },
+      {
+        "name": "aten::mm",
+        "count": 32320,
+        "self_cuda_time_us": 251285.5
+      },
+      {
+        "name": "aten::copy_",
+        "count": 73943,
+        "self_cuda_time_us": 144422.0
+      },
+      {
+        "name": "aten::mul",
+        "count": 45858,
+        "self_cuda_time_us": 84617.2
+      },
+      {
+        "name": "void gemv2T_kernel_val<int, int, float, float, float, float, 128, 16, 2, 2, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float const>, cublasGemvTensorStridedBatched<float>, float>, float, float)",
+        "count": 2268,
+        "self_cuda_time_us": 83105.3
+      },
+      {
+        "name": "aten::any",
+        "count": 25233,
+        "self_cuda_time_us": 73022.6
+      },
+      {
+        "name": "aten::index",
+        "count": 18210,
+        "self_cuda_time_us": 58976.5
+      },
+      {
+        "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>)",
+        "count": 63,
+        "self_cuda_time_us": 51351.4
+      },
+      {
+        "name": "aten::nonzero",
+        "count": 9105,
+        "self_cuda_time_us": 49267.0
+      }
+    ]
+  },
+  "combined": {
+    "load_time_s": 38.977,
+    "prompt_tokens": 499,
+    "generated_tokens": 64,
+    "ttft_ms": 87.79,
+    "prefill_ms": 87.75,
+    "decode_tok_per_s": 15.65,
+    "latency_per_token_ms": 63.92,
+    "e2e_ms": 4178.51,
+    "allocated_vram_mb": 4347.5,
+    "peak_vram_mb": 4567.9,
+    "warmup": 2,
+    "timed_iters": 5,
+    "all_ttft_ms": [
+      85.95,
+      94.0,
+      86.33,
+      86.21,
+      86.44
+    ],
+    "all_prefill_ms": [
+      85.92,
+      93.96,
+      86.3,
+      86.18,
+      86.41
+    ],
+    "all_decode_tok_per_s": [
+      15.57,
+      15.68,
+      15.7,
+      15.63,
+      15.65
+    ],
+    "all_e2e_ms": [
+      4197.48,
+      4176.61,
+      4162.36,
+      4180.92,
+      4175.17
+    ],
+    "decode_loop": "eager_generate_with_timings",
+    "prof_kernel_launch_count": 786481,
+    "prof_cast_count": 39154,
+    "prof_bf16_copy_cast_count": 0,
+    "prof_cast_self_cuda_us": 76209.7,
+    "prof_top10_ops": [
+      {
+        "name": "bitsandbytes::int8_linear_matmul",
+        "count": 16128,
+        "self_cuda_time_us": 363023.2
+      },
+      {
+        "name": "void gemmSN_kernel_int32<256, 32, 4, 8, 8, 1, true, 1, cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int> >(cublasGemmSmallNParams<cublasGemvTensorStridedBatched<signed char const>, cublasGemvTensorStridedBatched<int const>, cublasGemvTensorStridedBatched<int>, int>)",
+        "count": 15876,
+        "self_cuda_time_us": 350571.0
+      },
+      {
+        "name": "aten::mm",
+        "count": 32320,
+        "self_cuda_time_us": 145574.0
+      },
+      {
+        "name": "aten::mul",
+        "count": 64210,
+        "self_cuda_time_us": 111953.6
+      },
+      {
+        "name": "aten::any",
+        "count": 25238,
+        "self_cuda_time_us": 72620.4
+      },
+      {
+        "name": "aten::index",
+        "count": 18220,
+        "self_cuda_time_us": 58688.9
+      },
+      {
+        "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, false, true, true, false, 6, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+        "count": 63,
+        "self_cuda_time_us": 51350.3
+      },
+      {
+        "name": "aten::nonzero",
+        "count": 9110,
+        "self_cuda_time_us": 49502.9
+      },
+      {
+        "name": "std::enable_if<true, void>::type internal::gemvx::kernel<int, int, __half, __half, __half, float, true, true, true, false, 7, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half const>, cublasGemvTensorStridedBatched<__half>, float>)",
+        "count": 21907,
+        "self_cuda_time_us": 47115.9
+      },
+      {
+        "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4> >(at::native::ReduceOp<bool, at::native::func_wrapper_t<bool, at::native::or_kernel_cuda(at::TensorIterator&)::{lambda()#1}::operator()() const::{lambda()#12}::operator()() const::{lambda(bool, bool)#1}>, unsigned int, bool, 4, 4>)",
+        "count": 16128,
+        "self_cuda_time_us": 42455.7
+      }
+    ]
+  }
+}

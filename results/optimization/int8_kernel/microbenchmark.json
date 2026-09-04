@@ -1,0 +1,127 @@
+{
+  "stage": "H.5",
+  "phase": "microbenchmark",
+  "hot_shape": {
+    "N": 9728,
+    "K": 2560,
+    "example": "base_model.model.model.layers.0.mlp.gate_proj"
+  },
+  "timing_method": "CUDA events with synchronize; warmup=25, iters=80",
+  "scenarios": [
+    {
+      "scenario": "decode_m1",
+      "M": 1,
+      "N": 9728,
+      "K": 2560,
+      "bnb_total_ms_threshold": 0.0617,
+      "triton_total_ms_threshold": 0.0395,
+      "improvement_pct_threshold": 36.05,
+      "bnb_total_ms_no_outlier": 0.0261,
+      "triton_total_ms_no_outlier": 0.0184,
+      "improvement_pct_no_outlier": 29.49,
+      "bnb_quant_ms": 0.0073,
+      "bnb_int8_gemm_ms": 0.0152,
+      "bnb_dequant_ms": 0.0067,
+      "bnb_kernel_launches_approx": 3,
+      "triton_kernel_launches_approx": 2,
+      "launch_count_error": null,
+      "effective_tflops_bnb0": 1.9056,
+      "effective_tflops_triton0": 2.7026
+    },
+    {
+      "scenario": "small_batch_decode",
+      "M": 4,
+      "N": 9728,
+      "K": 2560,
+      "bnb_total_ms_threshold": 0.0783,
+      "triton_total_ms_threshold": 0.0526,
+      "improvement_pct_threshold": 32.88,
+      "bnb_total_ms_no_outlier": 0.0295,
+      "triton_total_ms_no_outlier": 0.023,
+      "improvement_pct_no_outlier": 22.08,
+      "bnb_quant_ms": 0.0087,
+      "bnb_int8_gemm_ms": 0.0171,
+      "bnb_dequant_ms": 0.0077,
+      "bnb_kernel_launches_approx": 3,
+      "triton_kernel_launches_approx": 2,
+      "launch_count_error": null,
+      "effective_tflops_bnb0": 6.756,
+      "effective_tflops_triton0": 8.6709
+    },
+    {
+      "scenario": "prefill_128",
+      "M": 128,
+      "N": 9728,
+      "K": 2560,
+      "bnb_total_ms_threshold": 0.1145,
+      "triton_total_ms_threshold": 0.1294,
+      "improvement_pct_threshold": -13.04,
+      "bnb_total_ms_no_outlier": 0.036,
+      "triton_total_ms_no_outlier": 0.0925,
+      "improvement_pct_no_outlier": -156.74,
+      "bnb_quant_ms": 0.0088,
+      "bnb_int8_gemm_ms": 0.0282,
+      "bnb_dequant_ms": 0.0075,
+      "bnb_kernel_launches_approx": 3,
+      "triton_kernel_launches_approx": 2,
+      "launch_count_error": null,
+      "effective_tflops_bnb0": 177.026,
+      "effective_tflops_triton0": 68.9506
+    },
+    {
+      "scenario": "prefill_512",
+      "M": 512,
+      "N": 9728,
+      "K": 2560,
+      "bnb_total_ms_threshold": 0.1421,
+      "triton_total_ms_threshold": 0.3219,
+      "improvement_pct_threshold": -126.53,
+      "bnb_total_ms_no_outlier": 0.0933,
+      "triton_total_ms_no_outlier": 0.2839,
+      "improvement_pct_no_outlier": -204.36,
+      "bnb_quant_ms": 0.0088,
+      "bnb_int8_gemm_ms": 0.0748,
+      "bnb_dequant_ms": 0.0121,
+      "bnb_kernel_launches_approx": 3,
+      "triton_kernel_launches_approx": 2,
+      "launch_count_error": null,
+      "effective_tflops_bnb0": 273.391,
+      "effective_tflops_triton0": 89.8238
+    }
+  ],
+  "primary_target": {
+    "scenario": "decode_m1",
+    "bnb_latency_ms": 0.0261,
+    "triton_latency_ms": 0.0184,
+    "improvement_pct": 29.49,
+    "bnb_latency_ms_with_threshold": 0.0617,
+    "triton_latency_ms_with_threshold": 0.0395,
+    "improvement_pct_with_threshold": 36.05
+  },
+  "tensor_core_evidence_tiled_m64": {
+    "claimed_tensor_cores": false,
+    "method": "triton ASM/PTX inspection + shape heuristic",
+    "notes": [
+      "kernel_cache_type=<class 'collections.defaultdict'>",
+      "Tiled path uses tl.dot (often maps to Tensor Cores on Ada) but PTX MMA tokens were not verified in this environment \u2014 NOT claiming Tensor Cores."
+    ],
+    "ptx_mma_tokens_found": [],
+    "decode_m1_uses_gemv_kernel": false,
+    "tiled_kernel_uses_tl_dot": true,
+    "shape_tensor_core_friendly": true
+  },
+  "tensor_core_evidence_decode_m1": {
+    "claimed_tensor_cores": false,
+    "method": "triton ASM/PTX inspection + shape heuristic",
+    "notes": [
+      "kernel_cache_type=<class 'collections.defaultdict'>",
+      "Decode M=1 path uses GEMV-style int8 accumulate (no tl.dot MMA); Tensor Cores NOT claimed."
+    ],
+    "ptx_mma_tokens_found": [],
+    "decode_m1_uses_gemv_kernel": true,
+    "tiled_kernel_uses_tl_dot": true,
+    "shape_tensor_core_friendly": false
+  },
+  "integration_threshold_pct": 15.0,
+  "meets_integration_bar": true
+}

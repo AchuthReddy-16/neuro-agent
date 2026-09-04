@@ -1,0 +1,187 @@
+{
+  "prefix_caching": false,
+  "vram_after_load_mb": 22536.0,
+  "enable_prefix_caching_log": [
+    "(APIServer pid=167325) INFO 09-03 20:23:25 [api_utils.py:272] non-default args: {'host': '127.0.0.1', 'model': '/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed', 'max_model_len': 4096, 'enforce_eager': True, 'served_model_name': ['w8a8-int8'], 'gpu_memory_utilization': 0.9, 'enable_prefix_caching': False}",
+    "(EngineCore pid=168145) INFO 09-03 20:23:33 [core.py:122] Initializing a V1 LLM engine (v0.28.0) with config: model='/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed', speculative_config=None, tokenizer='/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=compressed-tensors, quantization_config=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=w8a8-int8, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, enable_bf16x3_router_gemm=False, moe_backend='auto', linear_backend='auto')"
+  ],
+  "production_prefix_tokens": 875,
+  "concurrency_1": {
+    "label": "cacheoff-prod-c1",
+    "completed_requests": 32,
+    "failed_requests": 0,
+    "n_submitted": 32,
+    "wall_s": 16.253,
+    "requests_per_sec": 1.9689,
+    "output_tokens_per_sec": 125.45,
+    "mean_output_tokens": 63.72,
+    "ttft_ms": {
+      "p50": 40.068,
+      "p95": 42.4468,
+      "p99": 54.0468,
+      "mean": 40.841,
+      "min": 38.652,
+      "max": 58.946
+    },
+    "e2e_ms": {
+      "p50": 501.3345,
+      "p95": 532.1206,
+      "p99": 554.1901,
+      "mean": 506.94
+    },
+    "prefill_latency_ms": {
+      "observable": false,
+      "proxy": "ttft_ms",
+      "p50": 40.068,
+      "p95": 42.4468,
+      "note": "No separate prefill metric on streaming completions; TTFT is the prefill+queue proxy."
+    },
+    "gpu": {
+      "avg_gpu_util": 97.04,
+      "peak_gpu_util": 100.0,
+      "peak_vram_mb": 22536.0,
+      "n_samples": 54
+    },
+    "cache_metrics": {
+      "delta_prefix_cache_hits": null,
+      "delta_prefix_cache_queries": null,
+      "hit_rate_over_window": null,
+      "before": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      },
+      "after": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      }
+    },
+    "failures": [],
+    "concurrency": 1,
+    "primed": false
+  },
+  "concurrency_8": {
+    "label": "cacheoff-prod-c8",
+    "completed_requests": 48,
+    "failed_requests": 0,
+    "n_submitted": 48,
+    "wall_s": 4.712,
+    "requests_per_sec": 10.1857,
+    "output_tokens_per_sec": 649.34,
+    "mean_output_tokens": 63.75,
+    "ttft_ms": {
+      "p50": 129.7215,
+      "p95": 224.9977,
+      "p99": 241.9247,
+      "mean": 135.861,
+      "min": 41.576,
+      "max": 248.061
+    },
+    "e2e_ms": {
+      "p50": 784.004,
+      "p95": 827.7348,
+      "p99": 834.4161,
+      "mean": 780.759
+    },
+    "prefill_latency_ms": {
+      "observable": false,
+      "proxy": "ttft_ms",
+      "p50": 129.7215,
+      "p95": 224.9977,
+      "note": "No separate prefill metric on streaming completions; TTFT is the prefill+queue proxy."
+    },
+    "gpu": {
+      "avg_gpu_util": 96.62,
+      "peak_gpu_util": 100.0,
+      "peak_vram_mb": 22538.0,
+      "n_samples": 16
+    },
+    "cache_metrics": {
+      "delta_prefix_cache_hits": null,
+      "delta_prefix_cache_queries": null,
+      "hit_rate_over_window": null,
+      "before": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      },
+      "after": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      }
+    },
+    "failures": [],
+    "concurrency": 8,
+    "primed": false
+  },
+  "serial_baseline": {
+    "label": "cacheoff-prod-coldserial",
+    "completed_requests": 12,
+    "failed_requests": 0,
+    "n_submitted": 12,
+    "wall_s": 6.071,
+    "requests_per_sec": 1.9766,
+    "output_tokens_per_sec": 126.01,
+    "mean_output_tokens": 63.75,
+    "ttft_ms": {
+      "p50": 39.541,
+      "p95": 46.1489,
+      "p99": 50.057,
+      "mean": 40.609,
+      "min": 38.808,
+      "max": 51.034
+    },
+    "e2e_ms": {
+      "p50": 502.6515,
+      "p95": 513.9602,
+      "p99": 515.1288,
+      "mean": 504.466
+    },
+    "prefill_latency_ms": {
+      "observable": false,
+      "proxy": "ttft_ms",
+      "p50": 39.541,
+      "p95": 46.1489,
+      "note": "No separate prefill metric on streaming completions; TTFT is the prefill+queue proxy."
+    },
+    "gpu": {
+      "avg_gpu_util": 99.8,
+      "peak_gpu_util": 100.0,
+      "peak_vram_mb": 22538.0,
+      "n_samples": 20
+    },
+    "cache_metrics": {
+      "delta_prefix_cache_hits": null,
+      "delta_prefix_cache_queries": null,
+      "hit_rate_over_window": null,
+      "before": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      },
+      "after": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      }
+    },
+    "failures": [],
+    "resets": [],
+    "reset_enabled": false
+  },
+  "note": "With prefix caching disabled there is no reusable prefix KV; serial_baseline and concurrency_1 both reflect full-prefill cost."
+}

@@ -1,0 +1,85 @@
+# Conservative corrective multimodal QLoRA SFT (Stage F.1)
+
+model:
+  name: Qwen/Qwen2.5-VL-3B-Instruct
+  trust_remote_code: true
+  freeze_vision_tower: true
+  adapter_path: checkpoints/multimodal_sft/final
+
+data:
+  train_path: data/processed/vision/corrective/multimodal_sft_corrective_train.jsonl
+  train_subjects: [S001, S002, S003, S004, S005, S006, S007, S008, S009, S010,
+                   S011, S012, S013, S014, S015, S016, S017, S018, S019, S020]
+  validation_subjects: [S018, S019, S020]
+  forbidden_subjects: [S021, S022, S023, S024, S025, S026, S027, S028, S029, S030]
+
+prompt:
+  system: >
+    You are a neuroscience research assistant analyzing EEG-derived plots.
+    Use the provided image and context. Respond with ONLY the direct answer —
+    a single label, channel name, number, or comma-separated list.
+    Never add explanation, units, or supporting values.
+
+qlora:
+  load_in_4bit: true
+  bnb_4bit_compute_dtype: bfloat16
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_use_double_quant: true
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+training:
+  seed: 42
+  max_seq_length: 2048
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 8
+  num_train_epochs: 1
+  learning_rate: 5.0e-5
+  warmup_ratio: 0.03
+  weight_decay: 0.0
+  gradient_checkpointing: true
+  logging_steps: 10
+  eval_strategy: epoch
+  save_strategy: epoch
+  bf16: true
+  optim: paged_adamw_8bit
+  lr_scheduler_type: cosine
+
+output:
+  checkpoint_dir: checkpoints/multimodal_sft_corrected
+  results_dir: results/multimodal_sft_corrective_training
+
+evaluation:
+  dataset: data/processed/vision/multimodal_eval_heldout.jsonl
+  held_out_subjects: [S026, S027, S028, S029, S030]
+  train_subjects: [S001, S002, S003, S004, S005, S006, S007, S008, S009, S010,
+                   S011, S012, S013, S014, S015, S016, S017, S018, S019, S020]
+  validation_subjects: [S021, S022, S023, S024, S025]
+
+inference:
+  seed: 42
+  do_sample: false
+  max_new_tokens: 32
+  use_cache: true
+  temperature: 0.0
+  top_p: 1.0
+  dtype: bfloat16
+
+eval_output:
+  dir: results/multimodal_corrected_eval
+
+comparison:
+  base_dir: results/multimodal_base_eval
+  sft_dir: results/multimodal_sft_eval
+  corrected_dir: results/multimodal_corrected_eval
+  output_path: results/model_comparison/multimodal_base_vs_sft_vs_corrected.json

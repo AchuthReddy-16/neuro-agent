@@ -1,0 +1,131 @@
+{
+  "stage": "J.1",
+  "timestamp": "2026-09-03T21:34:10.514256+00:00",
+  "eval_set": {
+    "path": "/workspace/neuro-agent/results/routing/routing_eval_set.jsonl",
+    "n": 101,
+    "n_text_only": 50,
+    "n_vision_required": 51,
+    "n_tricky": 17,
+    "families": {
+      "band_power": 6,
+      "rms": 5,
+      "psd_peak": 7,
+      "channel_ranking": 6,
+      "threshold_set": 5,
+      "condition_comparison": 5,
+      "metadata_statistical": 5,
+      "image_exists_not_required": 6,
+      "tool_selection": 3,
+      "factual_grounding": 2,
+      "topomap_interpret": 10,
+      "spectrogram_pattern": 8,
+      "waveform_morphology": 6,
+      "psd_visual": 6,
+      "compare_plots": 5,
+      "uploaded_figure": 5,
+      "image_plus_numeric": 6,
+      "explicit_figure_ref": 5
+    }
+  },
+  "baseline": {
+    "overall_accuracy": 0.673267,
+    "vision_required": {
+      "precision": 0.875,
+      "recall": 0.411765,
+      "f1": 0.56,
+      "tp": 21,
+      "fp": 3,
+      "fn": 30
+    },
+    "text_only": {
+      "precision": 0.61039,
+      "recall": 0.94,
+      "f1": 0.740157,
+      "tp": 47,
+      "fp": 30,
+      "fn": 3
+    },
+    "fp_vision": 3,
+    "fn_vision": 30
+  },
+  "repair_applied": true,
+  "final": {
+    "overall_accuracy": 0.990099,
+    "vision_required": {
+      "precision": 1.0,
+      "recall": 0.980392,
+      "f1": 0.990099,
+      "tp": 50,
+      "fp": 0,
+      "fn": 1
+    },
+    "text_only": {
+      "precision": 0.980392,
+      "recall": 1.0,
+      "f1": 0.990099,
+      "tp": 50,
+      "fp": 1,
+      "fn": 0
+    },
+    "confusion_matrix": {
+      "labels": [
+        "TEXT_ONLY",
+        "VISION_REQUIRED"
+      ],
+      "matrix_expected_rows_predicted_cols": {
+        "TEXT_ONLY": {
+          "TEXT_ONLY": 50,
+          "VISION_REQUIRED": 0
+        },
+        "VISION_REQUIRED": {
+          "TEXT_ONLY": 1,
+          "VISION_REQUIRED": 50
+        }
+      },
+      "counts": {
+        "expected_TEXT_ONLY": 50,
+        "expected_VISION_REQUIRED": 51,
+        "predicted_TEXT_ONLY": 51,
+        "predicted_VISION_REQUIRED": 50
+      }
+    },
+    "fp_vision_examples": [],
+    "fn_vision_examples": [
+      {
+        "id": "v_combo_04",
+        "question": "Given numeric RMS=12.4 on C3, does the waveform figure look consistent with a large-amplitude channel?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "requires_vision": false,
+          "question_type": "band_power",
+          "sample_id": "S001_R01_E00",
+          "subject_id": "S001",
+          "run_id": "R01",
+          "epoch": 0,
+          "channels": [
+            "C3"
+          ],
+          "metric": "rms",
+          "threshold": 12.4,
+          "threshold_mode": "absolute",
+          "comparator": "ge",
+          "include_vision_evidence": false
+        }
+      }
+    ],
+    "fp_vision_count": 0,
+    "fn_vision_count": 1
+  },
+  "pass_criteria": {
+    "overall_accuracy_ge_0_95": true,
+    "vision_required_recall_ge_0_95": true,
+    "overall_accuracy": 0.990099,
+    "vision_required_recall": 0.980392,
+    "pass": true
+  },
+  "j1_verdict": "PASS",
+  "production_recommendation": "Keep text-primary + controlled vision swap/unload (Stage J). Gate VLM invocation on requires_vision / vision-route prediction; treat false-negative vision routing as the more serious failure. Prefer high vision-required recall even if it costs occasional swap overhead.",
+  "cost_analysis_path": "/workspace/neuro-agent/results/routing/routing_cost_analysis.json"
+}

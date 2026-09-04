@@ -1,0 +1,435 @@
+{
+  "answer_latency_ms": 10297.89080657065,
+  "category": "normal_easy",
+  "draft_answer": "The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The highest-ranked channel is CZ. The",
+  "errors": [],
+  "evidence_bundle": {
+    "condition_evidence": null,
+    "error": null,
+    "metadata": {
+      "array_ref": {
+        "array_index": 22,
+        "array_path": "data/processed/arrays/S016_R08.h5",
+        "n_channels": 64,
+        "n_samples": 640
+      },
+      "channels": [
+        "FC5",
+        "FC3",
+        "FC1",
+        "FCZ",
+        "FC2",
+        "FC4",
+        "FC6",
+        "C5",
+        "C3",
+        "C1",
+        "CZ",
+        "C2",
+        "C4",
+        "C6",
+        "CP5",
+        "CP3",
+        "CP1",
+        "CPZ",
+        "CP2",
+        "CP4",
+        "CP6",
+        "FP1",
+        "FPZ",
+        "FP2",
+        "AF7",
+        "AF3",
+        "AFZ",
+        "AF4",
+        "AF8",
+        "F7",
+        "F5",
+        "F3",
+        "F1",
+        "FZ",
+        "F2",
+        "F4",
+        "F6",
+        "F8",
+        "FT7",
+        "FT8",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "TP7",
+        "TP8",
+        "P7",
+        "P5",
+        "P3",
+        "P1",
+        "PZ",
+        "P2",
+        "P4",
+        "P6",
+        "P8",
+        "PO7",
+        "PO3",
+        "POZ",
+        "PO4",
+        "PO8",
+        "O1",
+        "OZ",
+        "O2",
+        "IZ"
+      ],
+      "condition": "imagery_rest",
+      "epoch_index": 22,
+      "event_code": "T0",
+      "extra": {
+        "end_time_s": 94.2,
+        "preprocessing": {
+          "epoch_seconds": 4.0,
+          "filter_hz": [
+            1.0,
+            40.0
+          ],
+          "source_file": "data/raw/S016/S016R08.edf"
+        },
+        "start_time_s": 90.2
+      },
+      "feature_refs": {
+        "available_columns": [
+          "mean",
+          "variance",
+          "std",
+          "rms",
+          "peak_to_peak",
+          "delta_power",
+          "theta_power",
+          "alpha_mu_power",
+          "beta_power"
+        ],
+        "feature_path": "data/processed/features.parquet"
+      },
+      "movement": "rest",
+      "protocol": "left_right_fist",
+      "router_version": "g.2.v1",
+      "run_id": "R08",
+      "sample_id": "S016_R08_E022",
+      "sampling_rate_hz": 160.0,
+      "split": "train",
+      "subject_id": "S016",
+      "task_type": "imagery",
+      "vision_assets": [
+        {
+          "frequency_band": [
+            "delta_power",
+            "theta_power",
+            "alpha_mu_power",
+            "beta_power"
+          ],
+          "image_id": "img_channel_band_00088ad9ffdad624",
+          "image_path": "data/processed/vision/images/train/img_channel_band_00088ad9ffdad624.png",
+          "visualization_type": "channel_band_power"
+        },
+        {
+          "frequency_band": [
+            1,
+            40
+          ],
+          "image_id": "img_psd_00088ad9ffdad624",
+          "image_path": "data/processed/vision/images/train/img_psd_00088ad9ffdad624.png",
+          "visualization_type": "power_spectral_density"
+        },
+        {
+          "frequency_band": [
+            1,
+            40
+          ],
+          "image_id": "img_spectrogram_00088ad9ffdad624",
+          "image_path": "data/processed/vision/images/train/img_spectrogram_00088ad9ffdad624.png",
+          "visualization_type": "spectrogram"
+        },
+        {
+          "frequency_band": [
+            "delta_power",
+            "theta_power",
+            "alpha_mu_power",
+            "beta_power"
+          ],
+          "image_id": "img_topomap_00088ad9ffdad624",
+          "image_path": "data/processed/vision/images/train/img_topomap_00088ad9ffdad624.png",
+          "visualization_type": "topomap_multi_band"
+        },
+        {
+          "frequency_band": null,
+          "image_id": "img_waveform_00088ad9ffdad624",
+          "image_path": "data/processed/vision/images/train/img_waveform_00088ad9ffdad624.png",
+          "visualization_type": "waveform"
+        }
+      ]
+    },
+    "numeric_evidence": {
+      "channel": "CZ",
+      "peak_frequency_hz": 1.5,
+      "psd_peaks_per_channel": {
+        "C3": 1.5,
+        "C4": 1.5,
+        "CZ": 1.5
+      },
+      "search_range_hz": [
+        1.0,
+        40.0
+      ]
+    },
+    "provenance": [
+      {
+        "artifact_path": null,
+        "detail": "Argmax of group-mean Welch PSD in search band",
+        "field": "peak_frequency_hz",
+        "method": "welch_group_mean",
+        "note": null,
+        "sample_id": "S016_R08_E022",
+        "source": "welch_psd"
+      }
+    ],
+    "question_type": "psd_peak",
+    "ranked_evidence": null,
+    "request_id": "req_75d79045c27a",
+    "set_evidence": null,
+    "success": true,
+    "tool_invocations": [
+      {
+        "error": null,
+        "inputs": {
+          "sample_id": "S016_R08_E022"
+        },
+        "name": "find_psd_peak",
+        "outputs": {
+          "channel": "CZ",
+          "config": {
+            "group_channels": [
+              "C3",
+              "CZ",
+              "C4"
+            ],
+            "noverlap": 160,
+            "nperseg": 320,
+            "sampling_rate_hz": 160.0
+          },
+          "method": "welch_group_mean",
+          "peak_frequency_hz": 1.5,
+          "peak_psd": 90.9479751586914,
+          "psd_peaks_per_channel": {
+            "C3": 1.5,
+            "C4": 1.5,
+            "CZ": 1.5
+          },
+          "search_range_hz": [
+            1.0,
+            40.0
+          ]
+        },
+        "provenance": [
+          {
+            "artifact_path": null,
+            "detail": "Argmax of group-mean Welch PSD in search band",
+            "field": "peak_frequency_hz",
+            "method": "welch_group_mean",
+            "note": null,
+            "sample_id": "S016_R08_E022",
+            "source": "welch_psd"
+          }
+        ],
+        "runtime_ms": 53.761803545057774,
+        "success": true
+      }
+    ],
+    "uncertainty_notes": [],
+    "units": "Hz",
+    "vision_evidence": [],
+    "warnings": []
+  },
+  "expect_recovery": null,
+  "expect_verifier_trigger": false,
+  "failure_category": null,
+  "final_answer": "Answer: PSD peak frequency is 1.5 Hz at channel CZ\nEvidence: peak_frequency_hz=1.5 Hz, channel=CZ\nTools used: find_psd_peak\nUncertainty: None",
+  "final_verification": {
+    "condition_mismatch": [],
+    "confidence_score": 0.95,
+    "deterministic": {
+      "ambiguous": false,
+      "condition_mismatches": [],
+      "evidence_conflicts": [],
+      "failure_codes": [],
+      "grounding": {
+        "numeric_claims": [
+          1.5,
+          1.5
+        ],
+        "passed": true,
+        "supported_claims": [
+          1.5,
+          1.5
+        ],
+        "unsupported_claims": []
+      },
+      "missing_channels": [],
+      "missing_evidence": [],
+      "passed": true,
+      "unit_issues": [],
+      "unsupported_candidates": []
+    },
+    "evidence_conflicts": [],
+    "failure_codes": [],
+    "missing_evidence": [],
+    "model_verified": false,
+    "passed": true,
+    "raw_model_json": null,
+    "recommendation": "ACCEPT",
+    "unit_issues": [],
+    "unsupported_claims": []
+  },
+  "first_pass_verification": {
+    "condition_mismatch": [],
+    "confidence_score": 0.3,
+    "deterministic": {
+      "ambiguous": false,
+      "condition_mismatches": [],
+      "evidence_conflicts": [],
+      "failure_codes": [
+        "missing_answer_sections",
+        "unit_mismatch"
+      ],
+      "grounding": {
+        "numeric_claims": [],
+        "passed": true,
+        "supported_claims": [],
+        "unsupported_claims": []
+      },
+      "missing_channels": [],
+      "missing_evidence": [],
+      "passed": false,
+      "unit_issues": [
+        "missing_hz_for_frequency_answer"
+      ],
+      "unsupported_candidates": []
+    },
+    "evidence_conflicts": [],
+    "failure_codes": [
+      "missing_answer_sections",
+      "unit_mismatch"
+    ],
+    "missing_evidence": [],
+    "model_verified": false,
+    "passed": false,
+    "raw_model_json": null,
+    "recommendation": "REWRITE",
+    "unit_issues": [
+      "missing_hz_for_frequency_answer"
+    ],
+    "unsupported_claims": []
+  },
+  "grounding": {
+    "numeric_claims": [
+      1.5,
+      1.5
+    ],
+    "passed": true,
+    "supported_claims": [
+      1.5,
+      1.5
+    ],
+    "unsupported_claims": []
+  },
+  "id": "g3b_004",
+  "intent_latency_ms": 547.7914977818727,
+  "intent_valid": true,
+  "model_calls": 2,
+  "original_question": "Find the PSD peak frequency for sample S016_R08_E022.",
+  "parsed_intent": {
+    "channels": null,
+    "comparator": null,
+    "condition_a": null,
+    "condition_b": null,
+    "epoch": null,
+    "extra": {},
+    "frequency_band": null,
+    "frequency_range": null,
+    "image_id": null,
+    "include_vision_evidence": false,
+    "metric": null,
+    "question_type": "psd_peak",
+    "requested_visual_type": null,
+    "run_id": null,
+    "sample_id": "S016_R08_E022",
+    "sort_direction": "descending",
+    "subject_id": null,
+    "threshold": null,
+    "threshold_mode": "absolute",
+    "top_k": null
+  },
+  "path_mode": "NORMAL",
+  "peak_vram_mb": 8371.060546875,
+  "question": "Find the PSD peak frequency for sample S016_R08_E022.",
+  "recovery": null,
+  "recovery_latency_ms": 0.0660233199596405,
+  "request_id": "req_75d79045c27a",
+  "routing_result": {
+    "error": null,
+    "success": true
+  },
+  "runtime_ms": 10902.735167182982,
+  "success": true,
+  "tool_invocations": [
+    {
+      "error": null,
+      "inputs": {
+        "sample_id": "S016_R08_E022"
+      },
+      "name": "find_psd_peak",
+      "outputs": {
+        "channel": "CZ",
+        "config": {
+          "group_channels": [
+            "C3",
+            "CZ",
+            "C4"
+          ],
+          "noverlap": 160,
+          "nperseg": 320,
+          "sampling_rate_hz": 160.0
+        },
+        "method": "welch_group_mean",
+        "peak_frequency_hz": 1.5,
+        "peak_psd": 90.9479751586914,
+        "psd_peaks_per_channel": {
+          "C3": 1.5,
+          "C4": 1.5,
+          "CZ": 1.5
+        },
+        "search_range_hz": [
+          1.0,
+          40.0
+        ]
+      },
+      "provenance": [
+        {
+          "artifact_path": null,
+          "detail": "Argmax of group-mean Welch PSD in search band",
+          "field": "peak_frequency_hz",
+          "method": "welch_group_mean",
+          "note": null,
+          "sample_id": "S016_R08_E022",
+          "source": "welch_psd"
+        }
+      ],
+      "runtime_ms": 53.761803545057774,
+      "success": true
+    }
+  ],
+  "trigger_reason": [
+    "missing_answer_sections",
+    "unit_mismatch"
+  ],
+  "verification_triggered": false,
+  "verifier_latency_ms": 0.0,
+  "warnings": []
+}

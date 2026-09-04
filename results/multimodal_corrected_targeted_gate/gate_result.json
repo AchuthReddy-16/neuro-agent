@@ -1,0 +1,44 @@
+{
+  "gate_pass": true,
+  "overall_pass_rate": 0.543859649122807,
+  "group_pass_rates": {
+    "waveform": 0.5277777777777778,
+    "categorical": 0.6941604278074867,
+    "ranking": 0.4573737373737374,
+    "numeric": 0.3123885918003565
+  },
+  "per_verifier": {
+    "categorical": {
+      "count": 168,
+      "verifier_pass_rate": 0.6607142857142857,
+      "invalid_parse_rate": 0.0,
+      "empty_refusal_rate": 0.0,
+      "avg_generated_tokens": 3.1666666666666665,
+      "unsupported_claim_rate": null
+    },
+    "numeric": {
+      "count": 75,
+      "verifier_pass_rate": 0.30666666666666664,
+      "invalid_parse_rate": 0.0,
+      "empty_refusal_rate": 0.0,
+      "avg_generated_tokens": 5.973333333333334,
+      "unsupported_claim_rate": 0.08
+    },
+    "ranking": {
+      "count": 99,
+      "verifier_pass_rate": 0.5252525252525253,
+      "invalid_parse_rate": 0.0,
+      "empty_refusal_rate": 0.0,
+      "avg_generated_tokens": 10.292929292929292,
+      "unsupported_claim_rate": null
+    }
+  },
+  "checks": {
+    "waveform_recovery": true,
+    "categorical_recovery": true,
+    "ranking_preserved": true,
+    "numeric_preserved": true
+  },
+  "example_count": 342,
+  "checkpoint": "/workspace/neuro-agent/checkpoints/multimodal_sft_corrected/final"
+}

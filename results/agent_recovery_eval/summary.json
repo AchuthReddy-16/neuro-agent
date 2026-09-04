@@ -1,0 +1,77 @@
+{
+  "metrics": {
+    "total_examples": 25,
+    "categories": {
+      "normal_easy": 10,
+      "multi_tool": 2,
+      "visual_ref": 1,
+      "corrupted_draft_numeric": 3,
+      "unsupported_channel": 2,
+      "unit_mismatch": 2,
+      "missing_channel": 1,
+      "wrong_condition": 1,
+      "insufficient_evidence": 1,
+      "tool_param_mismatch": 1,
+      "missing_sections": 1
+    },
+    "first_pass_acceptance_rate": 0.0,
+    "verifier_trigger_rate": 0.4,
+    "deterministic_only_rate": 0.0,
+    "verifier_model_call_rate": 0.4,
+    "recovery_rate": 0.4,
+    "recovery_attempts": 10,
+    "recovery_success_rate": 1.0,
+    "corruption_recovery_success_rate": 0.7272727272727273,
+    "e2e_success_rate": 0.96,
+    "g3a_clean_e2e_rate": 1.0,
+    "unsupported_numeric_claims": 0,
+    "false_rejection_count": 0,
+    "avg_tool_calls": 1.08,
+    "max_tool_calls": 2,
+    "avg_model_calls": 2.76,
+    "max_model_calls": 4,
+    "avg_normal_latency_ms": 5543.765188776888,
+    "avg_recovery_latency_ms": 13309.135226532817,
+    "max_recovery_cycles_observed": 1,
+    "peak_vram_mb": 13387.94921875,
+    "intent_accuracy_rate": 1.0,
+    "eval_runtime_s": 213.58243557810783,
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "adapter_path": "checkpoints/sft_corrected_v2/final"
+  },
+  "gate": {
+    "passed": true,
+    "checks": {
+      "g3a_clean_e2e": {
+        "value": 1.0,
+        "minimum": 0.9,
+        "passed": true
+      },
+      "unsupported_claims": {
+        "value": 0,
+        "maximum": 0,
+        "passed": true
+      },
+      "verifier_not_always_on": {
+        "value": 0.4,
+        "maximum": 0.5,
+        "passed": true
+      },
+      "max_tool_calls": {
+        "value": 2,
+        "maximum": 6,
+        "passed": true
+      },
+      "max_recovery_cycles": {
+        "value": 1,
+        "maximum": 1,
+        "passed": true
+      },
+      "recovery_improves": {
+        "value": 1.0,
+        "minimum": 0.5,
+        "passed": true
+      }
+    }
+  }
+}

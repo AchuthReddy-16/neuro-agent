@@ -1,0 +1,440 @@
+{
+  "stage": "H.5",
+  "phase": 1,
+  "timestamp": "2026-09-03T18:22:17.970157+00:00",
+  "bnb_version": "0.50.2",
+  "triton_version": "3.7.1",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "findings": {
+    "1_input_activation_dtype": "FP16 (cast from BF16 if model compute is BF16); shape [M,K] with M=tokens*batch",
+    "2_weight_representation": "Int8Params / state.CB contiguous INT8 [out_features, in_features]",
+    "3_weight_quant_format": "LLM.int8 row-wise absmax: CB = round(W/(SCB/127)), SCB=absmax per output row",
+    "4_activation_quant_behavior": "Per-forward int8_vectorwise_quant; threshold zeros outlier columns in CA",
+    "5_scale_representation": "SCA float32 [M] act absmax; SCB float32 [N] weight absmax",
+    "6_outlier_handling": "threshold=6.0 default; outlier cols computed in FP16 addmm and added to INT8 result",
+    "7_output_dtype": "FP16 (then cast to activation dtype if needed)",
+    "8_representative_gemm_dims": {
+      "q_proj": [
+        4096,
+        2560
+      ],
+      "k_proj": [
+        1024,
+        2560
+      ],
+      "v_proj": [
+        1024,
+        2560
+      ],
+      "o_proj": [
+        2560,
+        4096
+      ],
+      "gate_proj": [
+        9728,
+        2560
+      ],
+      "up_proj": [
+        9728,
+        2560
+      ],
+      "down_proj": [
+        2560,
+        9728
+      ]
+    },
+    "9_weights_usable_from_triton": true,
+    "10_bounded_replace_without_full_rewrite": true
+  },
+  "linear8bitlt_count": 252,
+  "unique_shapes": {
+    "4096x2560": 36,
+    "1024x2560": 72,
+    "2560x4096": 36,
+    "9728x2560": 72,
+    "2560x9728": 36
+  },
+  "shape_timings_decode_m1": [
+    {
+      "shape_key": "9728x2560",
+      "example_module": "base_model.model.model.layers.0.mlp.gate_proj",
+      "out_features": 9728,
+      "in_features": 2560,
+      "decode_m1_latency_ms": 0.0629,
+      "approx_flops": 49807360.0,
+      "count_in_model": 72,
+      "total_decode_cost_proxy_ms": 4.5254
+    },
+    {
+      "shape_key": "1024x2560",
+      "example_module": "base_model.model.model.layers.0.self_attn.k_proj",
+      "out_features": 1024,
+      "in_features": 2560,
+      "decode_m1_latency_ms": 0.0615,
+      "approx_flops": 5242880.0,
+      "count_in_model": 72,
+      "total_decode_cost_proxy_ms": 4.4292
+    },
+    {
+      "shape_key": "4096x2560",
+      "example_module": "base_model.model.model.layers.0.self_attn.q_proj",
+      "out_features": 4096,
+      "in_features": 2560,
+      "decode_m1_latency_ms": 0.0625,
+      "approx_flops": 20971520.0,
+      "count_in_model": 36,
+      "total_decode_cost_proxy_ms": 2.251
+    },
+    {
+      "shape_key": "2560x4096",
+      "example_module": "base_model.model.model.layers.0.self_attn.o_proj",
+      "out_features": 2560,
+      "in_features": 4096,
+      "decode_m1_latency_ms": 0.0619,
+      "approx_flops": 20971520.0,
+      "count_in_model": 36,
+      "total_decode_cost_proxy_ms": 2.2288
+    },
+    {
+      "shape_key": "2560x9728",
+      "example_module": "base_model.model.model.layers.0.mlp.down_proj",
+      "out_features": 2560,
+      "in_features": 9728,
+      "decode_m1_latency_ms": 0.0616,
+      "approx_flops": 49807360.0,
+      "count_in_model": 36,
+      "total_decode_cost_proxy_ms": 2.2177
+    }
+  ],
+  "selected_hot_shape": {
+    "shape_key": "9728x2560",
+    "example_module": "base_model.model.model.layers.0.mlp.gate_proj",
+    "out_features": 9728,
+    "in_features": 2560,
+    "decode_m1_latency_ms": 0.0629,
+    "approx_flops": 49807360.0,
+    "count_in_model": 72,
+    "total_decode_cost_proxy_ms": 4.5254
+  },
+  "outlier_probe": [
+    {
+      "module": "base_model.model.model.layers.0.self_attn.q_proj",
+      "threshold": 6.0,
+      "hit_rate_random_unit_normal": 0.0
+    },
+    {
+      "module": "base_model.model.model.layers.0.self_attn.k_proj",
+      "threshold": 6.0,
+      "hit_rate_random_unit_normal": 0.0
+    },
+    {
+      "module": "base_model.model.model.layers.0.self_attn.o_proj",
+      "threshold": 6.0,
+      "hit_rate_random_unit_normal": 0.0
+    },
+    {
+      "module": "base_model.model.model.layers.0.mlp.gate_proj",
+      "threshold": 6.0,
+      "hit_rate_random_unit_normal": 0.0
+    },
+    {
+      "module": "base_model.model.model.layers.0.mlp.down_proj",
+      "threshold": 6.0,
+      "hit_rate_random_unit_normal": 0.0
+    }
+  ],
+  "execution_path": [
+    "PEFT Linear8bitLt.forward (LoRA delta + base)",
+    "bnb Linear8bitLt.forward \u2192 bnb.matmul \u2192 MatMul8bitLt.forward",
+    "A.to(fp16) \u2192 int8_vectorwise_quant(threshold)",
+    "int8_mixed_scaled_mm / int8_scaled_mm",
+    "int8_linear_matmul (cuBLASLt) \u2192 int8_mm_dequant",
+    "optional FP16 addmm for outlier columns",
+    "LoRA adapter matmul accumulated on output"
+  ],
+  "feasible_bounded_prototype": true,
+  "requires_backend_replacement": false,
+  "stop_condition": null,
+  "notes": [
+    "Weights already stored as INT8 CB [N,K] + FP32 SCB [N] absmax \u2014 usable from Triton without reconversion.",
+    "Activation path: FP16 row-wise absmax quantize (int8_vectorwise_quant), optional outlier cols threshold=6.0.",
+    "GEMM: bitsandbytes::int8_linear_matmul via cuBLASLt INT8 (gemmSN for decode n=1).",
+    "Dequant: int8_mm_dequant scales by SCA*SCB/(127^2) \u2192 FP16.",
+    "Outlier routing is activation-column mixed precision (FP16 addmm), not weight-outlier storage.",
+    "PEFT LoRA wraps Linear8bitLt; base_layer holds MatmulLtState / CB / SCB.",
+    "Bounded prototype: fuse quant+GEMM+dequant for ONE hot shape using existing CB/SCB; keep outlier correction as a thin Python/FP16 add matching bnb \u2014 does NOT require full backend rewrite."
+  ],
+  "sample_layers": [
+    {
+      "name": "base_model.model.model.layers.0.self_attn.q_proj",
+      "proj": "q_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 4096,
+      "in_features": 2560,
+      "shape_key": "4096x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        4096
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.0.self_attn.k_proj",
+      "proj": "k_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 1024,
+      "in_features": 2560,
+      "shape_key": "1024x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        1024
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.0.self_attn.v_proj",
+      "proj": "v_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 1024,
+      "in_features": 2560,
+      "shape_key": "1024x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        1024
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.0.self_attn.o_proj",
+      "proj": "o_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 2560,
+      "in_features": 4096,
+      "shape_key": "2560x4096",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        2560
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.0.mlp.gate_proj",
+      "proj": "gate_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 9728,
+      "in_features": 2560,
+      "shape_key": "9728x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        9728
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.0.mlp.up_proj",
+      "proj": "up_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 9728,
+      "in_features": 2560,
+      "shape_key": "9728x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        9728
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.0.mlp.down_proj",
+      "proj": "down_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 2560,
+      "in_features": 9728,
+      "shape_key": "2560x9728",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        2560
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.1.self_attn.q_proj",
+      "proj": "q_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 4096,
+      "in_features": 2560,
+      "shape_key": "4096x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        4096
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.1.self_attn.k_proj",
+      "proj": "k_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 1024,
+      "in_features": 2560,
+      "shape_key": "1024x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        1024
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.1.self_attn.v_proj",
+      "proj": "v_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 1024,
+      "in_features": 2560,
+      "shape_key": "1024x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        1024
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.1.self_attn.o_proj",
+      "proj": "o_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 2560,
+      "in_features": 4096,
+      "shape_key": "2560x4096",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        2560
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.1.mlp.gate_proj",
+      "proj": "gate_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 9728,
+      "in_features": 2560,
+      "shape_key": "9728x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        9728
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.1.mlp.up_proj",
+      "proj": "up_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 9728,
+      "in_features": 2560,
+      "shape_key": "9728x2560",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        9728
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    },
+    {
+      "name": "base_model.model.model.layers.1.mlp.down_proj",
+      "proj": "down_proj",
+      "module_type": "Linear8bitLt",
+      "base_type": "Linear8bitLt",
+      "out_features": 2560,
+      "in_features": 9728,
+      "shape_key": "2560x9728",
+      "weight_dtype": "torch.int8",
+      "scb_dtype": "torch.float32",
+      "scb_shape": [
+        2560
+      ],
+      "threshold": 6.0,
+      "has_fp16_weights": false,
+      "has_bias": false,
+      "cb_device": "cuda:0",
+      "cb_contiguous": true
+    }
+  ]
+}

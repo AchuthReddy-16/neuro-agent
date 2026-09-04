@@ -1,0 +1,61 @@
+{
+  "model_name": "Qwen/Qwen3-4B-Instruct-2507",
+  "qlora_config": {
+    "load_in_4bit": true,
+    "bnb_4bit_compute_dtype": "bfloat16",
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_use_double_quant": true,
+    "lora_r": 32,
+    "lora_alpha": 64,
+    "lora_dropout": 0.05
+  },
+  "lora_target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "train_examples": 172,
+  "validation_examples": 28,
+  "train_subjects": [
+    "S001",
+    "S002",
+    "S003",
+    "S004",
+    "S005",
+    "S006",
+    "S007",
+    "S008",
+    "S009",
+    "S010",
+    "S011",
+    "S012",
+    "S013",
+    "S014",
+    "S015",
+    "S016",
+    "S017"
+  ],
+  "validation_subjects": [
+    "S018",
+    "S019",
+    "S020"
+  ],
+  "max_seq_length": 2048,
+  "num_train_epochs": 2,
+  "total_steps": 44,
+  "effective_batch_size": 8,
+  "final_train_loss": 0.00879349410533905,
+  "final_eval_loss": 0.013539706356823444,
+  "runtime_s": 104.4715987443924,
+  "peak_vram_mb": 5081.0029296875,
+  "adapter_size_mb": 262.9673376083374,
+  "checkpoint_path": "/workspace/neuro-agent/checkpoints/sft_corrected/final",
+  "total_tokens_seen": 352256,
+  "seed": 42,
+  "base_adapter_path": "/workspace/neuro-agent/checkpoints/sft/final",
+  "learning_rate": 5e-05
+}

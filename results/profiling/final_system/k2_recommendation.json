@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-09-03T22:11:28.330606+00:00",
+  "target": "text_vision_swap_unload_reload_overhead",
+  "measured_latency_ms": 58008.954,
+  "pct_of_relevant_e2e": 32.98,
+  "request_types_affected": [
+    "E",
+    "F"
+  ],
+  "optimization_opportunity": "Keep VLM warm at reduced text util; or persistent dual-process with util\u22480.40; or lazy/pool VLM",
+  "expected_complexity": "high (architecture) / medium (keep dual at reduced util)",
+  "correctness_risk": "low-medium",
+  "rationale": "Selected from measured K.1 ranking by latency impact, bounded effort, E2E benefit, and correctness risk. Do not force CUDA kernels if orchestration/swap dominates.",
+  "alternatives_considered": [
+    {
+      "component": "text_vision_swap_unload_reload_overhead",
+      "latency_ms": 58008.954
+    },
+    {
+      "component": "vlm_cold_load",
+      "latency_ms": 33473.923
+    },
+    {
+      "component": "text_vllm_restore_after_vision",
+      "latency_ms": 22524.383
+    },
+    {
+      "component": "vlm_inference_preprocess_generate",
+      "latency_ms": 4947.692
+    },
+    {
+      "component": "text_vllm_unload_for_vision",
+      "latency_ms": 910.803
+    }
+  ],
+  "start_k2_automatically": false
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "task": "eeg_interpretation",
+    "pass": true,
+    "response_snippet": " in eeg analysis, **alpha suppression** typically indicates **increased cognitive activity** or **attention**. \n\nalpha w"
+  },
+  {
+    "task": "eeg_interpretation",
+    "pass": true,
+    "response_snippet": " the term \"mu rhythm\" refers to a specific type of brainwave activity observed in the resting state, particularly in the"
+  },
+  {
+    "task": "frequency_analysis",
+    "pass": true,
+    "response_snippet": " the frequency band associated with working memory maintenance is the **theta band**. \n\nthis is supported by the fact th"
+  },
+  {
+    "task": "frequency_analysis",
+    "pass": true,
+    "response_snippet": " how does it differ from the rest of the rest period?\n\nokay, the user is asking about beta rebound after voluntary movem"
+  },
+  {
+    "task": "source_localisation",
+    "pass": true,
+    "response_snippet": " the primary cortical generator is the right parietal lobe. the right parietal lobe is the primary cortical generator of"
+  },
+  {
+    "task": "source_localisation",
+    "pass": true,
+    "response_snippet": " the n200 component is generated in the **right hemisphere** of the brain. it reflects the **right-fist** response. this"
+  },
+  {
+    "task": "bci_classification",
+    "pass": true,
+    "response_snippet": " the most commonly used classifier is the **support vector machine (svm)**. svm is widely adopted due to its high perfor"
+  },
+  {
+    "task": "bci_classification",
+    "pass": true,
+    "response_snippet": " how does csp work, and what are its advantages and limitations? additionally, how is csp applied in real-world scenario"
+  },
+  {
+    "task": "artefact_rejection",
+    "pass": true,
+    "response_snippet": " ica (independent component analysis) helps remove ocular artefacts from eeg by identifying and separating the signals t"
+  },
+  {
+    "task": "artefact_rejection",
+    "pass": true,
+    "response_snippet": " the typical threshold used for peak-to-peak amplitude rejection is **1000**. this means that any signal meeting or exce"
+  },
+  {
+    "task": "experimental_design",
+    "pass": true,
+    "response_snippet": " what is the purpose of the baseline correction step?\n\nbaseline correction is applied before erp analysis to remove the "
+  },
+  {
+    "task": "experimental_design",
+    "pass": true,
+    "response_snippet": " the advantage of a within-subjects design in eeg studies is that it allows for the comparison of the same individual's "
+  },
+  {
+    "task": "statistics",
+    "pass": true,
+    "response_snippet": " the standard multiple comparison correction for eeg cluster analysis is the **fdr (false discovery rate)**. \n\nthis meth"
+  },
+  {
+    "task": "statistics",
+    "pass": true,
+    "response_snippet": " why are they preferred over parametric tests?\n\nnon-parametric permutation tests are widely used in eeg analysis because"
+  },
+  {
+    "task": "clinical_application",
+    "pass": true,
+    "response_snippet": " what are the key features of the signal?\n\nthe primary method is to detect the characteristic high-frequency oscillation"
+  },
+  {
+    "task": "clinical_application",
+    "pass": false,
+    "response_snippet": " the primary markers are the **bispectral index (bis)** and the **entropy-based indices**. these are used to assess the "
+  }
+]

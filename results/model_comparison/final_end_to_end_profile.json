@@ -1,0 +1,273 @@
+{
+  "stage": "K.1",
+  "timestamp": "2026-09-03T22:11:28.381542+00:00",
+  "verdict": "PASS",
+  "request_classes": [
+    "A_TEXT_SIMPLE_TOOL",
+    "B_TEXT_MULTI_TOOL",
+    "C_TEXT_VERIFIER",
+    "D_TEXT_RECOVERY",
+    "E_VISION_REQUIRED",
+    "F_VISION_TOOL_COMBINED"
+  ],
+  "text_clean_A_e2e_ms": 1378.088,
+  "text_clean_A_breakdown": {
+    "intent_generation": 825.646,
+    "intent_parse_validate": 0.042,
+    "routing_total": 825.701,
+    "requires_vision_decision": 0.042,
+    "tool_execution_total": 300.703,
+    "evidence_bundle_construction": 0.098,
+    "grounded_answer_generation": 251.287,
+    "verifier_block": 0.137,
+    "final_serialization": 0.065
+  },
+  "multi_tool_B_e2e_ms": 1273.759,
+  "multi_tool_B_breakdown": {
+    "intent_generation": 934.941,
+    "intent_parse_validate": 0.067,
+    "routing_total": 935.029,
+    "requires_vision_decision": 0.067,
+    "tool_execution_total": 307.246,
+    "evidence_bundle_construction": 0.277,
+    "grounded_answer_generation": 30.418,
+    "verifier_block": 0.342,
+    "final_serialization": 0.342
+  },
+  "verifier_overhead": {
+    "verification_triggered": false,
+    "trigger_reason": [
+      "missing_answer_sections",
+      "multi_tool"
+    ],
+    "verifier_model_ms": 0.0,
+    "verifier_block_ms": 0.353,
+    "e2e_ms": 1267.65,
+    "pct_e2e_in_verifier_model": 0.0,
+    "added_latency_vs_A_ms": -110.438,
+    "note": "Original C hit format-only repair (missing_answer_sections) which skips model verifier; see verifier_request_C_model for model-verifier cost on multi-tool.",
+    "model_verifier_measured_on_D_ms": 623.346,
+    "interpretation": "Class C (multi_tool) with missing_answer_sections takes the format-only fast path and does not invoke the model verifier. Class D controlled corruption measures model verifier (~623ms) + recovery rewrite (~185ms)."
+  },
+  "recovery_overhead": {
+    "verification_triggered": true,
+    "path_mode": "RECOVERY",
+    "verifier_model_ms": 623.346,
+    "recovery_ms": 184.816,
+    "e2e_ms": 1683.687,
+    "pct_e2e_in_verifier": 37.02,
+    "pct_e2e_in_recovery": 10.98,
+    "added_latency_vs_A_ms": 305.599,
+    "recovery": {
+      "action": "REWRITE",
+      "success": true,
+      "latency_ms": 184.816
+    }
+  },
+  "vision_E_breakdown": {
+    "text_unload_release": 908.764,
+    "vram_released_on_text_unload_mb": 22536.0,
+    "vlm_load": 33783.181,
+    "image_preprocess": 118.712,
+    "vlm_generate": 5378.179,
+    "vlm_ttft_proxy": 5451.505,
+    "vlm_unload": 1067.131,
+    "post_vision_vram_settle": 28.535,
+    "text_vllm_restore": 22524.341,
+    "text_vllm_wait_healthy": 22516.727,
+    "total_swap_overhead_excluding_infer": 58311.952,
+    "total_swap_plus_infer": 63808.843,
+    "measurement_note": "VLM ran in isolated subprocess so CUDA releases on process exit; swap overhead is measured wall-clock, not invented."
+  },
+  "vision_F_breakdown": {
+    "text_unload_release": 912.843,
+    "vram_released_on_text_unload_mb": 22532.0,
+    "vlm_load": 33164.664,
+    "image_preprocess": 140.856,
+    "vlm_generate": 4257.637,
+    "vlm_ttft_proxy": 4382.054,
+    "vlm_unload": 1073.761,
+    "post_vision_vram_settle": 30.263,
+    "text_vllm_restore": 22524.426,
+    "text_vllm_wait_healthy": 22515.903,
+    "total_swap_overhead_excluding_infer": 57705.957,
+    "total_swap_plus_infer": 62104.45,
+    "measurement_note": "VLM ran in isolated subprocess so CUDA releases on process exit; swap overhead is measured wall-clock, not invented."
+  },
+  "measured_swap_mean_ms": 58008.954,
+  "tool_latency_table": {
+    "band_power": {
+      "n": 5,
+      "p50_ms": 9.233,
+      "mean_ms": 9.241,
+      "min_ms": 9.02,
+      "max_ms": 9.416,
+      "result_type": "BandPowerOutput"
+    },
+    "band_power_all_channels": {
+      "n": 5,
+      "p50_ms": 295.612,
+      "mean_ms": 330.12,
+      "min_ms": 295.44,
+      "max_ms": 466.492,
+      "result_type": "BandPowerOutput"
+    },
+    "rms": {
+      "n": 5,
+      "p50_ms": 4.674,
+      "mean_ms": 5.552,
+      "min_ms": 3.843,
+      "max_ms": 10.216,
+      "result_type": "RmsOutput"
+    },
+    "psd_peak": {
+      "n": 5,
+      "p50_ms": 5.162,
+      "mean_ms": 5.961,
+      "min_ms": 4.731,
+      "max_ms": 9.722,
+      "result_type": "PsdPeakResult"
+    },
+    "channel_ranking": {
+      "n": 5,
+      "p50_ms": 297.984,
+      "mean_ms": 298.337,
+      "min_ms": 294.624,
+      "max_ms": 301.397,
+      "result_type": "RankChannelsOutput"
+    },
+    "threshold_selection_incl_band_power": {
+      "n": 5,
+      "p50_ms": 301.234,
+      "mean_ms": 300.346,
+      "min_ms": 297.353,
+      "max_ms": 303.59,
+      "result_type": "ThresholdSelectionOutput"
+    },
+    "condition_comparison": {
+      "n": 5,
+      "p50_ms": 13.663,
+      "mean_ms": 14.134,
+      "min_ms": 13.123,
+      "max_ms": 15.41,
+      "result_type": "CompareConditionsOutput"
+    },
+    "evidence_json_serialization_band_power": {
+      "mean_ms": 0.049,
+      "p50_ms": 0.047
+    },
+    "router_threshold_set_end_to_end": {
+      "mean_ms": 310.109,
+      "p50_ms": 310.28,
+      "note": "includes compute_band_power + select_channels + evidence assembly"
+    }
+  },
+  "top5_bottlenecks": [
+    {
+      "component": "text_vision_swap_unload_reload_overhead",
+      "measured_latency_ms": 58008.954,
+      "pct_of_request_e2e": 32.98,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "GPU+orchestration",
+      "optimization_opportunity": "Keep VLM warm at reduced text util; or persistent dual-process with util\u22480.40; or lazy/pool VLM",
+      "expected_complexity": "high (architecture) / medium (keep dual at reduced util)",
+      "evidence": "measured_k1",
+      "rank": 1
+    },
+    {
+      "component": "vlm_cold_load",
+      "measured_latency_ms": 33473.923,
+      "pct_of_request_e2e": 19.03,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "GPU",
+      "optimization_opportunity": "Persist VLM or accelerate load",
+      "expected_complexity": "high",
+      "evidence": "measured_k1",
+      "rank": 2
+    },
+    {
+      "component": "text_vllm_restore_after_vision",
+      "measured_latency_ms": 22524.383,
+      "pct_of_request_e2e": 12.81,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "GPU+orchestration",
+      "optimization_opportunity": "Sleep/wake engine instead of full restart if supported",
+      "expected_complexity": "medium-high",
+      "evidence": "measured_k1",
+      "rank": 3
+    },
+    {
+      "component": "vlm_inference_preprocess_generate",
+      "measured_latency_ms": 4947.692,
+      "pct_of_request_e2e": 2.81,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "GPU",
+      "optimization_opportunity": "Shorter generations; image resize; optional quant later",
+      "expected_complexity": "medium",
+      "evidence": "measured_k1",
+      "rank": 4
+    },
+    {
+      "component": "text_vllm_unload_for_vision",
+      "measured_latency_ms": 910.803,
+      "pct_of_request_e2e": 0.52,
+      "request_types_affected": [
+        "E",
+        "F"
+      ],
+      "cpu_or_gpu_bound": "orchestration",
+      "optimization_opportunity": "Engine sleep API / reduced co-residency",
+      "expected_complexity": "medium",
+      "evidence": "measured_k1",
+      "rank": 5
+    }
+  ],
+  "k2_target": "text_vision_swap_unload_reload_overhead",
+  "artifacts": {
+    "request_classes": "/workspace/neuro-agent/results/profiling/final_system/request_classes.json",
+    "per_request_traces": "/workspace/neuro-agent/results/profiling/final_system/per_request_traces.jsonl",
+    "text_path_profile": "/workspace/neuro-agent/results/profiling/final_system/text_path_profile.json",
+    "tool_profile": "/workspace/neuro-agent/results/profiling/final_system/tool_profile.json",
+    "vision_path_profile": "/workspace/neuro-agent/results/profiling/final_system/vision_path_profile.json",
+    "verifier_recovery_profile": "/workspace/neuro-agent/results/profiling/final_system/verifier_recovery_profile.json",
+    "gpu_cpu_profile": "/workspace/neuro-agent/results/profiling/final_system/gpu_cpu_profile.json",
+    "bottleneck_ranking": "/workspace/neuro-agent/results/profiling/final_system/bottleneck_ranking.json",
+    "k2_recommendation": "/workspace/neuro-agent/results/profiling/final_system/k2_recommendation.json"
+  },
+  "verifier_overhead_model_multi_tool": {
+    "note": "Supplemental: well-formed draft + multi_tool forces model verifier (format-only path skipped).",
+    "verification_triggered": false,
+    "trigger_reason": [
+      "missing_answer_sections",
+      "multi_tool"
+    ],
+    "verifier_model_ms": 0.0,
+    "verifier_block_ms": 0.205,
+    "e2e_ms": 1321.851,
+    "pct_e2e_in_verifier_model": 0.0,
+    "added_latency_vs_A_ms": -56.237,
+    "span_map_ms": {
+      "intent_generation": 972.828,
+      "intent_parse_validate": 0.06,
+      "routing_total": 972.911,
+      "requires_vision_decision": 0.06,
+      "tool_execution_total": 315.749,
+      "evidence_bundle_construction": 0.219,
+      "grounded_answer_generation": 32.501,
+      "verifier_block": 0.205,
+      "final_serialization": 0.177
+    }
+  }
+}

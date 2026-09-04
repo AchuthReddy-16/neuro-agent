@@ -1,0 +1,78 @@
+{
+  "tag": "no_admission_c24",
+  "admission_enabled": false,
+  "offered_concurrency": 24,
+  "wall_s": 2.778,
+  "counts": {
+    "total_offered": 96,
+    "accepted_admitted": 96,
+    "completed": 96,
+    "queued": 0,
+    "rejected_queue_full": 0,
+    "rejected_timeout": 0,
+    "rejected_total": 0,
+    "failed": 0
+  },
+  "rates": {
+    "acceptance_rate_pct": 100.0,
+    "completion_rate_pct": 100.0,
+    "rejection_rate_pct": 0.0,
+    "timeout_rate_pct": 0.0,
+    "requests_per_sec_completed": 34.562
+  },
+  "latency_completed": {
+    "ttft_ms": {
+      "p50": 42.739,
+      "p95": 68.5907,
+      "p99": 68.8032,
+      "mean": 45.201
+    },
+    "e2e_ms": {
+      "p50": 688.08,
+      "p95": 704.3792,
+      "p99": 705.9853,
+      "mean": 687.729
+    },
+    "queue_wait_ms_queued_only": {
+      "p50": null,
+      "p95": null,
+      "p99": null,
+      "mean": null,
+      "n": 0
+    },
+    "queue_wait_ms_completed": {
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 0.0,
+      "mean": 0.0
+    }
+  },
+  "sla": {
+    "target_p95_e2e_ms": 1000.0,
+    "completed_above_1s": 0,
+    "sla_violation_rate_among_completed_pct": 0.0,
+    "sla_violation_rate_among_offered_latency_only_pct": 0.0,
+    "unmet_successful_sub1s_rate_among_offered_pct": 0.0,
+    "completed_p95_e2e_ms": 704.3792,
+    "completed_p95_meets_target": true,
+    "labels": {
+      "among_completed": "fraction of completed requests with E2E > 1000 ms",
+      "among_offered_latency_only": "completed>1s / all offered; rejects/timeouts are NOT counted as latency SLA violations",
+      "unmet_successful_sub1s_among_offered": "1 - (completed with E2E<=1s)/offered; includes rejects/failures/slow completes"
+    }
+  },
+  "throughput": {
+    "output_tokens_per_sec": 2204.04,
+    "mean_output_tokens": 63.77
+  },
+  "gpu": {
+    "avg_gpu_util": 100.0,
+    "peak_gpu_util": 100.0,
+    "peak_vram_mb": 22540.0,
+    "n_samples": 9,
+    "oom_count": 0
+  },
+  "admission_controller_stats": null,
+  "failures_sample": [],
+  "fairness_note": "Latency and throughput below must be read together with rejection_rate_pct; lower p95 with high rejection is a tradeoff, not a free improvement."
+}

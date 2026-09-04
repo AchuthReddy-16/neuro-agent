@@ -1,0 +1,30 @@
+{
+  "band_power_analysis": {
+    "count": 125,
+    "verifier_pass_rate": 0.88,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 9.0
+  },
+  "channel_ranking": {
+    "count": 125,
+    "verifier_pass_rate": 0.816,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 8.992
+  },
+  "execution_vs_imagery": {
+    "count": 125,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 2.488
+  },
+  "movement_task_classification": {
+    "count": 125,
+    "verifier_pass_rate": 0.728,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 7.864
+  }
+}

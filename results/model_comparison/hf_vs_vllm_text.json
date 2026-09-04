@@ -1,0 +1,133 @@
+{
+  "hf_bf16": {
+    "backend": "huggingface",
+    "dtype": "bfloat16",
+    "source": "H.1 measured results",
+    "quality": 0.864,
+    "vram_load_gb": 7.93,
+    "peak_vram_gb": 8.02,
+    "ttft_ms": 36.2,
+    "decode_tok_per_s": 50.4,
+    "latency_per_token_ms": 19.8,
+    "e2e_latency_ms": 1285.0
+  },
+  "hf_int8": {
+    "backend": "huggingface",
+    "dtype": "int8_bitsandbytes",
+    "source": "H.1 measured results",
+    "quality": 0.866,
+    "vram_load_gb": 4.48,
+    "peak_vram_gb": 4.6,
+    "ttft_ms": 112.5,
+    "decode_tok_per_s": 12.5,
+    "latency_per_token_ms": 84.7,
+    "e2e_latency_ms": 5450.0
+  },
+  "vllm_bf16": {
+    "backend": "vllm",
+    "dtype": "bfloat16",
+    "quantization": null,
+    "adapter": "checkpoints/sft_corrected_v2/final",
+    "model_load_time_s": 62.35,
+    "vram_after_load_gb": 7.78,
+    "peak_vram_gb": 8.05,
+    "e2e_latency_ms": 1043.8,
+    "generated_tokens_avg": 64.0,
+    "decode_tok_per_s": 61.3,
+    "latency_per_token_ms": 16.3,
+    "ttft_ms": "N/A (offline mode; not separately measured)",
+    "num_warmups": 2,
+    "num_timed": 5,
+    "e2e_all_ms": [
+      1053.1,
+      1045.8,
+      1039.2,
+      1045.7,
+      1034.8
+    ],
+    "peak_vram_all_gb": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "quality_smoke_pass_rate": 0.938,
+    "quality_smoke_n": 16,
+    "vram_note": "Reported by vLLM EngineCore log (subprocess); torch.cuda.memory_allocated() returns 0 in parent process"
+  },
+  "vllm_fp8_note": "FP8 is the closest vLLM-supported 8-bit path. It is NOT equivalent to bitsandbytes INT8.",
+  "vllm_fp8": {
+    "backend": "vllm",
+    "dtype": "auto",
+    "quantization": "fp8",
+    "adapter": "checkpoints/sft_corrected_v2/final",
+    "model_load_time_s": 13.96,
+    "vram_after_load_gb": 4.61,
+    "peak_vram_gb": 5.06,
+    "e2e_latency_ms": 1182.5,
+    "generated_tokens_avg": 64.0,
+    "decode_tok_per_s": 54.1,
+    "latency_per_token_ms": 18.5,
+    "ttft_ms": "N/A (offline mode; not separately measured)",
+    "num_warmups": 2,
+    "num_timed": 5,
+    "e2e_all_ms": [
+      1186.2,
+      1185.6,
+      1177.1,
+      1187.4,
+      1176.3
+    ],
+    "peak_vram_all_gb": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "quality_smoke_pass_rate": 0.938,
+    "quality_smoke_n": 16,
+    "vram_note": "Reported by vLLM EngineCore log (subprocess); torch.cuda.memory_allocated() returns 0 in parent process"
+  },
+  "vllm_int8_direct": {
+    "status": "UNSUPPORTED",
+    "reason": "vLLM 0.28.0 does not support bitsandbytes INT8 quantization backend",
+    "action_required": "Conversion to GPTQ/AWQ/FP8 required before vLLM INT8-class serving"
+  },
+  "audit": {
+    "vllm_version": "0.28.0",
+    "cuda_version": "13.0",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "qwen3_supported": true,
+    "bf16_path": "SUPPORTED (dtype='bfloat16')",
+    "bitsandbytes_int8_path": "NOT SUPPORTED by vLLM 0.28.0 (bitsandbytes is not a valid quantization method)",
+    "supported_quant_methods": [
+      "gptq",
+      "awq",
+      "fp8",
+      "compressed-tensors"
+    ],
+    "lora_support": "SUPPORTED via LoRARequest in generate()",
+    "int8_alternative": "fp8 (native hardware INT8/FP8 via vLLM fp8 backend on RTX 4090)",
+    "notes": "vLLM 0.28.0 does NOT support bitsandbytes INT8 quantization. The HF checkpoint uses bitsandbytes INT8 which cannot be loaded directly in vLLM. Closest vLLM-supported 8-bit path is FP8 (via quantization='fp8'). FP8 is NOT the same as bitsandbytes INT8: it uses hardware FP8 GEMM, different precision semantics, and requires re-quantization of the model weights. No conversion of bitsandbytes INT8 \u2192 vLLM-native INT8 is available without retraining/re-quantization."
+  },
+  "deltas_bf16_vllm_vs_hf": {
+    "e2e_ms_delta": -241.2,
+    "tok_per_s_delta": 10.9,
+    "peak_vram_gb_delta": 0.03
+  },
+  "explicit_questions": {
+    "Q1_did_vllm_improve_bf16_latency": "YES \u2014 vLLM BF16 E2E 1043.8 ms vs HF BF16 1285.0 ms (-241.2 ms, 61.3 vs 50.4 tok/s)",
+    "Q2_did_vllm_improve_int8_latency": "N/A \u2014 bitsandbytes INT8 is not supported by vLLM 0.28.0. Direct INT8 comparison impossible. FP8 results shown instead.",
+    "Q3_int8_memory_advantage_preserved": "vLLM FP8 VRAM = 5.06 GB vs vLLM BF16 = 8.05 GB. FP8 saves 2.99 GB (37.1% reduction). Original HF bitsandbytes INT8 advantage (4.60 vs 8.02 GB, ~43%) not directly comparable.",
+    "Q4_int8_slower_due_to_backend_overhead": "HF bitsandbytes INT8 was 4.24\u00d7 slower than HF BF16 (5450 vs 1285 ms E2E). vLLM FP8 (native hardware FP8 GEMM) is only 1.13\u00d7 slower than vLLM BF16 (1182.5 vs 1043.8 ms). Hardware FP8 GEMM overcomes the software bitsandbytes dequantisation overhead.",
+    "Q5_int8_suitable_for_concurrency_testing": "NOT as bitsandbytes INT8 \u2014 incompatible with vLLM. vLLM FP8 is suitable for concurrency testing (stable latency, good throughput). Recommend converting to GPTQ/AWQ/FP8 checkpoint for a proper INT8-class vLLM benchmark."
+  },
+  "deltas_fp8_vllm_vs_hf_int8": {
+    "note": "FP8 is NOT equivalent to bitsandbytes INT8 \u2014 different precision semantics",
+    "e2e_ms_delta": -4267.5,
+    "tok_per_s_delta": 41.6,
+    "peak_vram_gb_delta": 0.46
+  }
+}

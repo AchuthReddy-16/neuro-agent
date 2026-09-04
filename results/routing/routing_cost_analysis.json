@@ -1,0 +1,59 @@
+{
+  "stage": "J.1",
+  "timestamp": "2026-09-03T21:34:10.491563+00:00",
+  "sources": {
+    "stage_j_text_vs_vision_cost": "/workspace/neuro-agent/results/serving/multimodal/text_vs_vision_cost.json",
+    "stage_j_latency_benchmark": "/workspace/neuro-agent/results/serving/multimodal/latency_benchmark.json",
+    "stage_j_production_decision": "/workspace/neuro-agent/results/serving/multimodal/production_decision.json",
+    "intent_routing_latencies": "this run"
+  },
+  "intent_routing_latency_ms": {
+    "n": 101,
+    "p50": 481.92,
+    "p95": 988.326,
+    "mean": 504.431
+  },
+  "correct_text_routing": {
+    "n_in_eval": 50,
+    "path": "vLLM W8A8 INT8 text + deterministic tools",
+    "measured_text_e2e_ms_p50_stage_j": 454.795,
+    "measured_text_vram_idle_mb_stage_j": 22536.0,
+    "notes": "Correct TEXT_ONLY routing stays on resident text path; no VLM load."
+  },
+  "unnecessary_vision_routing_false_positives": {
+    "n_in_eval": 0,
+    "extra_cost_components": [
+      "stop/sleep text vLLM to free KV (production util=0.90 cannot co-reside)",
+      "load Qwen2.5-VL-3B corrected LoRA (HF)",
+      "VLM invocation",
+      "unload VLM + restart text vLLM"
+    ],
+    "measured_vlm_e2e_ms_p50_stage_j": 210.728,
+    "measured_vlm_vram_idle_mb_stage_j": 8000.0,
+    "swap_unload_overhead_ms": null,
+    "swap_unload_overhead_note": "Stage J established swap/unload is required at text util=0.90 but did not measure end-to-end swap/unload wall time; do not invent an exact latency.",
+    "impact": "Each FP vision route pays full swap + VLM invocation cost for a query that should have stayed on the cheap text/tool path."
+  },
+  "missed_vision_routing_false_negatives": {
+    "n_in_eval": 1,
+    "severity": "higher",
+    "impact": "FN vision routes keep image-understanding questions on text/tools, which cannot see the figure \u2192 likely answer correctness failure (wrong or unsupported visual claims).",
+    "measured_numeric_latency_irrelevant": true
+  },
+  "production_context": {
+    "strategy": "swap_unload_for_production_text_kv",
+    "co_residency_at_util_0_90": false,
+    "swap_policy": {
+      "default_resident": "text_w8a8_vllm @ gpu_memory_utilization=0.90",
+      "on_vision_request": [
+        "stop/sleep text vLLM to release KV reservation",
+        "load corrected Qwen2.5-VL-3B LoRA (bf16 HF)",
+        "serve vision request(s) at low concurrency",
+        "unload VLM",
+        "restart text vLLM at util=0.90"
+      ],
+      "optional_demo_coresidency": "Both can co-reside if text util\u22480.40 (combined idle ~18487.0 MB, free ~5595.0 MB) with much smaller text KV.",
+      "rationale": "Production text util=0.90 reserves ~22GB; VLM needs ~7\u20138GB torch \u2014 OOM beside production text."
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "stage": "H.7B",
+  "status": "PASS",
+  "checkpoint": "/workspace/neuro-agent/checkpoints/text_merged_corrected_bf16",
+  "merged_class": "Qwen3ForCausalLM",
+  "peft_runtime_lora": false,
+  "dtype": "bfloat16",
+  "num_parameters": 4022468096,
+  "merge_elapsed_s": 46.85,
+  "reference_corrected_sft_full_1000": 0.864,
+  "eval": {
+    "protocol": "targeted_8_families_x_10",
+    "n": 80,
+    "verifier_pass_rate": 0.875,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 7.9375,
+    "runtime_s": 14.33,
+    "per_task": {
+      "band_power_analysis": 0.9,
+      "channel_ranking": 0.9,
+      "execution_vs_imagery": 1.0,
+      "factual_grounding": 0.5,
+      "movement_task_classification": 0.7,
+      "numerical_reasoning": 1.0,
+      "statistical_comparison": 1.0,
+      "tool_selection": 1.0
+    },
+    "gate_passed": true,
+    "catastrophic": false,
+    "output_dir": "results/quantization/w8a8_int8/merged_targeted"
+  },
+  "full_1000_skipped_reason": "Targeted 8-family gate passed with 0.875 vs adapter full-set 0.864 and 0.0 invalid parse. Merge is merge_and_unload of the same adapter; full 1000 reserved for W8A8 (H.7G) rather than duplicating the adapter eval.",
+  "material_regression": false
+}

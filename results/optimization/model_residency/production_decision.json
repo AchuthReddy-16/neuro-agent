@@ -1,0 +1,120 @@
+{
+  "strategy": "C_hybrid_policy",
+  "selected_util_for_vision_mode": 0.4,
+  "selected_util_for_text_primary": 0.9,
+  "reason": "Co-resident util=0.40 eliminates ~58s swap and delivers warm vision E2E ~0.16s, but text KV reservation drops from ~22.5GB (util=0.90) to ~10.5GB. util=0.45/0.50 OOM with VLM. Production: keep util=0.90 text-primary for normal traffic; switch to util=0.40 co-resident when vision is enabled (demo/vision-heavy mode).",
+  "k2_verdict": "PARTIAL PASS",
+  "metrics": {
+    "swap_overhead_before_ms": 58008.954,
+    "swap_overhead_after_ms": 0.0,
+    "swap_reduction_pct": 100.0,
+    "vision_e2e_before_swap_plus_infer_ms": 62826.862,
+    "vision_e2e_before_k1_wall_with_subprocess_ms": 174727.799,
+    "vision_e2e_after_warm_ms": 155.461,
+    "vision_latency_reduction_vs_swap_plus_infer_pct": 99.75,
+    "combined_idle_vram_mb": 18489.0,
+    "free_vram_mb": 6075.0,
+    "highest_safe_coresident_util": 0.4,
+    "util_0.45_oom": true,
+    "util_0.50_tested": false
+  },
+  "text_capacity_caveat": {
+    "i1_workload": "512-token prompts, prefix cache OFF, util=0.90",
+    "k2_workload": "short prompts, prefix cache ON, util=0.40 + VLM resident",
+    "kv_reservation_mb": {
+      "i1_or_production_util_0.90": 22536,
+      "k2_coresident_util_0.40_text_only_after_load": 10512.0,
+      "k2_coresident_both_idle": 18489.0
+    },
+    "interpretation": "Short-prompt microbench at util=0.40 can look equal/better than I.1 on tok/s, but KV budget is ~half of util=0.90 (~10.5 GB text reservation vs ~22.5 GB). True high-concurrency / long-prefix capacity is reduced. Prefer hybrid policy.",
+    "k2_measured": {
+      "c1": {
+        "requests_per_sec": 2.1917,
+        "output_tokens_per_sec": 109.58,
+        "ttft_ms": {
+          "p50": 16.757,
+          "p95": 24.92,
+          "mean": 17.856
+        },
+        "e2e_ms": {
+          "p50": 454.958,
+          "p95": 463.363,
+          "mean": 456.239
+        },
+        "failed_requests": 0
+      },
+      "c8": {
+        "requests_per_sec": 16.3132,
+        "output_tokens_per_sec": 808.18,
+        "ttft_ms": {
+          "p50": 21.866,
+          "p95": 39.514,
+          "mean": 24.766
+        },
+        "e2e_ms": {
+          "p50": 485.368,
+          "p95": 498.857,
+          "mean": 486.779
+        },
+        "failed_requests": 0
+      },
+      "c16": {
+        "requests_per_sec": 31.106,
+        "output_tokens_per_sec": 1600.99,
+        "ttft_ms": {
+          "p50": 33.638,
+          "p95": 48.475,
+          "mean": 35.558
+        },
+        "e2e_ms": {
+          "p50": 503.339,
+          "p95": 522.429,
+          "mean": 504.625
+        },
+        "failed_requests": 0
+      }
+    }
+  },
+  "sleep_wake": {
+    "skipped_smoke": false,
+    "reason": "Hybrid policy selected due to KV capacity loss at util=0.40; ran ONE bounded sleep/wake smoke.",
+    "smoke": {
+      "ok": true,
+      "timestamp": "2026-09-03T22:53:05.960278+00:00",
+      "boot_s": 22.022,
+      "vram_awake": {
+        "used_mb": 22538.0,
+        "total_mb": 24564.0,
+        "free_mb": 2026.0
+      },
+      "awake_request_status": 200,
+      "sleep_url": "http://127.0.0.1:8000/sleep",
+      "sleep_status": 200,
+      "sleep_body": "",
+      "sleep_ms": 1189.522,
+      "vram_after_sleep": {
+        "used_mb": 710.0,
+        "total_mb": 24564.0,
+        "free_mb": 23854.0
+      },
+      "sleep_ok": true,
+      "sleep_error": null,
+      "wake_url": "http://127.0.0.1:8000/wake_up",
+      "wake_status": 200,
+      "wake_body": "",
+      "wake_ms": 961.328,
+      "vram_after_wake": {
+        "used_mb": 21962.0,
+        "total_mb": 24564.0,
+        "free_mb": 2602.0
+      },
+      "wake_ok": true,
+      "post_wake_request_status": 200,
+      "post_wake_preview": " OK again. OK",
+      "compare_to_full_restore_ms": 22524.0,
+      "note": "Bounded smoke only; not a full vision interleave experiment."
+    },
+    "interpretation": "vLLM 0.28 --enable-sleep-mode works: sleep\u22481189.522ms (VRAM 22538.0\u2192710.0 MB), wake\u2248961.328ms vs full text restore \u224822524ms. For text-primary vision events, sleep/wake can replace kill/restart (~22.5s saved on restore) but VLM cold load (~33.5s) remains unless co-resident vision mode is used. Preferred: hybrid \u2014 util=0.40 co-resident for vision sessions; util=0.90+sleep for rare vision on text-primary."
+  },
+  "timestamp": "2026-09-03T22:56:35.991672+00:00"
+}

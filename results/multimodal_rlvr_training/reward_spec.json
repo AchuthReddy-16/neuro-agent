@@ -1,0 +1,8 @@
+{
+  "categorical": "1.0 on exact normalized label match, else 0.0",
+  "numeric": "1.0 within tolerance; linear partial credit to 0 at 3x tolerance band",
+  "ranking": "1.0 exact order; partial = 0.7 * position accuracy + 0.3 * set overlap",
+  "set": "F1 over predicted vs expected channel sets; 1.0 on exact match",
+  "waveform_numeric": "numeric reward with waveform RMS tolerance shaping",
+  "spectrogram_peak_frequency": "numeric reward with peak-frequency tolerance shaping"
+}

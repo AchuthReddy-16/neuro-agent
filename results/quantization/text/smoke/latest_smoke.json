@@ -1,0 +1,148 @@
+{
+  "timestamp": "2026-09-03T12:28:22.311186+00:00",
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "adapter": "/workspace/neuro-agent/checkpoints/sft_corrected_v2/final",
+  "variants": {
+    "bf16": {
+      "quantization": "bf16",
+      "method": "Transformers AutoModelForCausalLM torch_dtype=bfloat16",
+      "limitations": [
+        "Weight-only PTQ via bitsandbytes (Transformers); not GPTQ/AWQ/vLLM.",
+        "LoRA adapters load via PEFT on top of the quantized (or BF16) base.",
+        "Adapter weights remain BF16/FP16; only base linear weights are quantized.",
+        "Full BF16 weights; highest quality reference, highest VRAM.",
+        "Expected weight VRAM \u2248 2 bytes/param (~8 GB for a 4B model)."
+      ],
+      "expected_weight_vram_mb_approx": 7629.39453125,
+      "supported": true,
+      "error": null,
+      "load_time_s": 32.942714588716626,
+      "weight_memory_mb": 7924.2490234375,
+      "allocated_after_load_mb": 7930.392578125,
+      "peak_allocated_mb": 7948.10107421875,
+      "peak_reserved_mb": 8206.0,
+      "nvidia_smi_mb": 8680.0,
+      "num_parameters": 4088528384,
+      "adapter_loaded": true,
+      "outputs": [
+        {
+          "prompt": "What EEG frequency band is associated with motor imagery mu rhythm?",
+          "response": "The associated band is the 8-13 Hz range."
+        },
+        {
+          "prompt": "List three common motor tasks in BCI2000 motor imagery experiments.",
+          "response": "The three common tasks are left_fist, right_fist, and both_fists."
+        },
+        {
+          "prompt": "Does execution or imagery typically produce stronger sensorimotor ERD?",
+          "response": "Execution typically produces stronger sensorimotor ERD."
+        },
+        {
+          "prompt": "Name a typical EEG channel over left motor cortex.",
+          "response": "A typical channel is F3."
+        },
+        {
+          "prompt": "Give a one-sentence definition of band power analysis for EEG.",
+          "response": "Band power analysis measures the strength of specific frequency bands in the EEG signal."
+        }
+      ],
+      "empty_output_count": 0,
+      "wall_time_s": 39.29108570422977
+    },
+    "int8": {
+      "quantization": "int8",
+      "method": "bitsandbytes BitsAndBytesConfig(load_in_8bit=True)",
+      "limitations": [
+        "Weight-only PTQ via bitsandbytes (Transformers); not GPTQ/AWQ/vLLM.",
+        "LoRA adapters load via PEFT on top of the quantized (or BF16) base.",
+        "Adapter weights remain BF16/FP16; only base linear weights are quantized.",
+        "bitsandbytes LLM.int8() (load_in_8bit); mixed-precision matmul.",
+        "Expected weight VRAM \u2248 1 byte/param (~4 GB for a 4B model).",
+        "May be slower than BF16 on RTX 4090 if INT8 kernels are not faster than Tensor Cores."
+      ],
+      "expected_weight_vram_mb_approx": 3814.697265625,
+      "supported": true,
+      "error": null,
+      "load_time_s": 6.187213942408562,
+      "weight_memory_mb": 4478.861328125,
+      "allocated_after_load_mb": 4478.861328125,
+      "peak_allocated_mb": 4523.88232421875,
+      "peak_reserved_mb": 4744.0,
+      "nvidia_smi_mb": 5228.0,
+      "num_parameters": 4088528384,
+      "adapter_loaded": true,
+      "outputs": [
+        {
+          "prompt": "What EEG frequency band is associated with motor imagery mu rhythm?",
+          "response": "The associated band is the 8-13 Hz range."
+        },
+        {
+          "prompt": "List three common motor tasks in BCI2000 motor imagery experiments.",
+          "response": "The three common tasks are left_fist, right_fist, and both_fist."
+        },
+        {
+          "prompt": "Does execution or imagery typically produce stronger sensorimotor ERD?",
+          "response": "Execution typically produces stronger sensorimotor ERD."
+        },
+        {
+          "prompt": "Name a typical EEG channel over left motor cortex.",
+          "response": "A typical channel is F3."
+        },
+        {
+          "prompt": "Give a one-sentence definition of band power analysis for EEG.",
+          "response": "Band power analysis measures the strength of specific frequency bands in the EEG signal."
+        }
+      ],
+      "empty_output_count": 0,
+      "wall_time_s": 10.562881003133953
+    },
+    "int4": {
+      "quantization": "int4",
+      "method": "bitsandbytes NF4 + double quant (load_in_4bit)",
+      "limitations": [
+        "Weight-only PTQ via bitsandbytes (Transformers); not GPTQ/AWQ/vLLM.",
+        "LoRA adapters load via PEFT on top of the quantized (or BF16) base.",
+        "Adapter weights remain BF16/FP16; only base linear weights are quantized.",
+        "bitsandbytes NF4 + double quant (same recipe as QLoRA training).",
+        "Expected weight VRAM \u2248 0.5 bytes/param (~2 GB for a 4B model).",
+        "Compute dtype remains BF16; quality may degrade vs BF16 reference."
+      ],
+      "expected_weight_vram_mb_approx": 1907.3486328125,
+      "supported": true,
+      "error": null,
+      "load_time_s": 3.5097582899034023,
+      "weight_memory_mb": 2820.4052734375,
+      "allocated_after_load_mb": 2820.4052734375,
+      "peak_allocated_mb": 2877.63720703125,
+      "peak_reserved_mb": 3148.0,
+      "nvidia_smi_mb": 3632.0,
+      "num_parameters": 2271870464,
+      "adapter_loaded": true,
+      "outputs": [
+        {
+          "prompt": "What EEG frequency band is associated with motor imagery mu rhythm?",
+          "response": "The dominant frequency is 8-12 Hz."
+        },
+        {
+          "prompt": "List three common motor tasks in BCI2000 motor imagery experiments.",
+          "response": "The three common tasks are both hands, left hand, and right hand."
+        },
+        {
+          "prompt": "Does execution or imagery typically produce stronger sensorimotor ERD?",
+          "response": "Execution typically produces stronger sensorimotor ERD."
+        },
+        {
+          "prompt": "Name a typical EEG channel over left motor cortex.",
+          "response": "A typical channel is left_f3."
+        },
+        {
+          "prompt": "Give a one-sentence definition of band power analysis for EEG.",
+          "response": "Band power analysis measures the strength of specific frequency bands in an EEG signal."
+        }
+      ],
+      "empty_output_count": 0,
+      "wall_time_s": 5.078439940698445
+    }
+  },
+  "all_supported": true
+}

@@ -22,12 +22,13 @@ htmlcov/
 # Virtual environments
 # =============================================================================
 .venv/
+.venv-*/
 venv/
 env/
 .envrc
 
 # =============================================================================
-# IDE / editor / agent (do NOT commit to GitHub)
+# IDE / editor scratch (do not commit)
 # =============================================================================
 .idea/
 .vscode/
@@ -36,8 +37,6 @@ env/
 *.swp
 *.swo
 *~
-
-# Cursor / agent scratch, state, and temporary files
 .agent/
 agent-scratch/
 scratch/
@@ -49,11 +48,12 @@ temp/
 .cursorrules.local
 
 # =============================================================================
-# Secrets
+# Secrets / local env
 # =============================================================================
 .env
 .env.*
 !.env.example
+!**/.env.example
 *.pem
 credentials.json
 secrets.yaml
@@ -65,7 +65,7 @@ secrets.json
 .ipynb_checkpoints/
 
 # =============================================================================
-# Project artifacts — checkpoints & model weights (never commit)
+# Checkpoints & model weights (never commit)
 # =============================================================================
 checkpoints/**
 !checkpoints/.gitkeep
@@ -77,7 +77,7 @@ checkpoints/**
 *.onnx
 
 # =============================================================================
-# Hugging Face / model caches (live under /workspace, not in repo)
+# Hugging Face / model caches
 # =============================================================================
 .cache/
 .huggingface/
@@ -85,43 +85,59 @@ models/
 hub/
 
 # =============================================================================
-# Datasets & raw data (never commit)
+# EEG / PhysioNet dataset
+# Keep small reproducibility files only (manifests, metadata JSON, scripts).
 # =============================================================================
+data/**
+!data/manifests/
+!data/manifests/**
+!data/metadata/
+!data/metadata/**/
+!data/metadata/**/*.json
+!data/scripts/
+!data/scripts/**
+
 data/raw/
+data/interim/
 data/downloads/
+data/processed/
+data/processed/arrays/
+data/processed/baseline/
+
+# Large neuroscience file formats (anywhere)
 datasets/
 *.parquet
 *.arrow
 *.feather
+*.npz
+*.npy
 *.h5
 *.hdf5
 *.nii
 *.nii.gz
 *.edf
+*.edf.event
 *.fif
+*.jsonl
 
 # =============================================================================
-# Results & benchmarks
-# Commit: small JSON/CSV summaries only
-# Do NOT commit: huge traces, raw profiler outputs, temp logs
+# Results: commit small JSON/MD/CSV summaries; exclude bulky traces & polls
 # =============================================================================
 results/**
 !results/.gitkeep
-!results/hardware_verify.json
-!results/profiling/
-results/profiling/**
-!results/profiling/gpu_profiling_validation_summary.json
-!results/profiling/vram_investigation.json
-!results/profiling/ncu/
-results/profiling/ncu/**
-!results/profiling/ncu/ncu_summary.json
-!results/profiling/pytorch/
-results/profiling/pytorch/**
-!results/profiling/pytorch/prefill_summary.json
-!results/profiling/pytorch/decode_summary.json
-!results/profiling/pytorch/profiling_summary.json
+!results/**/
+!results/**/*.json
+!results/**/*.md
+!results/**/*.csv
 
-# Large / temporary profiler outputs (never commit)
+# Re-ignore bulky / local-only result artifacts
+results/api_experiments/
+results/profiling/int8/
+results/**/gpu_poll.csv
+results/**/*_trace.json
+results/**/per_request_traces.jsonl
+
+# Profiler binary / oversized outputs
 *_trace.json
 *.nsys-rep
 *.qdrep
@@ -131,7 +147,7 @@ results/profiling/pytorch/**
 nsys-report.*
 ncu-report.*
 
-# Benchmarks: JSON/CSV summaries are OK; ignore temp runs
+# Benchmarks: keep summaries; ignore temp runs
 benchmarks/**/tmp/
 benchmarks/**/*.tmp
 
@@ -153,6 +169,6 @@ Thumbs.db
 desktop.ini
 
 # =============================================================================
-# Duplicate / accidental nested copies
+# Nested accidental copies
 # =============================================================================
 neuro-agent/

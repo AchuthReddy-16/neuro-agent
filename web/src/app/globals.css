@@ -1,0 +1,212 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --surface: #f4f7fb;
+  --surface-elevated: #ffffff;
+  --surface-muted: #e8edf4;
+  --surface-canvas: #f0f4f9;
+  --border: #c8d4e3;
+  --border-strong: #94a3b8;
+  --accent: #0d9488;
+  --accent-muted: #14b8a6;
+  --accent-secondary: #6366f1;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --grid-line: rgba(13, 148, 136, 0.08);
+  --panel-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.dark {
+  --surface: #0c1220;
+  --surface-elevated: #141d2e;
+  --surface-muted: #1a2540;
+  --surface-canvas: #101828;
+  --border: #2a3a52;
+  --border-strong: #3d5270;
+  --accent: #2dd4bf;
+  --accent-muted: #14b8a6;
+  --accent-secondary: #818cf8;
+  --text-primary: #f0f4f8;
+  --text-secondary: #a8b8cc;
+  --text-muted: #7a8fa6;
+  --grid-line: rgba(45, 212, 191, 0.05);
+  --panel-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--surface);
+  color: var(--text-primary);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+@layer utilities {
+  .text-primary {
+    color: var(--text-primary);
+  }
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+  .text-muted {
+    color: var(--text-muted);
+  }
+  .bg-surface {
+    background-color: var(--surface);
+  }
+  .bg-elevated {
+    background-color: var(--surface-elevated);
+  }
+  .bg-muted {
+    background-color: var(--surface-muted);
+  }
+  .bg-canvas {
+    background-color: var(--surface-canvas);
+  }
+  .border-default {
+    border-color: var(--border);
+  }
+  .border-strong {
+    border-color: var(--border-strong);
+  }
+  .text-accent {
+    color: var(--accent);
+  }
+  .text-accent-secondary {
+    color: var(--accent-secondary);
+  }
+  .bg-accent {
+    background-color: var(--accent);
+  }
+  .panel-shadow {
+    box-shadow: var(--panel-shadow);
+  }
+  .section-label {
+    @apply text-[10px] font-medium tracking-[0.12em] uppercase text-muted;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface-muted) 0%,
+    var(--surface-elevated) 50%,
+    var(--surface-muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.scanline-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    transparent 50%,
+    rgba(45, 212, 191, 0.015) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+.landing-vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 40%,
+    transparent 0%,
+    rgba(12, 18, 32, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+/* Research Agent question field — solid dark tokens (Tailwind opacity on custom utilities fails;
+   UA textarea default is white, which breaks dark-theme contrast) */
+.research-question-input {
+  color-scheme: dark;
+  background-color: #101828 !important; /* --surface-canvas */
+  color: #f0f4f8 !important; /* --text-primary */
+  caret-color: #2dd4bf !important; /* --accent teal */
+  border-color: #2a3a52; /* --border */
+}
+.dark .research-question-input {
+  background-color: var(--surface-canvas) !important;
+  color: var(--text-primary) !important;
+  caret-color: var(--accent) !important;
+  border-color: var(--border);
+}
+.research-question-input::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+.research-question-input::selection {
+  background-color: color-mix(in srgb, var(--accent) 28%, transparent);
+  color: var(--text-primary);
+}
+.research-question-input:focus {
+  border-color: var(--accent) !important;
+  outline: none;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.research-question-input:disabled {
+  background-color: var(--surface) !important;
+  color: var(--text-muted) !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.research-question-input:-webkit-autofill,
+.research-question-input:-webkit-autofill:hover,
+.research-question-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-primary) !important;
+  caret-color: var(--accent) !important;
+  box-shadow: 0 0 0 1000px var(--surface-canvas) inset !important;
+  transition: background-color 99999s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

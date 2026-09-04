@@ -1,0 +1,205 @@
+{
+  "stage": "J",
+  "timestamp": "2026-09-03T20:56:28.408107+00:00",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "total_vram_mb": 24564.0,
+  "clean_state": {
+    "nvidia_smi_used_mb": 1.0,
+    "nvidia_smi_free_mb": 24080.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "gpu_util_pct": 0.0,
+    "compute_apps": [],
+    "torch_allocated_mb": 0.0,
+    "torch_reserved_mb": 0.0,
+    "timestamp": "2026-09-03T20:56:28.408076+00:00"
+  },
+  "text_checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "vision_checkpoint": "/workspace/neuro-agent/checkpoints/multimodal_sft_corrected/final",
+  "attempts": [
+    {
+      "label": "production_util_0.90",
+      "gpu_memory_utilization": 0.9,
+      "text_load_ok": true,
+      "vision_load_ok": false,
+      "text_request_ok": false,
+      "vision_request_ok": false,
+      "oom": true,
+      "error": "CUDA OOM loading vision: CUDA out of memory. Tried to allocate 6.99 GiB. GPU 0 has a total capacity of 23.52 GiB of which 1.13 GiB is free. Including non-PyTorch memory, this process has 386.00 MiB memory in use. Process 268491 has 22.00 GiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
+      "clean_gpu": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_free_mb": 24078.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "compute_apps": [],
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0,
+        "timestamp": "2026-09-03T20:56:28.446641+00:00"
+      },
+      "after_text_load": {
+        "nvidia_smi_used_mb": 22536.0,
+        "nvidia_smi_free_mb": 1546.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "compute_apps": [
+          "268491, VLLM::EngineCore, 22526 MiB"
+        ],
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0,
+        "timestamp": "2026-09-03T20:56:53.525597+00:00"
+      },
+      "text_model_load_gib_from_log": 4.27,
+      "text_engine_reservation_mb": 22536.0,
+      "after_failed_vision_load": {
+        "nvidia_smi_used_mb": 22927.0,
+        "nvidia_smi_free_mb": 1155.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "compute_apps": [
+          "266474, /workspace/neuro-agent/.venv/bin/python, 386 MiB",
+          "268491, VLLM::EngineCore, 22526 MiB"
+        ],
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0,
+        "timestamp": "2026-09-03T20:58:07.481393+00:00"
+      }
+    },
+    {
+      "label": "coreside_util_0.40",
+      "gpu_memory_utilization": 0.4,
+      "text_load_ok": true,
+      "vision_load_ok": true,
+      "text_request_ok": true,
+      "vision_request_ok": true,
+      "oom": false,
+      "error": null,
+      "clean_gpu": {
+        "nvidia_smi_used_mb": 396.0,
+        "nvidia_smi_free_mb": 23686.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "compute_apps": [
+          "266474, /workspace/neuro-agent/.venv/bin/python, 386 MiB"
+        ],
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0,
+        "timestamp": "2026-09-03T20:58:12.543799+00:00"
+      },
+      "after_text_load": {
+        "nvidia_smi_used_mb": 10903.0,
+        "nvidia_smi_free_mb": 13179.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "compute_apps": [
+          "266474, /workspace/neuro-agent/.venv/bin/python, 386 MiB",
+          "273334, VLLM::EngineCore, 10502 MiB"
+        ],
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0,
+        "timestamp": "2026-09-03T20:58:33.610053+00:00"
+      },
+      "text_model_load_gib_from_log": 4.27,
+      "text_engine_reservation_mb": 10903.0,
+      "after_both_idle": {
+        "nvidia_smi_used_mb": 18487.0,
+        "nvidia_smi_free_mb": 5595.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "compute_apps": [
+          "266474, /workspace/neuro-agent/.venv/bin/python, 7970 MiB",
+          "273334, VLLM::EngineCore, 10502 MiB"
+        ],
+        "torch_allocated_mb": 7303.1,
+        "torch_reserved_mb": 7522.0,
+        "timestamp": "2026-09-03T20:58:58.798112+00:00"
+      },
+      "vision_info": {
+        "model_name": "Qwen/Qwen2.5-VL-3B-Instruct",
+        "dtype": "bfloat16",
+        "device": "cuda:0",
+        "total_parameters": 3791775744,
+        "vision_parameters": 675903488,
+        "merger_parameters": 36708608,
+        "weight_memory_mb": 7303.1015625,
+        "load_time_s": 25.07104584760964,
+        "adapter_path": "/workspace/neuro-agent/checkpoints/multimodal_sft_corrected/final",
+        "quantization": null,
+        "vision_tower_dtype": "bfloat16",
+        "backend": "transformers+peft (not vLLM)",
+        "architecture": "Qwen2_5_VLForConditionalGeneration"
+      },
+      "vision_load": {
+        "wall_s": 25.136,
+        "peak_torch_allocated_mb": 7444.9,
+        "before": {
+          "nvidia_smi_used_mb": 10903.0,
+          "nvidia_smi_free_mb": 13179.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "gpu_util_pct": 0.0,
+          "compute_apps": [
+            "266474, /workspace/neuro-agent/.venv/bin/python, 386 MiB",
+            "273334, VLLM::EngineCore, 10502 MiB"
+          ],
+          "torch_allocated_mb": 0.0,
+          "torch_reserved_mb": 0.0,
+          "timestamp": "2026-09-03T20:58:33.663335+00:00"
+        },
+        "after": {
+          "nvidia_smi_used_mb": 18487.0,
+          "nvidia_smi_free_mb": 5595.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "gpu_util_pct": 0.0,
+          "compute_apps": [
+            "266474, /workspace/neuro-agent/.venv/bin/python, 7970 MiB",
+            "273334, VLLM::EngineCore, 10502 MiB"
+          ],
+          "torch_allocated_mb": 7303.1,
+          "torch_reserved_mb": 7522.0,
+          "timestamp": "2026-09-03T20:58:58.772609+00:00"
+        }
+      },
+      "peak_vram_during_second_model_load_mb": 18487.0,
+      "combined_idle_vram_mb": 18487.0,
+      "remaining_free_mb": 5595.0,
+      "text_request": {
+        "ok": true,
+        "error": null,
+        "ttft_ms": 31.276,
+        "e2e_ms": 357.885,
+        "completion_tokens": 2,
+        "decode_tok_s": 6.12,
+        "preview": "{\"value\": 0.0}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+      },
+      "peak_vram_during_text_request_mb": 18487.0,
+      "vision_request": {
+        "ok": true,
+        "image": "/workspace/neuro-agent/data/processed/vision/images/test/img_channel_band_064ea5207bb2a8d8.png",
+        "question": "Rank the three channels with greatest beta power in img_channel_band_064ea5207bb2a8d8.",
+        "preprocess_ms": 113.266,
+        "generate_ms": 5605.65,
+        "e2e_ms": 5718.918,
+        "ttft_proxy_ms": 5697.048,
+        "vision_encoder_latency_observable": false,
+        "note": "Vision encoder latency not separately exposed; TTFT is preprocess+prefill proxy.",
+        "input_tokens": 2298,
+        "completion_tokens": 9,
+        "decode_tok_s": 411.55,
+        "peak_torch_allocated_mb": 7758.6,
+        "nvidia_smi_after_mb": 18969.0,
+        "output_preview": "AF7, AFZ, F7"
+      },
+      "peak_vram_during_vision_request_mb": 18969.0,
+      "safety_margin_mb": 5595.0,
+      "coresident_pass": true
+    }
+  ],
+  "verdict": "PASS",
+  "strategy": "co_resident",
+  "safe_combined_budget_mb": 18487.0,
+  "safety_margin_mb": 5595.0,
+  "recommended_text_gpu_memory_utilization": 0.4,
+  "note": "Both models resident with text gpu_memory_utilization=0.4. Text KV capacity is reduced vs production util=0.90 if util was lowered.",
+  "production_util_0.90_pass": false,
+  "reduced_util_0.40_pass": true,
+  "recommended_production_strategy": "swap_unload",
+  "verdict_note": "PASS only under reduced text gpu_memory_utilization=0.40. FAIL under production util=0.90. Recommended production strategy: swap/unload."
+}

@@ -1,0 +1,3835 @@
+{
+  "stage": "J.1",
+  "timestamp": "2026-09-03T21:33:19.381294+00:00",
+  "backend": "vLLM W8A8 INT8 (in-process LLM)",
+  "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "routing_signal": "include_vision_evidence | requested_visual_type | image_id (requires_vision if present)",
+  "prompt": "INTENT_SYSTEM_PROMPT (unchanged baseline)",
+  "metrics": {
+    "n": 101,
+    "overall_accuracy": 0.673267,
+    "vision_required": {
+      "precision": 0.875,
+      "recall": 0.411765,
+      "f1": 0.56,
+      "tp": 21,
+      "fp": 3,
+      "fn": 30
+    },
+    "text_only": {
+      "precision": 0.61039,
+      "recall": 0.94,
+      "f1": 0.740157,
+      "tp": 47,
+      "fp": 30,
+      "fn": 3
+    },
+    "confusion_matrix": {
+      "labels": [
+        "TEXT_ONLY",
+        "VISION_REQUIRED"
+      ],
+      "matrix_expected_rows_predicted_cols": {
+        "TEXT_ONLY": {
+          "TEXT_ONLY": 47,
+          "VISION_REQUIRED": 3
+        },
+        "VISION_REQUIRED": {
+          "TEXT_ONLY": 30,
+          "VISION_REQUIRED": 21
+        }
+      },
+      "counts": {
+        "expected_TEXT_ONLY": 50,
+        "expected_VISION_REQUIRED": 51,
+        "predicted_TEXT_ONLY": 77,
+        "predicted_VISION_REQUIRED": 24
+      }
+    },
+    "false_positive_vision": [
+      {
+        "id": "t_img_ok_04",
+        "question": "There is a spectrogram file named img_spectrogram_abc, but answer only with the deterministic band-power ranking for S014_R04_E003.",
+        "expected": "TEXT_ONLY",
+        "predicted": "VISION_REQUIRED",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S014_R04_E003",
+          "channels": "all",
+          "metric": "band_power",
+          "frequency_band": "delta|theta|alpha_mu|beta",
+          "frequency_range": [
+            1.0,
+            40.0
+          ],
+          "sort_direction": "descending",
+          "requested_visual_type": "spectrogram"
+        }
+      },
+      {
+        "id": "t_img_ok_05",
+        "question": "Find PSD peak for S016_R08_E022 and optionally attach stored PSD vision metadata (no visual interpretation needed).",
+        "expected": "TEXT_ONLY",
+        "predicted": "VISION_REQUIRED",
+        "raw_intent": {
+          "question_type": "psd_peak",
+          "sample_id": "S016_R08_E022",
+          "requested_visual_type": "psd"
+        }
+      },
+      {
+        "id": "t_mix_02",
+        "question": "For S014_R04_E003, return PSD peak Hz and RMS for Cz from tools only.",
+        "expected": "TEXT_ONLY",
+        "predicted": "VISION_REQUIRED",
+        "raw_intent": {
+          "question_type": "psd_peak",
+          "sample_id": "S014_R04_E003",
+          "channels": "Cz",
+          "metric": "rms",
+          "requested_visual_type": "psd"
+        }
+      }
+    ],
+    "false_negative_vision": [
+      {
+        "id": "v_topo_01",
+        "question": "Interpret this topomap: does frontal beta appear stronger than occipital beta?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "condition_comparison",
+          "subject_id": "S001",
+          "run_id": "R01",
+          "condition_a": "left_fist",
+          "condition_b": "right_fist"
+        }
+      },
+      {
+        "id": "v_topo_02",
+        "question": "Looking at the uploaded topomap figure, which scalp region looks hottest in beta?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "subject_id": "S001",
+          "run_id": "R01",
+          "epoch": 0,
+          "channels": "all",
+          "frequency_band": "beta",
+          "metric": "band_power",
+          "top_k": 3,
+          "sort_direction": "descending"
+        }
+      },
+      {
+        "id": "v_topo_03",
+        "question": "Describe the spatial pattern visible in this alpha_mu topomap image.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "alpha_mu_power",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_topo_04",
+        "question": "Does this topomap visually support the beta-power ranking?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "subject_id": "S001",
+          "run_id": "R01",
+          "epoch": 0,
+          "channels": "all",
+          "frequency_band": "beta",
+          "metric": "beta_power",
+          "top_k": 3,
+          "sort_direction": "descending"
+        }
+      },
+      {
+        "id": "v_topo_06",
+        "question": "From the visual appearance of img_topomap_0f8ba1d5d15cfb57, where is beta concentrated?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "subject_id": "S001",
+          "run_id": "R01",
+          "epoch": 0,
+          "channels": "all",
+          "frequency_band": "beta",
+          "frequency_range": [
+            1.0,
+            40.0
+          ],
+          "metric": "band_power",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_topo_08",
+        "question": "Does the uploaded scalp map show a clear central hotspot or a diffuse pattern?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "band_power",
+          "frequency_band": "alpha_mu",
+          "frequency_range": [
+            1.0,
+            40.0
+          ],
+          "top_k": 3,
+          "sort_direction": "descending"
+        }
+      },
+      {
+        "id": "v_spec_04",
+        "question": "Inspect img_spectrogram_026ad6ca411b6 and describe the dominant visible band.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak",
+          "sample_id": "S26_R02_E02",
+          "channels": "all",
+          "frequency_band": "all",
+          "frequency_range": [
+            1.0,
+            40.0
+          ],
+          "metric": "psd_peak"
+        }
+      },
+      {
+        "id": "v_spec_07",
+        "question": "Describe any artifactual stripes visible in the uploaded spectrogram.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "psd_peak",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_wave_01",
+        "question": "Inspect waveform morphology from this EEG image\u2014are there high-amplitude spikes?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "waveform"
+        }
+      },
+      {
+        "id": "v_wave_02",
+        "question": "Looking at the uploaded waveform plot, describe the transient shape around t=1.2s.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "rms",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_wave_03",
+        "question": "From the figure, does the waveform look clipped or unsaturated?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "rms",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_wave_04",
+        "question": "Visually inspect this raw trace image for blink-like deflections.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "rms",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_wave_06",
+        "question": "Does this waveform figure show rhythmic mu spindles or irregular noise?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak"
+        }
+      },
+      {
+        "id": "v_psd_vis_02",
+        "question": "Looking at the uploaded PSD plot, is the spectrum 1/f-like or peaked?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak"
+        }
+      },
+      {
+        "id": "v_psd_vis_03",
+        "question": "Describe the shape of the curve in this PSD image around the alpha range.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak"
+        }
+      },
+      {
+        "id": "v_psd_vis_05",
+        "question": "Interpret the shaded bands shown in this PSD plot image.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak"
+        }
+      },
+      {
+        "id": "v_cmp_03",
+        "question": "Looking at both waveform images, which trace shows larger peak-to-peak swings?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "condition_comparison",
+          "subject_id": "S001",
+          "run_id": "R01",
+          "condition_a": "left_fist",
+          "condition_b": "right_fist"
+        }
+      },
+      {
+        "id": "v_upload_01",
+        "question": "I uploaded a topomap\u2014please interpret what the figure shows.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "band_power",
+          "frequency_band": "delta",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_upload_02",
+        "question": "Regarding the attached spectrogram image: what stands out visually?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak"
+        }
+      },
+      {
+        "id": "v_upload_03",
+        "question": "Please look at my uploaded PSD figure and describe the spectral shape.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak"
+        }
+      },
+      {
+        "id": "v_upload_04",
+        "question": "The figure I just uploaded shows EEG waveforms\u2014comment on morphology.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "rms",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_upload_05",
+        "question": "Answer from the uploaded image only: is there a clear central hotspot?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "band_power",
+          "frequency_band": "alpha_mu",
+          "frequency_range": [
+            1.0,
+            40.0
+          ],
+          "top_k": 3,
+          "sort_direction": "descending"
+        }
+      },
+      {
+        "id": "v_combo_04",
+        "question": "Given numeric RMS=12.4 on C3, does the waveform figure look consistent with a large-amplitude channel?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "threshold_set",
+          "sample_id": "S123_R01_E00",
+          "subject_id": "S123",
+          "run_id": "R01",
+          "epoch": 0,
+          "channels": "C3",
+          "metric": "rms",
+          "threshold": 12.4,
+          "threshold_mode": "absolute",
+          "comparator": "gt"
+        }
+      },
+      {
+        "id": "v_combo_06",
+        "question": "Use the figure: visually confirm whether the spectrogram\u2019s dominant band matches the tool\u2019s alpha_mu label.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "frequency_band": "alpha_mu",
+          "frequency_range": [
+            1.0,
+            40.0
+          ],
+          "metric": "psd_peak"
+        }
+      },
+      {
+        "id": "v_ref_01",
+        "question": "What do you see in figure img_psd_0873a9a51138ecf9?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak",
+          "sample_id": "S0873_R01_E00",
+          "channels": "all",
+          "frequency_band": "all",
+          "frequency_range": [
+            1.0,
+            40.0
+          ],
+          "metric": "psd_peak"
+        }
+      },
+      {
+        "id": "v_ref_02",
+        "question": "Interpret the visual content of img_topomap_06b9e5be484f99a7.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "topomap"
+        }
+      },
+      {
+        "id": "v_ref_04",
+        "question": "Looking at img_waveform_sample_abc, comment on spike morphology.",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "band_power"
+        }
+      },
+      {
+        "id": "v_misc_01",
+        "question": "Is the color scale in this topomap image diverging or sequential, based on what you see?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "channel_ranking",
+          "sample_id": "S001_R01_E00",
+          "channels": "all",
+          "metric": "band_power",
+          "frequency_band": "alpha_mu",
+          "sort_direction": "descending",
+          "top_k": 3
+        }
+      },
+      {
+        "id": "v_misc_03",
+        "question": "Does this PSD figure appear to use a log or linear y-axis from its visual layout?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak"
+        }
+      },
+      {
+        "id": "v_misc_04",
+        "question": "In the spectrogram image, is time on the x-axis based on the plot layout you see?",
+        "expected": "VISION_REQUIRED",
+        "predicted": "TEXT_ONLY",
+        "raw_intent": {
+          "question_type": "psd_peak"
+        }
+      }
+    ],
+    "tag": "baseline",
+    "system_prompt_sha_prefix": "806694945588"
+  },
+  "rows": [
+    {
+      "id": "t_bp_01",
+      "question": "What is the beta band power for channel C3 in sample S001_R03_E012?",
+      "expected_route": "TEXT_ONLY",
+      "family": "band_power",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"frequency_band\": \"beta\"}",
+      "raw_intent": {
+        "question_type": "band_power",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3"
+        ],
+        "frequency_band": "beta"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3"
+        ],
+        "frequency_band": "beta"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 296.184,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_bp_02",
+      "question": "Compute alpha_mu power on Cz for S014_R04_E003 using stored EEG features.",
+      "expected_route": "TEXT_ONLY",
+      "family": "band_power",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\", \"sample_id\": \"S014_R04_E003\", \"channels\": [\"Cz\"], \"frequency_band\": \"alpha_mu\"}",
+      "raw_intent": {
+        "question_type": "band_power",
+        "sample_id": "S014_R04_E003",
+        "channels": [
+          "Cz"
+        ],
+        "frequency_band": "alpha_mu"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power",
+        "sample_id": "S014_R04_E003",
+        "channels": [
+          "Cz"
+        ],
+        "frequency_band": "alpha_mu"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 284.238,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_bp_03",
+      "question": "Report delta and theta band power for all channels in S022_R01_E001.",
+      "expected_route": "TEXT_ONLY",
+      "family": "band_power",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\", \"sample_id\": \"S022_R01_E001\", \"channels\": \"all\", \"frequency_band\": \"delta|theta\"}",
+      "raw_intent": {
+        "question_type": "band_power",
+        "sample_id": "S022_R01_E001",
+        "channels": "all",
+        "frequency_band": "delta|theta"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power",
+        "sample_id": "S022_R01_E001",
+        "channels": "all",
+        "frequency_band": "delta|theta"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 284.386,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_bp_04",
+      "question": "For S008_R06_E020, what is C4 beta power from the structured feature table?",
+      "expected_route": "TEXT_ONLY",
+      "family": "band_power",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\", \"sample_id\": \"S008_R06_E020\", \"channels\": [\"C4\"], \"frequency_band\": \"beta\"}",
+      "raw_intent": {
+        "question_type": "band_power",
+        "sample_id": "S008_R06_E020",
+        "channels": [
+          "C4"
+        ],
+        "frequency_band": "beta"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power",
+        "sample_id": "S008_R06_E020",
+        "channels": [
+          "C4"
+        ],
+        "frequency_band": "beta"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 277.793,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_bp_05",
+      "question": "Give me the numeric beta power values for C3 and C4 on S003_R03_E005.",
+      "expected_route": "TEXT_ONLY",
+      "family": "band_power",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\", \"sample_id\": \"S003_R03_E005\", \"channels\": [\"C3\", \"C4\"], \"frequency_band\": \"beta\", \"frequency_range\": [1.0, 40.0], \"metric\": \"beta_power\"}",
+      "raw_intent": {
+        "question_type": "band_power",
+        "sample_id": "S003_R03_E005",
+        "channels": [
+          "C3",
+          "C4"
+        ],
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power",
+        "sample_id": "S003_R03_E005",
+        "channels": [
+          "C3",
+          "C4"
+        ],
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 452.514,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rms_01",
+      "question": "What is the RMS amplitude of channel C3 in S001_R03_E012?",
+      "expected_route": "TEXT_ONLY",
+      "family": "rms",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"rms\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"metric\": \"rms\"}",
+      "raw_intent": {
+        "question_type": "rms",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3"
+        ],
+        "metric": "rms"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "rms",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3"
+        ],
+        "metric": "rms"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 264.363,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rms_02",
+      "question": "Compute RMS for all central channels in sample S016_R08_E022.",
+      "expected_route": "TEXT_ONLY",
+      "family": "rms",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"rms\", \"sample_id\": \"S016_R08_E022\", \"channels\": \"all\", \"metric\": \"rms\"}",
+      "raw_intent": {
+        "question_type": "rms",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "metric": "rms"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "rms",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "metric": "rms"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 257.217,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rms_03",
+      "question": "Which has higher RMS, C3 or C4, in S010_R05_E007? Use the deterministic RMS tool.",
+      "expected_route": "TEXT_ONLY",
+      "family": "rms",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S010_R05_E007\", \"channels\": [\"C3\", \"C4\"], \"metric\": \"rms\", \"sort_direction\": \"descending\", \"top_k\": 1}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S010_R05_E007",
+        "channels": [
+          "C3",
+          "C4"
+        ],
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 1
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S010_R05_E007",
+        "channels": [
+          "C3",
+          "C4"
+        ],
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 1
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 398.832,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rms_04",
+      "question": "Report RMS for Fz in S025_R02_E015 from stored EEG.",
+      "expected_route": "TEXT_ONLY",
+      "family": "rms",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"rms\", \"sample_id\": \"S025_R02_E015\", \"channels\": [\"Fz\"], \"metric\": \"rms\"}",
+      "raw_intent": {
+        "question_type": "rms",
+        "sample_id": "S025_R02_E015",
+        "channels": [
+          "Fz"
+        ],
+        "metric": "rms"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "rms",
+        "sample_id": "S025_R02_E015",
+        "channels": [
+          "Fz"
+        ],
+        "metric": "rms"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 264.616,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rms_05",
+      "question": "Calculate root-mean-square amplitude for channel Pz on S007_R03_E009.",
+      "expected_route": "TEXT_ONLY",
+      "family": "rms",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"rms\", \"sample_id\": \"S007_R03_E009\", \"channels\": [\"Pz\"]}",
+      "raw_intent": {
+        "question_type": "rms",
+        "sample_id": "S007_R03_E009",
+        "channels": [
+          "Pz"
+        ]
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "rms",
+        "sample_id": "S007_R03_E009",
+        "channels": [
+          "Pz"
+        ]
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 223.886,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_psd_01",
+      "question": "What is the PSD peak frequency numerically for S016_R08_E022 between 1 and 40 Hz?",
+      "expected_route": "TEXT_ONLY",
+      "family": "psd_peak",
+      "tricky_negative": true,
+      "notes": "numeric PSD peak \u2192 deterministic tool",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S016_R08_E022\", \"frequency_range\": [1.0, 40.0]}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S016_R08_E022",
+        "frequency_range": [
+          1.0,
+          40.0
+        ]
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S016_R08_E022",
+        "frequency_range": [
+          1.0,
+          40.0
+        ]
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 291.15,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_psd_02",
+      "question": "Find the dominant PSD peak for channel C3 in S001_R03_E012 from raw/stored EEG.",
+      "expected_route": "TEXT_ONLY",
+      "family": "psd_peak",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"frequency_band\": \"all\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3"
+        ],
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3"
+        ],
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 432.37,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_psd_03",
+      "question": "Report the 1\u201340 Hz PSD peak frequency for S014_R04_E003 using the psd_peak tool.",
+      "expected_route": "TEXT_ONLY",
+      "family": "psd_peak",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S014_R04_E003\", \"frequency_range\": [1.0, 40.0]}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S014_R04_E003",
+        "frequency_range": [
+          1.0,
+          40.0
+        ]
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S014_R04_E003",
+        "frequency_range": [
+          1.0,
+          40.0
+        ]
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 291.395,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_psd_04",
+      "question": "What is the numeric PSD peak (Hz) for S022_R01_E001?",
+      "expected_route": "TEXT_ONLY",
+      "family": "psd_peak",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S022_R01_E001\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S022_R01_E001"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S022_R01_E001"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 190.75,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_psd_05",
+      "question": "Compute PSD peak frequency for S008_R06_E020 from stored spectrum features.",
+      "expected_route": "TEXT_ONLY",
+      "family": "psd_peak",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S008_R06_E020\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S008_R06_E020"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S008_R06_E020"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 190.326,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rank_01",
+      "question": "Which channel has the highest beta power in S001_R03_E012?",
+      "expected_route": "TEXT_ONLY",
+      "family": "channel_ranking",
+      "tricky_negative": true,
+      "notes": "classic text/tool-only ranking",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S001_R03_E012\", \"channels\": \"all\", \"frequency_band\": \"beta\", \"frequency_range\": [1.0, 40.0], \"metric\": \"beta_power\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R03_E012",
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R03_E012",
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 425.2,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rank_02",
+      "question": "Rank the top 3 channels by alpha_mu power for sample S014_R04_E003.",
+      "expected_route": "TEXT_ONLY",
+      "family": "channel_ranking",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S014_R04_E003\", \"channels\": \"all\", \"metric\": \"alpha_mu_power\", \"top_k\": 3, \"sort_direction\": \"descending\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S014_R04_E003",
+        "channels": "all",
+        "metric": "alpha_mu_power",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S014_R04_E003",
+        "channels": "all",
+        "metric": "alpha_mu_power",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 378.64,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rank_03",
+      "question": "Which channel has highest RMS in S016_R08_E022?",
+      "expected_route": "TEXT_ONLY",
+      "family": "channel_ranking",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S016_R08_E022\", \"channels\": \"all\", \"metric\": \"rms\", \"sort_direction\": \"descending\", \"top_k\": 1}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 1
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 1
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 364.941,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rank_04",
+      "question": "Order channels by descending beta power for S010_R05_E007 using the ranking tool.",
+      "expected_route": "TEXT_ONLY",
+      "family": "channel_ranking",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S010_R05_E007\", \"channels\": \"all\", \"metric\": \"beta_power\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S010_R05_E007",
+        "channels": "all",
+        "metric": "beta_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S010_R05_E007",
+        "channels": "all",
+        "metric": "beta_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 372.048,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_rank_05",
+      "question": "Which electrode ranks #1 for theta power in S025_R02_E015?",
+      "expected_route": "TEXT_ONLY",
+      "family": "channel_ranking",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S025_R02_E015\", \"channels\": \"all\", \"frequency_band\": \"theta\", \"metric\": \"beta_power\", \"top_k\": 1, \"sort_direction\": \"descending\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S025_R02_E015",
+        "channels": "all",
+        "frequency_band": "theta",
+        "metric": "beta_power",
+        "top_k": 1,
+        "sort_direction": "descending"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S025_R02_E015",
+        "channels": "all",
+        "frequency_band": "theta",
+        "metric": "beta_power",
+        "top_k": 1,
+        "sort_direction": "descending"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 419.029,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_thr_01",
+      "question": "Select channels with beta power above the median in S001_R03_E012.",
+      "expected_route": "TEXT_ONLY",
+      "family": "threshold_set",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"threshold_set\", \"sample_id\": \"S001_R03_E012\", \"channels\": \"all\", \"frequency_band\": \"beta\", \"metric\": \"beta_power\", \"threshold_mode\": \"median\", \"comparator\": \"gt\"}",
+      "raw_intent": {
+        "question_type": "threshold_set",
+        "sample_id": "S001_R03_E012",
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "threshold_mode": "median",
+        "comparator": "gt"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "threshold_set",
+        "sample_id": "S001_R03_E012",
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "threshold_mode": "median",
+        "comparator": "gt"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 412.13,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_thr_02",
+      "question": "Which channels exceed absolute beta threshold 0.5 in S014_R04_E003?",
+      "expected_route": "TEXT_ONLY",
+      "family": "threshold_set",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"threshold_set\", \"sample_id\": \"S014_R04_E003\", \"channels\": \"all\", \"frequency_band\": \"beta\", \"threshold\": 0.5, \"threshold_mode\": \"absolute\", \"comparator\": \"gt\"}",
+      "raw_intent": {
+        "question_type": "threshold_set",
+        "sample_id": "S014_R04_E003",
+        "channels": "all",
+        "frequency_band": "beta",
+        "threshold": 0.5,
+        "threshold_mode": "absolute",
+        "comparator": "gt"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "threshold_set",
+        "sample_id": "S014_R04_E003",
+        "channels": "all",
+        "frequency_band": "beta",
+        "threshold": 0.5,
+        "threshold_mode": "absolute",
+        "comparator": "gt"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 419.227,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_thr_03",
+      "question": "Apply upper-quartile thresholding on alpha_mu power for S016_R08_E022.",
+      "expected_route": "TEXT_ONLY",
+      "family": "threshold_set",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"threshold_set\", \"sample_id\": \"S016_R08_E022\", \"channels\": \"all\", \"frequency_band\": \"alpha_mu\", \"frequency_range\": [1.0, 40.0], \"metric\": \"alpha_mu_power\", \"threshold_mode\": \"upper_quartile\", \"comparator\": \"gt\"}",
+      "raw_intent": {
+        "question_type": "threshold_set",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "alpha_mu_power",
+        "threshold_mode": "upper_quartile",
+        "comparator": "gt"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "threshold_set",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "alpha_mu_power",
+        "threshold_mode": "upper_quartile",
+        "comparator": "gt"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 547.077,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_thr_04",
+      "question": "Return channels with RMS greater than 10 for S008_R06_E020.",
+      "expected_route": "TEXT_ONLY",
+      "family": "threshold_set",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"threshold_set\", \"sample_id\": \"S008_R06_E020\", \"channels\": \"all\", \"metric\": \"rms\", \"threshold\": 10, \"threshold_mode\": \"absolute\", \"comparator\": \"gt\"}",
+      "raw_intent": {
+        "question_type": "threshold_set",
+        "sample_id": "S008_R06_E020",
+        "channels": "all",
+        "metric": "rms",
+        "threshold": 10,
+        "threshold_mode": "absolute",
+        "comparator": "gt"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "threshold_set",
+        "sample_id": "S008_R06_E020",
+        "channels": "all",
+        "metric": "rms",
+        "threshold": 10,
+        "threshold_mode": "absolute",
+        "comparator": "gt"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 405.942,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_thr_05",
+      "question": "Threshold-select channels below median beta power in S022_R01_E001.",
+      "expected_route": "TEXT_ONLY",
+      "family": "threshold_set",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"threshold_set\", \"sample_id\": \"S022_R01_E001\", \"channels\": \"all\", \"frequency_band\": \"beta\", \"metric\": \"beta_power\", \"threshold_mode\": \"median\", \"comparator\": \"lt\"}",
+      "raw_intent": {
+        "question_type": "threshold_set",
+        "sample_id": "S022_R01_E001",
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "threshold_mode": "median",
+        "comparator": "lt"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "threshold_set",
+        "sample_id": "S022_R01_E001",
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "threshold_mode": "median",
+        "comparator": "lt"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 412.054,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_cmp_01",
+      "question": "Compare left_fist vs right_fist beta power for subject S001.",
+      "expected_route": "TEXT_ONLY",
+      "family": "condition_comparison",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"subject_id\": \"S001\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\", \"metric\": \"beta_power\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "subject_id": "S001",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "metric": "beta_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "subject_id": "S001",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "metric": "beta_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 304.492,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_cmp_02",
+      "question": "For S014, is alpha_mu power higher in feet than in rest?",
+      "expected_route": "TEXT_ONLY",
+      "family": "condition_comparison",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"subject_id\": \"S014\", \"condition_a\": \"feet\", \"condition_b\": \"rest\", \"metric\": \"alpha_mu_power\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "subject_id": "S014",
+        "condition_a": "feet",
+        "condition_b": "rest",
+        "metric": "alpha_mu_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "subject_id": "S014",
+        "condition_a": "feet",
+        "condition_b": "rest",
+        "metric": "alpha_mu_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 291.306,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_cmp_03",
+      "question": "Statistically compare both_fists vs left_fist RMS for subject S022.",
+      "expected_route": "TEXT_ONLY",
+      "family": "condition_comparison",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"subject_id\": \"S022\", \"condition_a\": \"both_fists\", \"condition_b\": \"left_fist\", \"metric\": \"rms\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "subject_id": "S022",
+        "condition_a": "both_fists",
+        "condition_b": "left_fist",
+        "metric": "rms"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "subject_id": "S022",
+        "condition_a": "both_fists",
+        "condition_b": "left_fist",
+        "metric": "rms"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 297.621,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_cmp_04",
+      "question": "Condition comparison: right_fist versus left_fist beta on S008.",
+      "expected_route": "TEXT_ONLY",
+      "family": "condition_comparison",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"subject_id\": \"S008\", \"run_id\": \"R01\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\", \"metric\": \"beta_power\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "subject_id": "S008",
+        "run_id": "R01",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "metric": "beta_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "subject_id": "S008",
+        "run_id": "R01",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "metric": "beta_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 365.082,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_cmp_05",
+      "question": "Does S016 show higher C3 beta in left_fist than right_fist?",
+      "expected_route": "TEXT_ONLY",
+      "family": "condition_comparison",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"sample_id\": \"S016_R01_E00\", \"subject_id\": \"S016\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"C3\", \"frequency_band\": \"beta\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\", \"comparator\": \"gt\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "sample_id": "S016_R01_E00",
+        "subject_id": "S016",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "C3",
+        "frequency_band": "beta",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "comparator": "gt"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "sample_id": "S016_R01_E00",
+        "subject_id": "S016",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "C3",
+        "frequency_band": "beta",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "comparator": "gt"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 607.201,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_meta_01",
+      "question": "How many channels are recorded in sample S001_R03_E012?",
+      "expected_route": "TEXT_ONLY",
+      "family": "metadata_statistical",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R03_E012\", \"channels\": \"all\", \"metric\": \"rms\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R03_E012",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R03_E012",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 365.24,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_meta_02",
+      "question": "What sampling rate and epoch duration are used for S014_R04_E003?",
+      "expected_route": "TEXT_ONLY",
+      "family": "metadata_statistical",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\", \"sample_id\": \"S014_R04_E003\"}",
+      "raw_intent": {
+        "question_type": "band_power",
+        "sample_id": "S014_R04_E003"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power",
+        "sample_id": "S014_R04_E003"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 183.831,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_meta_03",
+      "question": "List available frequency bands in the feature schema for this dataset.",
+      "expected_route": "TEXT_ONLY",
+      "family": "metadata_statistical",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\"}",
+      "raw_intent": {
+        "question_type": "band_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 69.19,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_meta_04",
+      "question": "What is the mean beta power across all channels in S016_R08_E022?",
+      "expected_route": "TEXT_ONLY",
+      "family": "metadata_statistical",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\", \"sample_id\": \"S016_R08_E022\", \"channels\": \"all\", \"frequency_band\": \"beta\", \"frequency_range\": [1.0, 40.0], \"metric\": \"beta_power\"}",
+      "raw_intent": {
+        "question_type": "band_power",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 419.264,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_meta_05",
+      "question": "Report the median RMS across central channels for S010_R05_E007.",
+      "expected_route": "TEXT_ONLY",
+      "family": "metadata_statistical",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"rms\", \"sample_id\": \"S010_R05_E007\", \"channels\": \"central\", \"metric\": \"rms\"}",
+      "raw_intent": {
+        "question_type": "rms",
+        "sample_id": "S010_R05_E007",
+        "channels": "central",
+        "metric": "rms"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "rms",
+        "sample_id": "S010_R05_E007",
+        "channels": "central",
+        "metric": "rms"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 257.505,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_img_ok_01",
+      "question": "A PSD plot exists for S016_R08_E022, but I only need the numeric PSD peak from the tool\u2014what is it?",
+      "expected_route": "TEXT_ONLY",
+      "family": "image_exists_not_required",
+      "tricky_negative": true,
+      "notes": "image may exist but is NOT required",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S016_R08_E022\", \"channels\": \"all\", \"frequency_band\": \"all\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S016_R08_E022",
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 426.056,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_img_ok_02",
+      "question": "Even though a topomap PNG is on disk for this sample, which channel has highest beta power from features?",
+      "expected_route": "TEXT_ONLY",
+      "family": "image_exists_not_required",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"beta\", \"metric\": \"beta_power\", \"top_k\": 1, \"sort_direction\": \"descending\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "top_k": 1,
+        "sort_direction": "descending"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "top_k": 1,
+        "sort_direction": "descending"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 580.834,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_img_ok_03",
+      "question": "Ignore any uploaded figure\u2014compute RMS for C3 in S001_R03_E012 from EEG.",
+      "expected_route": "TEXT_ONLY",
+      "family": "image_exists_not_required",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"rms\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"metric\": \"rms\"}",
+      "raw_intent": {
+        "question_type": "rms",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3"
+        ],
+        "metric": "rms"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "rms",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3"
+        ],
+        "metric": "rms"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 264.581,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_img_ok_04",
+      "question": "There is a spectrogram file named img_spectrogram_abc, but answer only with the deterministic band-power ranking for S014_R04_E003.",
+      "expected_route": "TEXT_ONLY",
+      "family": "image_exists_not_required",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S014_R04_E003\", \"channels\": \"all\", \"metric\": \"band_power\", \"frequency_band\": \"delta|theta|alpha_mu|beta\", \"frequency_range\": [1.0, 40.0], \"sort_direction\": \"descending\", \"requested_visual_type\": \"spectrogram\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S014_R04_E003",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "delta|theta|alpha_mu|beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "sort_direction": "descending",
+        "requested_visual_type": "spectrogram"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S014_R04_E003",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "delta|theta|alpha_mu|beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "sort_direction": "descending",
+        "requested_visual_type": "spectrogram"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 580.982,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_img_ok_05",
+      "question": "Find PSD peak for S016_R08_E022 and optionally attach stored PSD vision metadata (no visual interpretation needed).",
+      "expected_route": "TEXT_ONLY",
+      "family": "image_exists_not_required",
+      "tricky_negative": false,
+      "notes": "sidecar metadata \u2260 VLM interpretation",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S016_R08_E022\", \"requested_visual_type\": \"psd\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S016_R08_E022",
+        "requested_visual_type": "psd"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S016_R08_E022",
+        "requested_visual_type": "psd"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 251.343,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_img_ok_06",
+      "question": "Using structured features only (not the plot), rank beta power channels for S022_R01_E001.",
+      "expected_route": "TEXT_ONLY",
+      "family": "image_exists_not_required",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S022_R01_E001\", \"channels\": \"all\", \"metric\": \"beta_power\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S022_R01_E001",
+        "channels": "all",
+        "metric": "beta_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S022_R01_E001",
+        "channels": "all",
+        "metric": "beta_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 372.167,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_tool_01",
+      "question": "Which analysis tool should I use to get RMS for a sample?",
+      "expected_route": "TEXT_ONLY",
+      "family": "tool_selection",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"rms\"}",
+      "raw_intent": {
+        "question_type": "rms"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "rms"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 63.057,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_tool_02",
+      "question": "I need exact numeric channel ranking by beta power\u2014route me to the correct tool.",
+      "expected_route": "TEXT_ONLY",
+      "family": "tool_selection",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"beta_power\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "beta_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "beta_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 365.129,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_tool_03",
+      "question": "Select the deterministic threshold_set tool for upper-quartile beta gating on S008_R06_E020.",
+      "expected_route": "TEXT_ONLY",
+      "family": "tool_selection",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"threshold_set\", \"sample_id\": \"S008_R06_E020\", \"channels\": \"all\", \"frequency_band\": \"beta\", \"frequency_range\": [1.0, 40.0], \"metric\": \"band_power\", \"threshold_mode\": \"upper_quartile\", \"comparator\": \"gt\", \"threshold\": 0.0}",
+      "raw_intent": {
+        "question_type": "threshold_set",
+        "sample_id": "S008_R06_E020",
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "band_power",
+        "threshold_mode": "upper_quartile",
+        "comparator": "gt",
+        "threshold": 0.0
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "threshold_set",
+        "sample_id": "S008_R06_E020",
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "band_power",
+        "threshold_mode": "upper_quartile",
+        "comparator": "gt",
+        "threshold": 0.0
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 587.675,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_fact_01",
+      "question": "What frequency range defines the beta band in this agent\u2019s feature schema?",
+      "expected_route": "TEXT_ONLY",
+      "family": "factual_grounding",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\"}",
+      "raw_intent": {
+        "question_type": "band_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 69.633,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_fact_02",
+      "question": "Is alpha_mu the same as the classic mu rhythm band used in our feature pipeline?",
+      "expected_route": "TEXT_ONLY",
+      "family": "factual_grounding",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\"}",
+      "raw_intent": {
+        "question_type": "band_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 69.211,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_mix_01",
+      "question": "Compute beta power for C3 and C4 on S001_R03_E012, then say which is larger\u2014no plots.",
+      "expected_route": "TEXT_ONLY",
+      "family": "band_power",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\", \"C4\"], \"frequency_band\": \"beta\", \"frequency_range\": [1.0, 40.0], \"metric\": \"beta_power\"}",
+      "raw_intent": {
+        "question_type": "band_power",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3",
+          "C4"
+        ],
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power",
+        "sample_id": "S001_R03_E012",
+        "channels": [
+          "C3",
+          "C4"
+        ],
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 452.796,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_mix_02",
+      "question": "For S014_R04_E003, return PSD peak Hz and RMS for Cz from tools only.",
+      "expected_route": "TEXT_ONLY",
+      "family": "psd_peak",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S014_R04_E003\", \"channels\": \"Cz\", \"metric\": \"rms\", \"requested_visual_type\": \"psd\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S014_R04_E003",
+        "channels": "Cz",
+        "metric": "rms",
+        "requested_visual_type": "psd"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S014_R04_E003",
+        "channels": "Cz",
+        "metric": "rms",
+        "requested_visual_type": "psd"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 339.225,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_mix_03",
+      "question": "Which channel has the highest beta power among C3, C4, and Cz in S016_R08_E022?",
+      "expected_route": "TEXT_ONLY",
+      "family": "channel_ranking",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S016_R08_E022\", \"channels\": [\"C3\", \"C4\", \"Cz\"], \"metric\": \"beta_power\", \"sort_direction\": \"descending\", \"top_k\": 1}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S016_R08_E022",
+        "channels": [
+          "C3",
+          "C4",
+          "Cz"
+        ],
+        "metric": "beta_power",
+        "sort_direction": "descending",
+        "top_k": 1
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S016_R08_E022",
+        "channels": [
+          "C3",
+          "C4",
+          "Cz"
+        ],
+        "metric": "beta_power",
+        "sort_direction": "descending",
+        "top_k": 1
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 432.642,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "t_mix_04",
+      "question": "Numeric only: PSD peak frequency for S025_R02_E015.",
+      "expected_route": "TEXT_ONLY",
+      "family": "psd_peak",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S025_R02_E015\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S025_R02_E015"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S025_R02_E015"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 190.394,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_topo_01",
+      "question": "Interpret this topomap: does frontal beta appear stronger than occipital beta?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 317.855,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_topo_02",
+      "question": "Looking at the uploaded topomap figure, which scalp region looks hottest in beta?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"beta\", \"metric\": \"band_power\", \"top_k\": 3, \"sort_direction\": \"descending\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "band_power",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "band_power",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 580.535,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_topo_03",
+      "question": "Describe the spatial pattern visible in this alpha_mu topomap image.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"alpha_mu_power\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "alpha_mu_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "alpha_mu_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 371.742,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_topo_04",
+      "question": "Does this topomap visually support the beta-power ranking?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": true,
+      "notes": "visual support of ranking \u2192 vision",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"beta\", \"metric\": \"beta_power\", \"top_k\": 3, \"sort_direction\": \"descending\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 580.406,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_topo_05",
+      "question": "Inspect the topomap PNG and say whether left-hemisphere beta looks asymmetric.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"beta\", \"metric\": \"band_power\", \"top_k\": 3, \"sort_direction\": \"descending\", \"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "band_power",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "band_power",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 641.054,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_topo_06",
+      "question": "From the visual appearance of img_topomap_0f8ba1d5d15cfb57, where is beta concentrated?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"beta\", \"frequency_range\": [1.0, 40.0], \"metric\": \"band_power\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "band_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "band_power",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 681.762,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_topo_07",
+      "question": "Visually compare the left vs right sensorimotor foci in this topomap.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"alpha_mu\", \"metric\": \"band_power\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\", \"threshold\": 0.0, \"threshold_mode\": \"absolute\", \"comparator\": \"gt\", \"top_k\": 3, \"sort_direction\": \"descending\", \"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "alpha_mu",
+        "metric": "band_power",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "threshold": 0.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "alpha_mu",
+        "metric": "band_power",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "threshold": 0.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 910.26,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_topo_08",
+      "question": "Does the uploaded scalp map show a clear central hotspot or a diffuse pattern?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"band_power\", \"frequency_band\": \"alpha_mu\", \"frequency_range\": [1.0, 40.0], \"top_k\": 3, \"sort_direction\": \"descending\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 519.906,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_spec_01",
+      "question": "Describe the spectrogram pattern in the uploaded figure between 1 and 40 Hz.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "spectrogram_pattern",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"requested_visual_type\", \"requested_visual_type\": \"spectrogram\"}",
+      "raw_intent": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "spectrogram"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "spectrogram"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": true,
+      "latency_ms": 136.93,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_spec_02",
+      "question": "What temporal-frequency pattern is visible in this spectrogram image?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "spectrogram_pattern",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"requested_visual_type\": \"spectrogram\"}",
+      "raw_intent": {
+        "requested_visual_type": "spectrogram"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "requested_visual_type": "spectrogram"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": true,
+      "latency_ms": 75.877,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_spec_03",
+      "question": "Looking at the spectrogram plot, do you see a bursty beta band or sustained power?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "spectrogram_pattern",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S123_R01_E00\", \"channels\": \"all\", \"frequency_band\": \"beta\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd_peak\", \"requested_visual_type\": \"spectrogram\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S123_R01_E00",
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak",
+        "requested_visual_type": "spectrogram"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S123_R01_E00",
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak",
+        "requested_visual_type": "spectrogram"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 486.118,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_spec_04",
+      "question": "Inspect img_spectrogram_026ad6ca411b6 and describe the dominant visible band.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "spectrogram_pattern",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S26_R02_E02\", \"channels\": \"all\", \"frequency_band\": \"all\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S26_R02_E02",
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S26_R02_E02",
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 419.221,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_spec_05",
+      "question": "In this spectrogram figure, is there a clear vertical transient or horizontal band structure?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "spectrogram_pattern",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"requested_visual_type\", \"requested_visual_type\": \"spectrogram\"}",
+      "raw_intent": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "spectrogram"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "spectrogram"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": true,
+      "latency_ms": 136.507,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_spec_06",
+      "question": "Visually, does the spectrogram show alpha attenuation after the event marker?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "spectrogram_pattern",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"frequency_band\": \"alpha_mu\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd_peak\", \"requested_visual_type\": \"spectrogram\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak",
+        "requested_visual_type": "spectrogram"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak",
+        "requested_visual_type": "spectrogram"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 493.29,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_spec_07",
+      "question": "Describe any artifactual stripes visible in the uploaded spectrogram.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "spectrogram_pattern",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"psd_peak\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "psd_peak",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "psd_peak",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 371.758,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_wave_01",
+      "question": "Inspect waveform morphology from this EEG image\u2014are there high-amplitude spikes?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "waveform_morphology",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"waveform\"}",
+      "raw_intent": {
+        "question_type": "waveform"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "waveform"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": false,
+      "latency_ms": 69.286,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_wave_02",
+      "question": "Looking at the uploaded waveform plot, describe the transient shape around t=1.2s.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "waveform_morphology",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"rms\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 358.246,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_wave_03",
+      "question": "From the figure, does the waveform look clipped or unsaturated?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "waveform_morphology",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"rms\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 358.322,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_wave_04",
+      "question": "Visually inspect this raw trace image for blink-like deflections.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "waveform_morphology",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"rms\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 358.195,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_wave_05",
+      "question": "Describe the morphology visible in the uploaded C3 waveform PNG.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "waveform_morphology",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"requested_visual_type\", \"requested_visual_type\": \"waveform\"}",
+      "raw_intent": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "waveform"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "waveform"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": true,
+      "latency_ms": 136.367,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_wave_06",
+      "question": "Does this waveform figure show rhythmic mu spindles or irregular noise?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "waveform_morphology",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 75.858,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_psd_vis_01",
+      "question": "What pattern is visible in this PSD figure?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "psd_visual",
+      "tricky_negative": true,
+      "notes": "visual PSD pattern \u2260 numeric peak",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"requested_visual_type\": \"psd\"}",
+      "raw_intent": {
+        "requested_visual_type": "psd"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "requested_visual_type": "psd"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": true,
+      "latency_ms": 75.877,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_psd_vis_02",
+      "question": "Looking at the uploaded PSD plot, is the spectrum 1/f-like or peaked?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "psd_visual",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 75.68,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_psd_vis_03",
+      "question": "Describe the shape of the curve in this PSD image around the alpha range.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "psd_visual",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 75.875,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_psd_vis_04",
+      "question": "In the PSD figure, does a secondary peak appear visually above 20 Hz?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "psd_visual",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"frequency_band\": \"all\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd\", \"threshold\": 20.0, \"threshold_mode\": \"absolute\", \"comparator\": \"gt\", \"requested_visual_type\": \"psd\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd",
+        "threshold": 20.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "requested_visual_type": "psd"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd",
+        "threshold": 20.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "requested_visual_type": "psd"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 633.968,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_psd_vis_05",
+      "question": "Interpret the shaded bands shown in this PSD plot image.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "psd_visual",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 75.98,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_cmp_01",
+      "question": "Compare the visible patterns across these two topomap plots\u2014are they congruent?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "compare_plots",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"all\", \"frequency_range\": [1.0, 40.0], \"metric\": \"band_power\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\", \"threshold\": 0.0, \"threshold_mode\": \"absolute\", \"comparator\": \"gt\", \"top_k\": 3, \"sort_direction\": \"descending\", \"include_vision_evidence\": false, \"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "band_power",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "threshold": 0.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "include_vision_evidence": false,
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "band_power",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "threshold": 0.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "include_vision_evidence": false,
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 1064.901,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_cmp_02",
+      "question": "Visually compare the left and right spectrogram panels in the uploaded figure.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "compare_plots",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"all\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\", \"threshold\": 0.0, \"threshold_mode\": \"absolute\", \"comparator\": \"gt\", \"top_k\": 3, \"sort_direction\": \"descending\", \"requested_visual_type\": \"spectrogram\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "threshold": 0.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "spectrogram"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "threshold": 0.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "spectrogram"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 1004.522,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_cmp_03",
+      "question": "Looking at both waveform images, which trace shows larger peak-to-peak swings?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "compare_plots",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 318.222,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_cmp_04",
+      "question": "Across the two PSD figures, which spectrum looks more peaked visually?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "compare_plots",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"all\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\", \"threshold\": 0.0, \"threshold_mode\": \"absolute\", \"comparator\": \"gt\", \"top_k\": 3, \"sort_direction\": \"descending\", \"include_vision_evidence\": false, \"requested_visual_type\": \"psd\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "threshold": 0.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "include_vision_evidence": false,
+        "requested_visual_type": "psd"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "threshold": 0.0,
+        "threshold_mode": "absolute",
+        "comparator": "gt",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "include_vision_evidence": false,
+        "requested_visual_type": "psd"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 1072.214,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_cmp_05",
+      "question": "Compare visible spatial foci between the alpha and beta topomaps in this figure.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "compare_plots",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"alpha_mu_power\", \"top_k\": 3, \"sort_direction\": \"descending\", \"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "alpha_mu_power",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "alpha_mu_power",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 432.732,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_upload_01",
+      "question": "I uploaded a topomap\u2014please interpret what the figure shows.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "uploaded_figure",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"band_power\", \"frequency_band\": \"delta\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "delta",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "delta",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 412.181,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_upload_02",
+      "question": "Regarding the attached spectrogram image: what stands out visually?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "uploaded_figure",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 76.122,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_upload_03",
+      "question": "Please look at my uploaded PSD figure and describe the spectral shape.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "uploaded_figure",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 75.886,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_upload_04",
+      "question": "The figure I just uploaded shows EEG waveforms\u2014comment on morphology.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "uploaded_figure",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"rms\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "rms",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 358.172,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_upload_05",
+      "question": "Answer from the uploaded image only: is there a clear central hotspot?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "uploaded_figure",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"band_power\", \"frequency_band\": \"alpha_mu\", \"frequency_range\": [1.0, 40.0], \"top_k\": 3, \"sort_direction\": \"descending\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 519.752,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_combo_01",
+      "question": "Tools say C3 has highest beta; does this topomap visually agree?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "image_plus_numeric",
+      "tricky_negative": true,
+      "notes": "numeric claim + visual confirmation needs image",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"all\", \"frequency_band\": \"beta\", \"metric\": \"beta_power\", \"top_k\": 3, \"sort_direction\": \"descending\", \"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 641.113,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_combo_02",
+      "question": "The PSD peak tool returned 10.5 Hz\u2014does the uploaded PSD figure show a matching visual peak?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "image_plus_numeric",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S123_R01_E00\", \"channels\": \"all\", \"frequency_band\": \"delta|theta|alpha_mu|beta\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd\", \"requested_visual_type\": \"psd\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S123_R01_E00",
+        "channels": "all",
+        "frequency_band": "delta|theta|alpha_mu|beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd",
+        "requested_visual_type": "psd"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S123_R01_E00",
+        "channels": "all",
+        "frequency_band": "delta|theta|alpha_mu|beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd",
+        "requested_visual_type": "psd"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 526.829,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_combo_03",
+      "question": "Ranking tool lists C3>C4>Cz for beta; inspect the topomap image and say if that ranking is visually plausible.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "image_plus_numeric",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"frequency_band\": \"beta\", \"metric\": \"beta_power\", \"top_k\": 3, \"sort_direction\": \"descending\", \"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "frequency_band": "beta",
+        "metric": "beta_power",
+        "top_k": 3,
+        "sort_direction": "descending",
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 473.105,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_combo_04",
+      "question": "Given numeric RMS=12.4 on C3, does the waveform figure look consistent with a large-amplitude channel?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "image_plus_numeric",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"threshold_set\", \"sample_id\": \"S123_R01_E00\", \"subject_id\": \"S123\", \"run_id\": \"R01\", \"epoch\": 0, \"channels\": \"C3\", \"metric\": \"rms\", \"threshold\": 12.4, \"threshold_mode\": \"absolute\", \"comparator\": \"gt\"}",
+      "raw_intent": {
+        "question_type": "threshold_set",
+        "sample_id": "S123_R01_E00",
+        "subject_id": "S123",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "C3",
+        "metric": "rms",
+        "threshold": 12.4,
+        "threshold_mode": "absolute",
+        "comparator": "gt"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "threshold_set",
+        "sample_id": "S123_R01_E00",
+        "subject_id": "S123",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "C3",
+        "metric": "rms",
+        "threshold": 12.4,
+        "threshold_mode": "absolute",
+        "comparator": "gt"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 587.647,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_combo_05",
+      "question": "Condition comparison suggests left>right beta; does the uploaded topomap visually support left-lateralization?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "image_plus_numeric",
+      "tricky_negative": true,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"condition_comparison\", \"subject_id\": \"S001\", \"run_id\": \"R01\", \"condition_a\": \"left_fist\", \"condition_b\": \"right_fist\", \"metric\": \"beta_power\", \"comparator\": \"gt\", \"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "condition_comparison",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "metric": "beta_power",
+        "comparator": "gt",
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "condition_comparison",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "condition_a": "left_fist",
+        "condition_b": "right_fist",
+        "metric": "beta_power",
+        "comparator": "gt",
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": true,
+      "latency_ms": 472.839,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_combo_06",
+      "question": "Use the figure: visually confirm whether the spectrogram\u2019s dominant band matches the tool\u2019s alpha_mu label.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "image_plus_numeric",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"frequency_band\": \"alpha_mu\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "frequency_band": "alpha_mu",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 432.63,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_ref_01",
+      "question": "What do you see in figure img_psd_0873a9a51138ecf9?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "explicit_figure_ref",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\", \"sample_id\": \"S0873_R01_E00\", \"channels\": \"all\", \"frequency_band\": \"all\", \"frequency_range\": [1.0, 40.0], \"metric\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak",
+        "sample_id": "S0873_R01_E00",
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak",
+        "sample_id": "S0873_R01_E00",
+        "channels": "all",
+        "frequency_band": "all",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 432.628,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_ref_02",
+      "question": "Interpret the visual content of img_topomap_06b9e5be484f99a7.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "explicit_figure_ref",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "topomap"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": false,
+      "latency_ms": 69.553,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_ref_03",
+      "question": "Describe patterns visible in img_spectrogram_11a33c61527e7885.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "explicit_figure_ref",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"requested_visual_type\", \"requested_visual_type\": \"spectrogram\"}",
+      "raw_intent": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "spectrogram"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "spectrogram"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": true,
+      "latency_ms": 136.452,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_ref_04",
+      "question": "Looking at img_waveform_sample_abc, comment on spike morphology.",
+      "expected_route": "VISION_REQUIRED",
+      "family": "explicit_figure_ref",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"band_power\"}",
+      "raw_intent": {
+        "question_type": "band_power"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "band_power"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 69.193,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_ref_05",
+      "question": "From the plot img_band_power_heatmap_xyz, where is power concentrated visually?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "explicit_figure_ref",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"question_type\": \"requested_visual_type\", \"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "requested_visual_type",
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": true,
+      "latency_ms": 136.166,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_misc_01",
+      "question": "Is the color scale in this topomap image diverging or sequential, based on what you see?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S001_R01_E00\", \"channels\": \"all\", \"metric\": \"band_power\", \"frequency_band\": \"alpha_mu\", \"sort_direction\": \"descending\", \"top_k\": 3}",
+      "raw_intent": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "alpha_mu",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E00",
+        "channels": "all",
+        "metric": "band_power",
+        "frequency_band": "alpha_mu",
+        "sort_direction": "descending",
+        "top_k": 3
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 418.876,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_misc_02",
+      "question": "Visually, are electrode labels readable on the uploaded scalp map?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "topomap_interpret",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "VISION_REQUIRED",
+      "raw_model_output": "{\"requested_visual_type\": \"topomap\"}",
+      "raw_intent": {
+        "requested_visual_type": "topomap"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "requested_visual_type": "topomap"
+      },
+      "tool_path_chosen": false,
+      "vision_path_chosen": true,
+      "latency_ms": 75.924,
+      "correct": true,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_misc_03",
+      "question": "Does this PSD figure appear to use a log or linear y-axis from its visual layout?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "psd_visual",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 76.158,
+      "correct": false,
+      "run_tag": "baseline"
+    },
+    {
+      "id": "v_misc_04",
+      "question": "In the spectrogram image, is time on the x-axis based on the plot layout you see?",
+      "expected_route": "VISION_REQUIRED",
+      "family": "spectrogram_pattern",
+      "tricky_negative": false,
+      "notes": "",
+      "predicted_route": "TEXT_ONLY",
+      "raw_model_output": "{\"question_type\": \"psd_peak\"}",
+      "raw_intent": {
+        "question_type": "psd_peak"
+      },
+      "confidence": null,
+      "structured_router_output": {
+        "question_type": "psd_peak"
+      },
+      "tool_path_chosen": true,
+      "vision_path_chosen": false,
+      "latency_ms": 75.827,
+      "correct": false,
+      "run_tag": "baseline"
+    }
+  ]
+}

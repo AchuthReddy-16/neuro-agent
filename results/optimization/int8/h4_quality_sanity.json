@@ -1,0 +1,404 @@
+{
+  "n_examples": 32,
+  "verifier_pass_rate": 0.875,
+  "per_task": {
+    "numerical_reasoning": {
+      "n": 4,
+      "pass_rate": 1.0
+    },
+    "channel_ranking": {
+      "n": 4,
+      "pass_rate": 1.0
+    },
+    "band_power_analysis": {
+      "n": 4,
+      "pass_rate": 0.75
+    },
+    "movement_task_classification": {
+      "n": 4,
+      "pass_rate": 0.75
+    },
+    "execution_vs_imagery": {
+      "n": 4,
+      "pass_rate": 1.0
+    },
+    "statistical_comparison": {
+      "n": 4,
+      "pass_rate": 1.0
+    },
+    "tool_selection": {
+      "n": 4,
+      "pass_rate": 1.0
+    },
+    "factual_grounding": {
+      "n": 4,
+      "pass_rate": 0.5
+    }
+  },
+  "integrity": {
+    "confirmed_subjects": [
+      "S026",
+      "S027",
+      "S028",
+      "S029",
+      "S030"
+    ],
+    "example_count": 32,
+    "integrity_passed": true
+  },
+  "original_int8_quality": 0.866,
+  "records": [
+    {
+      "id": "eval_0b9a3231ebca69b8",
+      "category": "numerical_reasoning",
+      "passed": true,
+      "reason": "match",
+      "response": "The variance is 3911.7488.",
+      "generated_tokens": 15,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_bfd1c118796d9dfc",
+      "category": "numerical_reasoning",
+      "passed": true,
+      "reason": "match",
+      "response": "The variance is 10131.683.",
+      "generated_tokens": 15,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_0563431bb823fc40",
+      "category": "numerical_reasoning",
+      "passed": true,
+      "reason": "match",
+      "response": "The variance is 3206.9937.",
+      "generated_tokens": 15,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_20dbd5d90391a180",
+      "category": "channel_ranking",
+      "passed": true,
+      "reason": "match",
+      "response": "The highest-ranked channel is AF8.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_67fe066979c9ba15",
+      "category": "channel_ranking",
+      "passed": true,
+      "reason": "match",
+      "response": "The highest-ranked channel is FP2.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S030"
+      ]
+    },
+    {
+      "id": "eval_824b4194d648e158",
+      "category": "channel_ranking",
+      "passed": true,
+      "reason": "match",
+      "response": "The highest-ranked channel is FP2.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S030"
+      ]
+    },
+    {
+      "id": "eval_b54b4fa0b020132c",
+      "category": "band_power_analysis",
+      "passed": true,
+      "reason": "match",
+      "response": "The highest-ranked channel is CP3.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_6abcb36127dd2fa6",
+      "category": "band_power_analysis",
+      "passed": false,
+      "reason": "ranking_mismatch",
+      "response": "The highest-ranked channel is T9.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S030"
+      ]
+    },
+    {
+      "id": "eval_2dce0ce00271361e",
+      "category": "band_power_analysis",
+      "passed": true,
+      "reason": "match",
+      "response": "The highest-ranked channel is CP3.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_607b2c613658f835",
+      "category": "movement_task_classification",
+      "passed": true,
+      "reason": "match",
+      "response": "The normalized label is rest.",
+      "generated_tokens": 7,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_21d923dcd6909701",
+      "category": "movement_task_classification",
+      "passed": false,
+      "reason": "categorical_mismatch",
+      "response": "The normalized label is right_fist.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_8ac8db644e27afbc",
+      "category": "movement_task_classification",
+      "passed": true,
+      "reason": "match",
+      "response": "The normalized label is rest.",
+      "generated_tokens": 7,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_f8c55812fa423bde",
+      "category": "execution_vs_imagery",
+      "passed": true,
+      "reason": "match",
+      "response": "execution",
+      "generated_tokens": 2,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_2a044d76257f54c6",
+      "category": "execution_vs_imagery",
+      "passed": true,
+      "reason": "match",
+      "response": "baseline",
+      "generated_tokens": 2,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_a37fbbf50627c893",
+      "category": "execution_vs_imagery",
+      "passed": true,
+      "reason": "match",
+      "response": "imagery",
+      "generated_tokens": 3,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_985153d3db0800a9",
+      "category": "statistical_comparison",
+      "passed": true,
+      "reason": "match",
+      "response": "The larger-ranked metric is rms.",
+      "generated_tokens": 8,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_fcb0f737d24e2149",
+      "category": "statistical_comparison",
+      "passed": true,
+      "reason": "match",
+      "response": "The larger-ranked metric is rms.",
+      "generated_tokens": 8,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_9a32de904917d56f",
+      "category": "statistical_comparison",
+      "passed": true,
+      "reason": "match",
+      "response": "The larger-ranked metric is rms.",
+      "generated_tokens": 8,
+      "subjects": [
+        "S026"
+      ]
+    },
+    {
+      "id": "eval_8947ec4fa2e979a6",
+      "category": "tool_selection",
+      "passed": true,
+      "reason": "match",
+      "response": "The appropriate tool is band_power.",
+      "generated_tokens": 8,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_0ec8212ccc8a2994",
+      "category": "tool_selection",
+      "passed": true,
+      "reason": "match",
+      "response": "The appropriate tool is band_power.",
+      "generated_tokens": 8,
+      "subjects": [
+        "S026"
+      ]
+    },
+    {
+      "id": "eval_a40e96c595bbd39c",
+      "category": "tool_selection",
+      "passed": true,
+      "reason": "match",
+      "response": "The appropriate tool is band_power.",
+      "generated_tokens": 8,
+      "subjects": [
+        "S029"
+      ]
+    },
+    {
+      "id": "eval_1c56a32539213a0d",
+      "category": "factual_grounding",
+      "passed": false,
+      "reason": "categorical_mismatch",
+      "response": "rest",
+      "generated_tokens": 2,
+      "subjects": [
+        "S030"
+      ]
+    },
+    {
+      "id": "eval_bffa666c02090d48",
+      "category": "factual_grounding",
+      "passed": true,
+      "reason": "match",
+      "response": "execution_left_fist",
+      "generated_tokens": 5,
+      "subjects": [
+        "S030"
+      ]
+    },
+    {
+      "id": "eval_499d8377ea44854a",
+      "category": "factual_grounding",
+      "passed": false,
+      "reason": "categorical_mismatch",
+      "response": "rest",
+      "generated_tokens": 2,
+      "subjects": [
+        "S029"
+      ]
+    },
+    {
+      "id": "eval_6341748b8c04004c",
+      "category": "numerical_reasoning",
+      "passed": true,
+      "reason": "match",
+      "response": "The variance is 382.94418.",
+      "generated_tokens": 15,
+      "subjects": [
+        "S029"
+      ]
+    },
+    {
+      "id": "eval_1719ee626f268ee2",
+      "category": "channel_ranking",
+      "passed": true,
+      "reason": "match",
+      "response": "The highest-ranked channel is F6.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_07d6fd822fee2e9d",
+      "category": "band_power_analysis",
+      "passed": true,
+      "reason": "match",
+      "response": "The highest-ranked channel is AF7.",
+      "generated_tokens": 9,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_764aeb73cfd90ff0",
+      "category": "movement_task_classification",
+      "passed": true,
+      "reason": "match",
+      "response": "The normalized label is rest.",
+      "generated_tokens": 7,
+      "subjects": [
+        "S030"
+      ]
+    },
+    {
+      "id": "eval_7297de8a507ba1b9",
+      "category": "execution_vs_imagery",
+      "passed": true,
+      "reason": "match",
+      "response": "execution",
+      "generated_tokens": 2,
+      "subjects": [
+        "S026"
+      ]
+    },
+    {
+      "id": "eval_110af5ad79898aa7",
+      "category": "statistical_comparison",
+      "passed": true,
+      "reason": "match",
+      "response": "The larger-ranked metric is rms.",
+      "generated_tokens": 8,
+      "subjects": [
+        "S027"
+      ]
+    },
+    {
+      "id": "eval_5f5ab508ddf9b91b",
+      "category": "tool_selection",
+      "passed": true,
+      "reason": "match",
+      "response": "The appropriate tool is band_power.",
+      "generated_tokens": 8,
+      "subjects": [
+        "S028"
+      ]
+    },
+    {
+      "id": "eval_3ff006a1f99bb5ae",
+      "category": "factual_grounding",
+      "passed": true,
+      "reason": "match",
+      "response": "imagery_both_feet",
+      "generated_tokens": 6,
+      "subjects": [
+        "S030"
+      ]
+    }
+  ]
+}

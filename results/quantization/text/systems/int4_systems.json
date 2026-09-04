@@ -1,0 +1,17 @@
+{
+  "variant": "int4",
+  "status": "ok",
+  "load_time_s": 2.33,
+  "alloc_after_load_mb": 2821.09,
+  "reserved_after_load_mb": 3096.0,
+  "nvidia_smi_after_load_mb": 3580.0,
+  "prompt_tokens": 282,
+  "ttft_ms": 44.648,
+  "decode_tps": 39.522,
+  "latency_per_token_ms": 25.303,
+  "e2e_ms": 1638.726,
+  "generated_tokens_avg": 64.0,
+  "peak_alloc_mb": 2928.231,
+  "peak_reserved_mb": 3144.0,
+  "nvidia_smi_during_gen_mb": 3628.0
+}

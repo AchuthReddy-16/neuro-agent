@@ -28,7 +28,7 @@ Formula (per layer, both K and V):
 2 × batch × seq_len × num_kv_heads × head_dim × sizeof(dtype)
 ```
 
-## Experiments in this stage
+## Experiments
 
 | Experiment | `use_cache` | Purpose |
 |------------|-------------|---------|
@@ -43,5 +43,4 @@ claimed when measured — see JSON output for actual numbers.
 
 Profiling results (PyTorch profiler, Nsight Systems, Nsight Compute) are
 structured to identify whether custom kernels (RMSNorm, RoPE, attention,
-quantized GEMM, activation fusion) would address a real bottleneck. No
-custom CUDA/Triton kernels are written in this stage.
+quantized GEMM, activation fusion) would address a real bottleneck. Custom CUDA/Triton kernels are only justified when profiling shows a real bottleneck.

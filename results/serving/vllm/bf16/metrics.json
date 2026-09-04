@@ -1,0 +1,33 @@
+{
+  "backend": "vllm",
+  "dtype": "bfloat16",
+  "quantization": null,
+  "adapter": "checkpoints/sft_corrected_v2/final",
+  "model_load_time_s": 62.35,
+  "vram_after_load_gb": 7.78,
+  "peak_vram_gb": 8.05,
+  "e2e_latency_ms": 1043.8,
+  "generated_tokens_avg": 64.0,
+  "decode_tok_per_s": 61.3,
+  "latency_per_token_ms": 16.3,
+  "ttft_ms": "N/A (offline mode; not separately measured)",
+  "num_warmups": 2,
+  "num_timed": 5,
+  "e2e_all_ms": [
+    1053.1,
+    1045.8,
+    1039.2,
+    1045.7,
+    1034.8
+  ],
+  "peak_vram_all_gb": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "quality_smoke_pass_rate": 0.938,
+  "quality_smoke_n": 16,
+  "vram_note": "Reported by vLLM EngineCore log (subprocess); torch.cuda.memory_allocated() returns 0 in parent process"
+}

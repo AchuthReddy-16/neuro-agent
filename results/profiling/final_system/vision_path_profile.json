@@ -1,0 +1,562 @@
+{
+  "timestamp": "2026-09-03T22:11:27.347636+00:00",
+  "strategy": "text-primary + controlled vision swap/unload @ util=0.90",
+  "E": {
+    "request_class": "E_VISION_REQUIRED",
+    "question": "Describe the spatial pattern visible in this topomap: where is power concentrated?",
+    "requires_vision": true,
+    "raw_intent": {
+      "requires_vision": true,
+      "question_type": "topomap",
+      "include_vision_evidence": true,
+      "requested_visual_type": "topomap"
+    },
+    "ranking": null,
+    "vlm_output": "the central region",
+    "trace": {
+      "e2e_ms": 174727.799,
+      "spans": [
+        {
+          "name": "text_intent_routing",
+          "ms": 271.349,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 254.876,
+          "ttft_ms": 18.829,
+          "prefill_proxy_ms": 18.829,
+          "decode_ms": 236.047,
+          "prompt_tokens": 713,
+          "completion_tokens": 33,
+          "decode_tok_s": 139.8,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22540.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "name": "text_vllm_unload_release",
+          "ms": 937.481,
+          "wall_ms": 908.764,
+          "before": {
+            "nvidia_smi_used_mb": 22540.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          },
+          "after": {
+            "nvidia_smi_used_mb": 4.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          },
+          "vram_released_mb": 22536.0,
+          "released": true,
+          "vram_gate": {
+            "ok": true,
+            "wait_ms": 28.698,
+            "gpu": {
+              "nvidia_smi_used_mb": 4.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          }
+        },
+        {
+          "name": "vlm_subprocess_load_infer_unload",
+          "ms": 150948.901,
+          "ok": true,
+          "vlm_load_ms": 33783.181,
+          "preprocess_ms": 118.712,
+          "generate_ms": 5378.179,
+          "vlm_unload_ms": 1067.131,
+          "subprocess_wall_ms": 150897.011
+        },
+        {
+          "name": "post_vision_vram_settle",
+          "ms": 28.545,
+          "ok": true,
+          "wait_ms": 28.535,
+          "gpu": {
+            "nvidia_smi_used_mb": 4.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 0.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "name": "text_vllm_restore",
+          "ms": 22541.489,
+          "wall_ms": 22524.341,
+          "wait_healthy_ms": 22516.727,
+          "gpu": {
+            "nvidia_smi_used_mb": 22536.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 0.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        }
+      ],
+      "span_map_ms": {
+        "text_intent_routing": 271.349,
+        "text_vllm_unload_release": 937.481,
+        "vlm_subprocess_load_infer_unload": 150948.901,
+        "post_vision_vram_settle": 28.545,
+        "text_vllm_restore": 22541.489
+      }
+    },
+    "worker": {
+      "ok": true,
+      "before_all": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "vlm_load_ms": 33783.181,
+      "load_time_s_reported": 33.75820337142795,
+      "before_load": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "after_load": {
+        "nvidia_smi_used_mb": 7980.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 2.0,
+        "torch_allocated_mb": 7303.1,
+        "torch_reserved_mb": 7522.0
+      },
+      "vram_delta_load_mb": 7976.0,
+      "preprocess_ms": 118.712,
+      "generate_ms": 5378.179,
+      "ttft_proxy_ms": 5451.505,
+      "infer_e2e_ms": 5496.891,
+      "input_tokens": 470,
+      "completion_tokens": 4,
+      "output": "the central region",
+      "peak_torch_mb": 7407.4,
+      "vlm_unload_ms": 1067.131,
+      "before_unload": {
+        "nvidia_smi_used_mb": 8060.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 7317.9,
+        "torch_reserved_mb": 7582.0
+      },
+      "after_unload": {
+        "nvidia_smi_used_mb": 7640.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 41.0,
+        "torch_allocated_mb": 8.1,
+        "torch_reserved_mb": 7162.0
+      },
+      "vram_released_unload_mb": 420.0,
+      "subprocess_wall_ms": 150897.011,
+      "parent_before": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "parent_after": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      }
+    },
+    "swap_breakdown_ms": {
+      "text_unload_release": 908.764,
+      "vram_released_on_text_unload_mb": 22536.0,
+      "vlm_load": 33783.181,
+      "image_preprocess": 118.712,
+      "vlm_generate": 5378.179,
+      "vlm_ttft_proxy": 5451.505,
+      "vlm_unload": 1067.131,
+      "post_vision_vram_settle": 28.535,
+      "text_vllm_restore": 22524.341,
+      "text_vllm_wait_healthy": 22516.727,
+      "total_swap_overhead_excluding_infer": 58311.952,
+      "total_swap_plus_infer": 63808.843,
+      "measurement_note": "VLM ran in isolated subprocess so CUDA releases on process exit; swap overhead is measured wall-clock, not invented."
+    },
+    "intent_metrics": {
+      "ok": true,
+      "error": null,
+      "e2e_ms": 254.876,
+      "ttft_ms": 18.829,
+      "prefill_proxy_ms": 18.829,
+      "decode_ms": 236.047,
+      "prompt_tokens": 713,
+      "completion_tokens": 33,
+      "decode_tok_s": 139.8,
+      "queue_wait_ms": null,
+      "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+      "gpu": {
+        "nvidia_smi_used_mb": 22540.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      }
+    },
+    "answer_metrics": null,
+    "gpu_final": {
+      "nvidia_smi_used_mb": 22536.0,
+      "nvidia_smi_total_mb": 24564.0,
+      "gpu_util_pct": 0.0,
+      "torch_allocated_mb": 0.0,
+      "torch_reserved_mb": 0.0
+    },
+    "timestamp": "2026-09-03T22:08:30.327495+00:00"
+  },
+  "F": {
+    "request_class": "F_VISION_TOOL_COMBINED",
+    "question": "Tools ranked channels by beta power for S001_R01_E000 as T8, IZ, O2. Does this topomap visually support the measured beta-power ranking?",
+    "requires_vision": true,
+    "raw_intent": {
+      "requires_vision": true,
+      "question_type": "channel_ranking",
+      "sample_id": "S001_R01_E000",
+      "subject_id": "S001",
+      "run_id": "R01",
+      "epoch": 0,
+      "channels": [
+        "T8",
+        "IZ",
+        "O2"
+      ],
+      "frequency_band": "beta",
+      "include_vision_evidence": true,
+      "requested_visual_type": "topomap"
+    },
+    "ranking": {
+      "top_channels": [
+        "T8",
+        "IZ",
+        "O2"
+      ],
+      "metric": "beta_power",
+      "sample_id": "S001_R01_E000"
+    },
+    "vlm_output": "yes",
+    "trace": {
+      "e2e_ms": 177006.378,
+      "spans": [
+        {
+          "name": "text_intent_routing",
+          "ms": 772.317,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 756.334,
+          "ttft_ms": 51.99,
+          "prefill_proxy_ms": 51.99,
+          "decode_ms": 704.344,
+          "prompt_tokens": 738,
+          "completion_tokens": 97,
+          "decode_tok_s": 137.72,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22536.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 0.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "name": "deterministic_tools_before_swap",
+          "ms": 349.638,
+          "ranking": {
+            "top_channels": [
+              "T8",
+              "IZ",
+              "O2"
+            ],
+            "metric": "beta_power",
+            "sample_id": "S001_R01_E000"
+          }
+        },
+        {
+          "name": "text_vllm_unload_release",
+          "ms": 940.923,
+          "wall_ms": 912.843,
+          "before": {
+            "nvidia_smi_used_mb": 22536.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 0.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          },
+          "after": {
+            "nvidia_smi_used_mb": 4.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 0.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          },
+          "vram_released_mb": 22532.0,
+          "released": true,
+          "vram_gate": {
+            "ok": true,
+            "wait_ms": 28.064,
+            "gpu": {
+              "nvidia_smi_used_mb": 4.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 0.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          }
+        },
+        {
+          "name": "vlm_subprocess_load_infer_unload",
+          "ms": 152144.416,
+          "ok": true,
+          "vlm_load_ms": 33164.664,
+          "preprocess_ms": 140.856,
+          "generate_ms": 4257.637,
+          "vlm_unload_ms": 1073.761,
+          "subprocess_wall_ms": 152087.396
+        },
+        {
+          "name": "post_vision_vram_settle",
+          "ms": 30.273,
+          "ok": true,
+          "wait_ms": 30.263,
+          "gpu": {
+            "nvidia_smi_used_mb": 4.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 0.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "name": "text_vllm_restore",
+          "ms": 22540.173,
+          "wall_ms": 22524.426,
+          "wait_healthy_ms": 22515.903,
+          "gpu": {
+            "nvidia_smi_used_mb": 22536.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 0.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "name": "grounded_answer_after_vision",
+          "ms": 228.598,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 213.096,
+          "ttft_ms": 43.687,
+          "prefill_proxy_ms": 43.687,
+          "decode_ms": 169.409,
+          "prompt_tokens": 359,
+          "completion_tokens": 24,
+          "decode_tok_s": 141.67,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22536.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          },
+          "preview": "The topomap visually supports the measured ranking. The channels meeting the criterion are T8, IZ, O2."
+        }
+      ],
+      "span_map_ms": {
+        "text_intent_routing": 772.317,
+        "deterministic_tools_before_swap": 349.638,
+        "text_vllm_unload_release": 940.923,
+        "vlm_subprocess_load_infer_unload": 152144.416,
+        "post_vision_vram_settle": 30.273,
+        "text_vllm_restore": 22540.173,
+        "grounded_answer_after_vision": 228.598
+      }
+    },
+    "worker": {
+      "ok": true,
+      "before_all": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "vlm_load_ms": 33164.664,
+      "load_time_s_reported": 33.13973551616073,
+      "before_load": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "after_load": {
+        "nvidia_smi_used_mb": 7980.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 7303.1,
+        "torch_reserved_mb": 7522.0
+      },
+      "vram_delta_load_mb": 7976.0,
+      "preprocess_ms": 140.856,
+      "generate_ms": 4257.637,
+      "ttft_proxy_ms": 4382.054,
+      "infer_e2e_ms": 4398.493,
+      "input_tokens": 516,
+      "completion_tokens": 2,
+      "output": "yes",
+      "peak_torch_mb": 7415.8,
+      "vlm_unload_ms": 1073.761,
+      "before_unload": {
+        "nvidia_smi_used_mb": 8060.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 3.0,
+        "torch_allocated_mb": 7317.9,
+        "torch_reserved_mb": 7582.0
+      },
+      "after_unload": {
+        "nvidia_smi_used_mb": 7640.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 8.1,
+        "torch_reserved_mb": 7162.0
+      },
+      "vram_released_unload_mb": 420.0,
+      "subprocess_wall_ms": 152087.396,
+      "parent_before": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "parent_after": {
+        "nvidia_smi_used_mb": 4.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      }
+    },
+    "swap_breakdown_ms": {
+      "text_unload_release": 912.843,
+      "vram_released_on_text_unload_mb": 22532.0,
+      "vlm_load": 33164.664,
+      "image_preprocess": 140.856,
+      "vlm_generate": 4257.637,
+      "vlm_ttft_proxy": 4382.054,
+      "vlm_unload": 1073.761,
+      "post_vision_vram_settle": 30.263,
+      "text_vllm_restore": 22524.426,
+      "text_vllm_wait_healthy": 22515.903,
+      "total_swap_overhead_excluding_infer": 57705.957,
+      "total_swap_plus_infer": 62104.45,
+      "measurement_note": "VLM ran in isolated subprocess so CUDA releases on process exit; swap overhead is measured wall-clock, not invented."
+    },
+    "intent_metrics": {
+      "ok": true,
+      "error": null,
+      "e2e_ms": 756.334,
+      "ttft_ms": 51.99,
+      "prefill_proxy_ms": 51.99,
+      "decode_ms": 704.344,
+      "prompt_tokens": 738,
+      "completion_tokens": 97,
+      "decode_tok_s": 137.72,
+      "queue_wait_ms": null,
+      "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+      "gpu": {
+        "nvidia_smi_used_mb": 22536.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 0.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      }
+    },
+    "answer_metrics": {
+      "ok": true,
+      "error": null,
+      "e2e_ms": 213.096,
+      "ttft_ms": 43.687,
+      "prefill_proxy_ms": 43.687,
+      "decode_ms": 169.409,
+      "prompt_tokens": 359,
+      "completion_tokens": 24,
+      "decode_tok_s": 141.67,
+      "queue_wait_ms": null,
+      "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+      "gpu": {
+        "nvidia_smi_used_mb": 22536.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      }
+    },
+    "gpu_final": {
+      "nvidia_smi_used_mb": 22536.0,
+      "nvidia_smi_total_mb": 24564.0,
+      "gpu_util_pct": 100.0,
+      "torch_allocated_mb": 0.0,
+      "torch_reserved_mb": 0.0
+    },
+    "timestamp": "2026-09-03T22:11:27.347615+00:00"
+  },
+  "measured_swap_unload_reload": {
+    "E_ms": {
+      "text_unload_release": 908.764,
+      "vram_released_on_text_unload_mb": 22536.0,
+      "vlm_load": 33783.181,
+      "image_preprocess": 118.712,
+      "vlm_generate": 5378.179,
+      "vlm_ttft_proxy": 5451.505,
+      "vlm_unload": 1067.131,
+      "post_vision_vram_settle": 28.535,
+      "text_vllm_restore": 22524.341,
+      "text_vllm_wait_healthy": 22516.727,
+      "total_swap_overhead_excluding_infer": 58311.952,
+      "total_swap_plus_infer": 63808.843,
+      "measurement_note": "VLM ran in isolated subprocess so CUDA releases on process exit; swap overhead is measured wall-clock, not invented."
+    },
+    "F_ms": {
+      "text_unload_release": 912.843,
+      "vram_released_on_text_unload_mb": 22532.0,
+      "vlm_load": 33164.664,
+      "image_preprocess": 140.856,
+      "vlm_generate": 4257.637,
+      "vlm_ttft_proxy": 4382.054,
+      "vlm_unload": 1073.761,
+      "post_vision_vram_settle": 30.263,
+      "text_vllm_restore": 22524.426,
+      "text_vllm_wait_healthy": 22515.903,
+      "total_swap_overhead_excluding_infer": 57705.957,
+      "total_swap_plus_infer": 62104.45,
+      "measurement_note": "VLM ran in isolated subprocess so CUDA releases on process exit; swap overhead is measured wall-clock, not invented."
+    },
+    "mean_total_swap_overhead_excluding_infer_ms": 58008.954
+  }
+}

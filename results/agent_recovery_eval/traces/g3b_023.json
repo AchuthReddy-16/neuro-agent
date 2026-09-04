@@ -1,0 +1,513 @@
+{
+  "answer_latency_ms": 10850.03215353936,
+  "category": "unsupported_channel",
+  "draft_answer": "The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3. The highest-ranked channel is C3.\nEvidence: Channel ZZ9 beta power is 1.5 \u00b5V\u00b2.",
+  "errors": [],
+  "evidence_bundle": {
+    "condition_evidence": null,
+    "error": null,
+    "metadata": {
+      "array_ref": {
+        "array_index": 0,
+        "array_path": "data/processed/arrays/S001_R01.h5",
+        "n_channels": 64,
+        "n_samples": 640
+      },
+      "channels": [
+        "FC5",
+        "FC3",
+        "FC1",
+        "FCZ",
+        "FC2",
+        "FC4",
+        "FC6",
+        "C5",
+        "C3",
+        "C1",
+        "CZ",
+        "C2",
+        "C4",
+        "C6",
+        "CP5",
+        "CP3",
+        "CP1",
+        "CPZ",
+        "CP2",
+        "CP4",
+        "CP6",
+        "FP1",
+        "FPZ",
+        "FP2",
+        "AF7",
+        "AF3",
+        "AFZ",
+        "AF4",
+        "AF8",
+        "F7",
+        "F5",
+        "F3",
+        "F1",
+        "FZ",
+        "F2",
+        "F4",
+        "F6",
+        "F8",
+        "FT7",
+        "FT8",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "TP7",
+        "TP8",
+        "P7",
+        "P5",
+        "P3",
+        "P1",
+        "PZ",
+        "P2",
+        "P4",
+        "P6",
+        "P8",
+        "PO7",
+        "PO3",
+        "POZ",
+        "PO4",
+        "PO8",
+        "O1",
+        "OZ",
+        "O2",
+        "IZ"
+      ],
+      "condition": "baseline_rest",
+      "epoch_index": 0,
+      "event_code": "T0",
+      "extra": {
+        "end_time_s": 4.0,
+        "preprocessing": {
+          "epoch_seconds": 4.0,
+          "filter_hz": [
+            1.0,
+            40.0
+          ],
+          "source_file": "data/raw/S001/S001R01.edf"
+        },
+        "start_time_s": 0.0
+      },
+      "feature_refs": {
+        "available_columns": [
+          "mean",
+          "variance",
+          "std",
+          "rms",
+          "peak_to_peak",
+          "delta_power",
+          "theta_power",
+          "alpha_mu_power",
+          "beta_power"
+        ],
+        "feature_path": "data/processed/features.parquet"
+      },
+      "movement": "rest",
+      "protocol": "eyes_open",
+      "router_version": "g.2.v1",
+      "run_id": "R01",
+      "sample_id": "S001_R01_E000",
+      "sampling_rate_hz": 160.0,
+      "split": "train",
+      "subject_id": "S001",
+      "task_type": "baseline",
+      "vision_assets": [
+        {
+          "frequency_band": "alpha_mu_power",
+          "image_id": "img_comparison_22055210f8479220",
+          "image_path": "data/processed/vision/images/train/img_comparison_22055210f8479220.png",
+          "visualization_type": "condition_comparison"
+        },
+        {
+          "frequency_band": "alpha_mu_power",
+          "image_id": "img_comparison_73b4d7bd9e2b35ae",
+          "image_path": "data/processed/vision/images/train/img_comparison_73b4d7bd9e2b35ae.png",
+          "visualization_type": "condition_comparison"
+        },
+        {
+          "frequency_band": "alpha_mu_power",
+          "image_id": "img_comparison_d92ae2c560083838",
+          "image_path": "data/processed/vision/images/train/img_comparison_d92ae2c560083838.png",
+          "visualization_type": "condition_comparison"
+        }
+      ]
+    },
+    "numeric_evidence": {
+      "channel": "C3",
+      "highest_rms_channel": "C3",
+      "value": 30.281800847080927
+    },
+    "provenance": [
+      {
+        "artifact_path": null,
+        "detail": "sqrt(mean(x^2)) on epoch waveform",
+        "field": "rms.C3",
+        "method": "epoch_rms",
+        "note": null,
+        "sample_id": "S001_R01_E000",
+        "source": "raw_eeg"
+      }
+    ],
+    "question_type": "rms",
+    "ranked_evidence": null,
+    "request_id": "req_d1a4f1ac2ac3",
+    "set_evidence": null,
+    "success": true,
+    "tool_invocations": [
+      {
+        "error": null,
+        "inputs": {
+          "channels": [
+            "C3"
+          ],
+          "sample_id": "S001_R01_E000",
+          "source": "epoch"
+        },
+        "name": "compute_rms",
+        "outputs": {
+          "highest_rms_channel": "C3",
+          "method": "epoch_rms",
+          "results": [
+            {
+              "channel": "C3",
+              "rms": 30.281800847080927,
+              "units": "uV"
+            }
+          ],
+          "sample_id": "S001_R01_E000"
+        },
+        "provenance": [
+          {
+            "artifact_path": null,
+            "detail": "sqrt(mean(x^2)) on epoch waveform",
+            "field": "rms.C3",
+            "method": "epoch_rms",
+            "note": null,
+            "sample_id": "S001_R01_E000",
+            "source": "raw_eeg"
+          }
+        ],
+        "runtime_ms": 18.269717693328857,
+        "success": true
+      }
+    ],
+    "uncertainty_notes": [],
+    "units": "uV",
+    "vision_evidence": [],
+    "warnings": []
+  },
+  "expect_recovery": true,
+  "expect_verifier_trigger": null,
+  "failure_category": null,
+  "final_answer": "Answer: RMS at C3 is 30.281800847080927 uV\nEvidence: channel=C3, value=30.281800847080927 uV\nTools used: compute_rms\nUncertainty: None",
+  "final_verification": {
+    "condition_mismatch": [],
+    "confidence_score": 0.9,
+    "deterministic": {
+      "ambiguous": false,
+      "condition_mismatches": [],
+      "evidence_conflicts": [],
+      "failure_codes": [],
+      "grounding": {
+        "numeric_claims": [
+          30.281800847080927,
+          30.281800847080927
+        ],
+        "passed": true,
+        "supported_claims": [
+          30.281800847080927,
+          30.281800847080927
+        ],
+        "unsupported_claims": []
+      },
+      "missing_channels": [],
+      "missing_evidence": [],
+      "passed": true,
+      "unit_issues": [],
+      "unsupported_candidates": []
+    },
+    "evidence_conflicts": [],
+    "failure_codes": [],
+    "missing_evidence": [],
+    "model_verified": false,
+    "passed": true,
+    "raw_model_json": null,
+    "recommendation": "ACCEPT",
+    "unit_issues": [],
+    "unsupported_claims": []
+  },
+  "first_pass_verification": {
+    "condition_mismatch": [],
+    "confidence_score": 0.0,
+    "deterministic": {
+      "ambiguous": false,
+      "condition_mismatches": [],
+      "evidence_conflicts": [],
+      "failure_codes": [
+        "channel_not_in_evidence",
+        "missing_answer_sections",
+        "unsupported_numeric"
+      ],
+      "grounding": {
+        "numeric_claims": [
+          1.5
+        ],
+        "passed": false,
+        "supported_claims": [],
+        "unsupported_claims": [
+          1.5
+        ]
+      },
+      "missing_channels": [
+        "ZZ9"
+      ],
+      "missing_evidence": [],
+      "passed": false,
+      "unit_issues": [],
+      "unsupported_candidates": [
+        "1.5"
+      ]
+    },
+    "evidence_conflicts": [],
+    "failure_codes": [
+      "channel_not_in_evidence",
+      "missing_answer_sections",
+      "unsupported_numeric"
+    ],
+    "missing_evidence": [],
+    "model_verified": true,
+    "passed": false,
+    "raw_model_json": {
+      "condition_mismatch": [],
+      "confidence_score": 0.0,
+      "evidence_conflicts": [],
+      "failure_codes": [
+        "channel_not_in_evidence"
+      ],
+      "missing_evidence": [],
+      "passed": false,
+      "recommendation": "REWRITE",
+      "unit_issues": [],
+      "unsupported_claims": [
+        "1.5"
+      ]
+    },
+    "recommendation": "REWRITE",
+    "unit_issues": [],
+    "unsupported_claims": [
+      "1.5"
+    ]
+  },
+  "grounding": {
+    "numeric_claims": [
+      30.281800847080927,
+      30.281800847080927
+    ],
+    "passed": true,
+    "supported_claims": [
+      30.281800847080927,
+      30.281800847080927
+    ],
+    "unsupported_claims": []
+  },
+  "id": "g3b_023",
+  "intent_latency_ms": 787.8928361460567,
+  "intent_valid": true,
+  "model_calls": 4,
+  "original_question": "What is the RMS amplitude at C3 for sample S001_R01_E000?",
+  "parsed_intent": {
+    "channels": [
+      "C3"
+    ],
+    "comparator": null,
+    "condition_a": null,
+    "condition_b": null,
+    "epoch": null,
+    "extra": {},
+    "frequency_band": null,
+    "frequency_range": null,
+    "image_id": null,
+    "include_vision_evidence": false,
+    "metric": "rms",
+    "question_type": "rms",
+    "requested_visual_type": null,
+    "run_id": null,
+    "sample_id": "S001_R01_E000",
+    "sort_direction": "descending",
+    "subject_id": null,
+    "threshold": null,
+    "threshold_mode": "absolute",
+    "top_k": null
+  },
+  "path_mode": "RECOVERY",
+  "peak_vram_mb": 8641.2412109375,
+  "question": "What is the RMS amplitude at C3 for sample S001_R01_E000?",
+  "recovery": {
+    "action": "REWRITE",
+    "latency_ms": 10815.895043313503,
+    "notes": [
+      "rewrite_from_same_evidence",
+      "deterministic_format_fallback"
+    ],
+    "post_verification": {
+      "condition_mismatch": [],
+      "confidence_score": 0.9,
+      "deterministic": {
+        "ambiguous": false,
+        "condition_mismatches": [],
+        "evidence_conflicts": [],
+        "failure_codes": [],
+        "grounding": {
+          "numeric_claims": [
+            30.281800847080927,
+            30.281800847080927
+          ],
+          "passed": true,
+          "supported_claims": [
+            30.281800847080927,
+            30.281800847080927
+          ],
+          "unsupported_claims": []
+        },
+        "missing_channels": [],
+        "missing_evidence": [],
+        "passed": true,
+        "unit_issues": [],
+        "unsupported_candidates": []
+      },
+      "evidence_conflicts": [],
+      "failure_codes": [],
+      "missing_evidence": [],
+      "model_verified": false,
+      "passed": true,
+      "raw_model_json": null,
+      "recommendation": "ACCEPT",
+      "unit_issues": [],
+      "unsupported_claims": []
+    },
+    "pre_verification": {
+      "condition_mismatch": [],
+      "confidence_score": 0.0,
+      "deterministic": {
+        "ambiguous": false,
+        "condition_mismatches": [],
+        "evidence_conflicts": [],
+        "failure_codes": [
+          "channel_not_in_evidence",
+          "missing_answer_sections",
+          "unsupported_numeric"
+        ],
+        "grounding": {
+          "numeric_claims": [
+            1.5
+          ],
+          "passed": false,
+          "supported_claims": [],
+          "unsupported_claims": [
+            1.5
+          ]
+        },
+        "missing_channels": [
+          "ZZ9"
+        ],
+        "missing_evidence": [],
+        "passed": false,
+        "unit_issues": [],
+        "unsupported_candidates": [
+          "1.5"
+        ]
+      },
+      "evidence_conflicts": [],
+      "failure_codes": [
+        "channel_not_in_evidence",
+        "missing_answer_sections",
+        "unsupported_numeric"
+      ],
+      "missing_evidence": [],
+      "model_verified": true,
+      "passed": false,
+      "raw_model_json": {
+        "condition_mismatch": [],
+        "confidence_score": 0.0,
+        "evidence_conflicts": [],
+        "failure_codes": [
+          "channel_not_in_evidence"
+        ],
+        "missing_evidence": [],
+        "passed": false,
+        "recommendation": "REWRITE",
+        "unit_issues": [],
+        "unsupported_claims": [
+          "1.5"
+        ]
+      },
+      "recommendation": "REWRITE",
+      "unit_issues": [],
+      "unsupported_claims": [
+        "1.5"
+      ]
+    },
+    "success": true
+  },
+  "recovery_latency_ms": 10815.895043313503,
+  "request_id": "req_d1a4f1ac2ac3",
+  "routing_result": {
+    "error": null,
+    "success": true
+  },
+  "runtime_ms": 24080.720658414066,
+  "success": true,
+  "tool_invocations": [
+    {
+      "error": null,
+      "inputs": {
+        "channels": [
+          "C3"
+        ],
+        "sample_id": "S001_R01_E000",
+        "source": "epoch"
+      },
+      "name": "compute_rms",
+      "outputs": {
+        "highest_rms_channel": "C3",
+        "method": "epoch_rms",
+        "results": [
+          {
+            "channel": "C3",
+            "rms": 30.281800847080927,
+            "units": "uV"
+          }
+        ],
+        "sample_id": "S001_R01_E000"
+      },
+      "provenance": [
+        {
+          "artifact_path": null,
+          "detail": "sqrt(mean(x^2)) on epoch waveform",
+          "field": "rms.C3",
+          "method": "epoch_rms",
+          "note": null,
+          "sample_id": "S001_R01_E000",
+          "source": "raw_eeg"
+        }
+      ],
+      "runtime_ms": 18.269717693328857,
+      "success": true
+    }
+  ],
+  "trigger_reason": [
+    "channel_not_in_evidence",
+    "missing_answer_sections",
+    "unsupported_numeric",
+    "unsupported_value_candidate"
+  ],
+  "verification_triggered": true,
+  "verifier_latency_ms": 1602.1029194816947,
+  "warnings": []
+}

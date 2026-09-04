@@ -1,0 +1,71 @@
+# Text quantization quality eval — INT8 (bitsandbytes load_in_8bit)
+
+model:
+  name: Qwen/Qwen3-4B-Instruct-2507
+  variant: sft_corrected_v2_INT8
+  dtype: bfloat16
+  quantization: int8
+  trust_remote_code: false
+  adapter_path: checkpoints/sft_corrected_v2/final
+
+inference:
+  seed: 42
+  do_sample: false
+  max_new_tokens: 128
+  use_cache: true
+  temperature: 0.0
+  top_p: 1.0
+
+evaluation:
+  dataset: data/processed/eval_heldout_corrected.jsonl
+  held_out_subjects: [S026, S027, S028, S029, S030]
+  train_subjects: [S001, S002, S003, S004, S005, S006, S007, S008, S009, S010,
+                   S011, S012, S013, S014, S015, S016, S017, S018, S019, S020]
+  validation_subjects: [S021, S022, S023, S024, S025]
+  targeted_categories:
+    - numerical_reasoning
+    - channel_ranking
+    - band_power_analysis
+    - movement_task_classification
+    - execution_vs_imagery
+    - statistical_comparison
+    - tool_selection
+    - factual_grounding
+  targeted_per_category: 10
+
+gate:
+  catastrophic_overall_drop: 0.15
+  catastrophic_invalid_parse_rate: 0.05
+  numerical_reasoning_min: 0.80
+  channel_ranking_min: 0.65
+  band_power_analysis_min: 0.70
+  movement_task_classification_min: 0.55
+  execution_vs_imagery_min: 0.80
+  statistical_comparison_min: 0.80
+  tool_selection_min: 0.80
+  factual_grounding_min: 0.30
+  reference:
+    numerical_reasoning: 1.0
+    channel_ranking: 0.816
+    band_power_analysis: 0.88
+    movement_task_classification: 0.728
+    execution_vs_imagery: 1.0
+    statistical_comparison: 1.0
+    tool_selection: 1.0
+    factual_grounding: 0.488
+
+prompt:
+  system: >
+    You are a neuroscience research assistant. Answer using only the provided
+    context. Respond with a concise direct answer only. Do not add unsupported
+    interpretation.
+
+output:
+  dir: results/quantization/text/quality/int8
+  targeted_dir: results/quantization/text/quality/int8_targeted
+
+benchmark:
+  warmup_iterations: 2
+  benchmark_iterations: 5
+  prompt_token_length: 512
+  max_new_tokens: 64

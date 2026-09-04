@@ -1,0 +1,113 @@
+{
+  "class_imbalance": {
+    "movement_classification_rest_fraction": 0.5983,
+    "movement_label_distribution": {
+      "rest": 359,
+      "both_fists": 73,
+      "left_fist": 69,
+      "both_feet": 52,
+      "right_fist": 47
+    }
+  },
+  "inconsistent_label_wording": {
+    "sft_movement_labels": [
+      "rest",
+      "both_fists",
+      "left_fist",
+      "both_feet",
+      "right_fist"
+    ],
+    "eval_execution_vs_imagery_labels": [
+      "baseline",
+      "execution",
+      "imagery"
+    ],
+    "eval_factual_grounding_labels": "compound task_type_movement (e.g. imagery_rest)",
+    "label_space_mismatch": true
+  },
+  "contradictory_examples": {
+    "movement_training_same_event_movement_across_task_types": {
+      "T0_rest": [
+        "baseline",
+        "execution",
+        "imagery"
+      ],
+      "T1_both_fists": [
+        "execution",
+        "imagery"
+      ],
+      "T1_left_fist": [
+        "execution",
+        "imagery"
+      ],
+      "T2_both_feet": [
+        "execution",
+        "imagery"
+      ],
+      "T2_right_fist": [
+        "execution",
+        "imagery"
+      ]
+    },
+    "summary": "Movement SFT examples use identical labels for execution, imagery, and baseline when event_code and movement match. task_type is present in training context but ignored by the supervised answer."
+  },
+  "execution_vs_imagery_mapping": {
+    "sft_training_examples": 0,
+    "eval_mapping_rule": "ground_truth = task_type from condition prefix; rest trials map to parent task_type not movement label",
+    "baseline_rest_ambiguity": {
+      "eval_baseline_rest_count": 11,
+      "execution_rest_count": 27,
+      "imagery_rest_count": 28,
+      "sft_outputs_rest_for_all_rest_conditions": true,
+      "base_outputs_baseline_for_execution_and_imagery_rest": true
+    }
+  },
+  "sparse_metadata": {
+    "factual_grounding_missing_fields": [
+      "task_type",
+      "movement",
+      "condition"
+    ],
+    "movement_eval_includes_task_type": true,
+    "execution_vs_imagery_includes_condition_and_movement": true
+  },
+  "duplicate_near_duplicate_prompts": {
+    "max_source_sample_appearances_in_sft": 4,
+    "samples_with_more_than_four_appearances": 0,
+    "unique_source_samples_in_sft": 600
+  },
+  "train_eval_mismatch": {
+    "execution_vs_imagery": {
+      "eval_count": 125,
+      "source_sample_overlap": 0
+    },
+    "factual_grounding": {
+      "eval_count": 125,
+      "source_sample_overlap": 0
+    },
+    "movement_task_classification": {
+      "eval_count": 125,
+      "source_sample_overlap": 0
+    },
+    "band_power_analysis": {
+      "eval_count": 125,
+      "source_sample_overlap": 0
+    },
+    "channel_ranking": {
+      "eval_count": 125,
+      "source_sample_overlap": 0
+    }
+  },
+  "overrepresentation": {
+    "sft_has_only_four_question_families": true,
+    "examples_per_family": 600,
+    "missing_eval_categories_in_sft": [
+      "execution_vs_imagery",
+      "factual_grounding",
+      "channel_ranking",
+      "tool_selection",
+      "statistical_comparison",
+      "numerical_reasoning"
+    ]
+  }
+}

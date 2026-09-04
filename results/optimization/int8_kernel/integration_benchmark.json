@@ -1,0 +1,355 @@
+{
+  "attempted": true,
+  "patched_modules": [
+    "base_model.model.model.layers.0.mlp.gate_proj",
+    "base_model.model.model.layers.0.mlp.up_proj",
+    "base_model.model.model.layers.1.mlp.gate_proj",
+    "base_model.model.model.layers.1.mlp.up_proj",
+    "base_model.model.model.layers.2.mlp.gate_proj",
+    "base_model.model.model.layers.2.mlp.up_proj",
+    "base_model.model.model.layers.3.mlp.gate_proj",
+    "base_model.model.model.layers.3.mlp.up_proj",
+    "base_model.model.model.layers.4.mlp.gate_proj",
+    "base_model.model.model.layers.4.mlp.up_proj",
+    "base_model.model.model.layers.5.mlp.gate_proj",
+    "base_model.model.model.layers.5.mlp.up_proj",
+    "base_model.model.model.layers.6.mlp.gate_proj",
+    "base_model.model.model.layers.6.mlp.up_proj",
+    "base_model.model.model.layers.7.mlp.gate_proj",
+    "base_model.model.model.layers.7.mlp.up_proj",
+    "base_model.model.model.layers.8.mlp.gate_proj",
+    "base_model.model.model.layers.8.mlp.up_proj",
+    "base_model.model.model.layers.9.mlp.gate_proj",
+    "base_model.model.model.layers.9.mlp.up_proj",
+    "base_model.model.model.layers.10.mlp.gate_proj",
+    "base_model.model.model.layers.10.mlp.up_proj",
+    "base_model.model.model.layers.11.mlp.gate_proj",
+    "base_model.model.model.layers.11.mlp.up_proj",
+    "base_model.model.model.layers.12.mlp.gate_proj",
+    "base_model.model.model.layers.12.mlp.up_proj",
+    "base_model.model.model.layers.13.mlp.gate_proj",
+    "base_model.model.model.layers.13.mlp.up_proj",
+    "base_model.model.model.layers.14.mlp.gate_proj",
+    "base_model.model.model.layers.14.mlp.up_proj",
+    "base_model.model.model.layers.15.mlp.gate_proj",
+    "base_model.model.model.layers.15.mlp.up_proj",
+    "base_model.model.model.layers.16.mlp.gate_proj",
+    "base_model.model.model.layers.16.mlp.up_proj",
+    "base_model.model.model.layers.17.mlp.gate_proj",
+    "base_model.model.model.layers.17.mlp.up_proj",
+    "base_model.model.model.layers.18.mlp.gate_proj",
+    "base_model.model.model.layers.18.mlp.up_proj",
+    "base_model.model.model.layers.19.mlp.gate_proj",
+    "base_model.model.model.layers.19.mlp.up_proj",
+    "base_model.model.model.layers.20.mlp.gate_proj",
+    "base_model.model.model.layers.20.mlp.up_proj",
+    "base_model.model.model.layers.21.mlp.gate_proj",
+    "base_model.model.model.layers.21.mlp.up_proj",
+    "base_model.model.model.layers.22.mlp.gate_proj",
+    "base_model.model.model.layers.22.mlp.up_proj",
+    "base_model.model.model.layers.23.mlp.gate_proj",
+    "base_model.model.model.layers.23.mlp.up_proj",
+    "base_model.model.model.layers.24.mlp.gate_proj",
+    "base_model.model.model.layers.24.mlp.up_proj",
+    "base_model.model.model.layers.25.mlp.gate_proj",
+    "base_model.model.model.layers.25.mlp.up_proj",
+    "base_model.model.model.layers.26.mlp.gate_proj",
+    "base_model.model.model.layers.26.mlp.up_proj",
+    "base_model.model.model.layers.27.mlp.gate_proj",
+    "base_model.model.model.layers.27.mlp.up_proj",
+    "base_model.model.model.layers.28.mlp.gate_proj",
+    "base_model.model.model.layers.28.mlp.up_proj",
+    "base_model.model.model.layers.29.mlp.gate_proj",
+    "base_model.model.model.layers.29.mlp.up_proj",
+    "base_model.model.model.layers.30.mlp.gate_proj",
+    "base_model.model.model.layers.30.mlp.up_proj",
+    "base_model.model.model.layers.31.mlp.gate_proj",
+    "base_model.model.model.layers.31.mlp.up_proj",
+    "base_model.model.model.layers.32.mlp.gate_proj",
+    "base_model.model.model.layers.32.mlp.up_proj",
+    "base_model.model.model.layers.33.mlp.gate_proj",
+    "base_model.model.model.layers.33.mlp.up_proj",
+    "base_model.model.model.layers.34.mlp.gate_proj",
+    "base_model.model.model.layers.34.mlp.up_proj",
+    "base_model.model.model.layers.35.mlp.gate_proj",
+    "base_model.model.model.layers.35.mlp.up_proj"
+  ],
+  "patched_count": 72,
+  "shape_key": "9728x2560",
+  "baseline_remeasure": {
+    "prompt_tokens": 499,
+    "generated_tokens": 64,
+    "ttft_ms": 89.11,
+    "decode_tok_per_s": 15.95,
+    "latency_per_token_ms": 62.7,
+    "e2e_ms": 4101.82,
+    "allocated_vram_mb": 4691.4,
+    "peak_vram_mb": 4911.5,
+    "warmup": 2,
+    "timed_iters": 5,
+    "all_ttft_ms": [
+      89.0,
+      88.98,
+      89.76,
+      88.91,
+      88.91
+    ],
+    "all_decode_tok_per_s": [
+      15.99,
+      15.96,
+      15.71,
+      16.04,
+      16.06
+    ],
+    "all_e2e_ms": [
+      4091.83,
+      4099.37,
+      4163.14,
+      4079.87,
+      4074.87
+    ]
+  },
+  "triton_patched": {
+    "prompt_tokens": 499,
+    "generated_tokens": 64,
+    "ttft_ms": 105.67,
+    "decode_tok_per_s": 15.6,
+    "latency_per_token_ms": 64.11,
+    "e2e_ms": 4208.68,
+    "allocated_vram_mb": 4691.4,
+    "peak_vram_mb": 4911.6,
+    "warmup": 2,
+    "timed_iters": 5,
+    "all_ttft_ms": [
+      105.62,
+      105.18,
+      105.13,
+      106.21,
+      106.21
+    ],
+    "all_decode_tok_per_s": [
+      15.57,
+      15.58,
+      15.56,
+      15.63,
+      15.65
+    ],
+    "all_e2e_ms": [
+      4215.71,
+      4212.21,
+      4218.29,
+      4200.38,
+      4196.78
+    ]
+  },
+  "quality_sanity": {
+    "n_examples": 32,
+    "verifier_pass_rate": 0.875,
+    "passes": 28,
+    "integrity": {
+      "confirmed_subjects": [
+        "S026",
+        "S027",
+        "S028",
+        "S029",
+        "S030"
+      ],
+      "example_count": 32,
+      "integrity_passed": true
+    },
+    "records": [
+      {
+        "id": "eval_0b9a3231ebca69b8",
+        "category": "numerical_reasoning",
+        "passed": true,
+        "generated_tokens": 15
+      },
+      {
+        "id": "eval_bfd1c118796d9dfc",
+        "category": "numerical_reasoning",
+        "passed": true,
+        "generated_tokens": 15
+      },
+      {
+        "id": "eval_0563431bb823fc40",
+        "category": "numerical_reasoning",
+        "passed": true,
+        "generated_tokens": 15
+      },
+      {
+        "id": "eval_20dbd5d90391a180",
+        "category": "channel_ranking",
+        "passed": true,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_67fe066979c9ba15",
+        "category": "channel_ranking",
+        "passed": true,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_824b4194d648e158",
+        "category": "channel_ranking",
+        "passed": true,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_b54b4fa0b020132c",
+        "category": "band_power_analysis",
+        "passed": true,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_6abcb36127dd2fa6",
+        "category": "band_power_analysis",
+        "passed": false,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_2dce0ce00271361e",
+        "category": "band_power_analysis",
+        "passed": true,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_607b2c613658f835",
+        "category": "movement_task_classification",
+        "passed": true,
+        "generated_tokens": 7
+      },
+      {
+        "id": "eval_21d923dcd6909701",
+        "category": "movement_task_classification",
+        "passed": false,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_8ac8db644e27afbc",
+        "category": "movement_task_classification",
+        "passed": true,
+        "generated_tokens": 7
+      },
+      {
+        "id": "eval_f8c55812fa423bde",
+        "category": "execution_vs_imagery",
+        "passed": true,
+        "generated_tokens": 2
+      },
+      {
+        "id": "eval_2a044d76257f54c6",
+        "category": "execution_vs_imagery",
+        "passed": true,
+        "generated_tokens": 2
+      },
+      {
+        "id": "eval_a37fbbf50627c893",
+        "category": "execution_vs_imagery",
+        "passed": true,
+        "generated_tokens": 3
+      },
+      {
+        "id": "eval_985153d3db0800a9",
+        "category": "statistical_comparison",
+        "passed": true,
+        "generated_tokens": 8
+      },
+      {
+        "id": "eval_fcb0f737d24e2149",
+        "category": "statistical_comparison",
+        "passed": true,
+        "generated_tokens": 8
+      },
+      {
+        "id": "eval_9a32de904917d56f",
+        "category": "statistical_comparison",
+        "passed": true,
+        "generated_tokens": 8
+      },
+      {
+        "id": "eval_8947ec4fa2e979a6",
+        "category": "tool_selection",
+        "passed": true,
+        "generated_tokens": 8
+      },
+      {
+        "id": "eval_0ec8212ccc8a2994",
+        "category": "tool_selection",
+        "passed": true,
+        "generated_tokens": 8
+      },
+      {
+        "id": "eval_a40e96c595bbd39c",
+        "category": "tool_selection",
+        "passed": true,
+        "generated_tokens": 8
+      },
+      {
+        "id": "eval_1c56a32539213a0d",
+        "category": "factual_grounding",
+        "passed": false,
+        "generated_tokens": 2
+      },
+      {
+        "id": "eval_bffa666c02090d48",
+        "category": "factual_grounding",
+        "passed": true,
+        "generated_tokens": 5
+      },
+      {
+        "id": "eval_499d8377ea44854a",
+        "category": "factual_grounding",
+        "passed": false,
+        "generated_tokens": 2
+      },
+      {
+        "id": "eval_6341748b8c04004c",
+        "category": "numerical_reasoning",
+        "passed": true,
+        "generated_tokens": 15
+      },
+      {
+        "id": "eval_1719ee626f268ee2",
+        "category": "channel_ranking",
+        "passed": true,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_07d6fd822fee2e9d",
+        "category": "band_power_analysis",
+        "passed": true,
+        "generated_tokens": 9
+      },
+      {
+        "id": "eval_764aeb73cfd90ff0",
+        "category": "movement_task_classification",
+        "passed": true,
+        "generated_tokens": 7
+      },
+      {
+        "id": "eval_7297de8a507ba1b9",
+        "category": "execution_vs_imagery",
+        "passed": true,
+        "generated_tokens": 2
+      },
+      {
+        "id": "eval_110af5ad79898aa7",
+        "category": "statistical_comparison",
+        "passed": true,
+        "generated_tokens": 8
+      },
+      {
+        "id": "eval_5f5ab508ddf9b91b",
+        "category": "tool_selection",
+        "passed": true,
+        "generated_tokens": 8
+      },
+      {
+        "id": "eval_3ff006a1f99bb5ae",
+        "category": "factual_grounding",
+        "passed": true,
+        "generated_tokens": 6
+      }
+    ]
+  }
+}

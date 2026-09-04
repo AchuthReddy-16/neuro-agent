@@ -1,0 +1,116 @@
+{
+  "band_power_beta_top3": {
+    "count": 52.0,
+    "mean": 0.1544871794871795,
+    "min": 0.0,
+    "max": 0.6666666666666666
+  },
+  "band_power_dominant_mean_band": {
+    "count": 50.0,
+    "mean": 0.74,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "band_power_high_beta_set": {
+    "count": 44.0,
+    "mean": 0.21294858007412615,
+    "min": 0.0,
+    "max": 0.6923076923076923
+  },
+  "band_power_weakest_alpha_mu": {
+    "count": 44.0,
+    "mean": 0.6363636363636364,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "condition_higher_mean": {
+    "count": 18.0,
+    "mean": 0.7777777777777778,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "condition_largest_channel_difference": {
+    "count": 24.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "condition_percent_difference": {
+    "count": 28.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "psd_band_order": {
+    "count": 78.0,
+    "mean": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "psd_dominant_band": {
+    "count": 76.0,
+    "mean": 0.75,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "psd_peak_frequency": {
+    "count": 76.0,
+    "mean": 0.34210526315789475,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "spectrogram_dominant_band": {
+    "count": 66.0,
+    "mean": 0.5303030303030303,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "spectrogram_peak_frequency": {
+    "count": 76.0,
+    "mean": 0.4440801315789474,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "spectrogram_strongest_vs_weakest": {
+    "count": 60.0,
+    "mean": 0.5666666666666667,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "topomap_beta_top3": {
+    "count": 64.0,
+    "mean": 0.08333333333333333,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "topomap_high_delta_set": {
+    "count": 68.0,
+    "mean": 0.15570104776547333,
+    "min": 0.0,
+    "max": 0.5384615384615384
+  },
+  "topomap_strongest_alpha_mu": {
+    "count": 66.0,
+    "mean": 0.015151515151515152,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "waveform_highest_rms": {
+    "count": 18.0,
+    "mean": 0.3888888888888889,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "waveform_max_rms_numeric": {
+    "count": 26.0,
+    "mean": 0.058239056645442384,
+    "min": 0.0,
+    "max": 1.0
+  },
+  "waveform_rms_order": {
+    "count": 26.0,
+    "mean": 0.6499999999999999,
+    "min": 0.3,
+    "max": 1.0
+  }
+}

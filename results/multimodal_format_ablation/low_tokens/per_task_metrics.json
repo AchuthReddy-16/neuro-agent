@@ -1,0 +1,135 @@
+{
+  "band_power_beta_top3": {
+    "count": 25,
+    "verifier_pass_rate": 0.24,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "band_power_dominant_mean_band": {
+    "count": 25,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "band_power_high_beta_set": {
+    "count": 25,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "band_power_weakest_alpha_mu": {
+    "count": 25,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "condition_higher_mean": {
+    "count": 5,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "condition_largest_channel_difference": {
+    "count": 5,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "condition_percent_difference": {
+    "count": 5,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "psd_band_order": {
+    "count": 33,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "psd_dominant_band": {
+    "count": 33,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "psd_peak_frequency": {
+    "count": 34,
+    "verifier_pass_rate": 0.08823529411764706,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 10.5
+  },
+  "spectrogram_dominant_band": {
+    "count": 34,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "spectrogram_peak_frequency": {
+    "count": 33,
+    "verifier_pass_rate": 0.3939393939393939,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 12.272727272727273
+  },
+  "spectrogram_strongest_vs_weakest": {
+    "count": 33,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 15.969696969696969
+  },
+  "topomap_beta_top3": {
+    "count": 33,
+    "verifier_pass_rate": 0.36363636363636365,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "topomap_high_delta_set": {
+    "count": 33,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "topomap_strongest_alpha_mu": {
+    "count": 34,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "waveform_highest_rms": {
+    "count": 9,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  },
+  "waveform_max_rms_numeric": {
+    "count": 8,
+    "verifier_pass_rate": 0.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 15.75
+  },
+  "waveform_rms_order": {
+    "count": 8,
+    "verifier_pass_rate": 1.0,
+    "invalid_parse_rate": 0.0,
+    "empty_refusal_rate": 0.0,
+    "avg_generated_tokens": 16.0
+  }
+}

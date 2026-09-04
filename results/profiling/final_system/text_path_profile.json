@@ -1,0 +1,1349 @@
+{
+  "timestamp": "2026-09-03T22:05:35.560496+00:00",
+  "backend": "vLLM W8A8 INT8 compressed-tensors + CutlassInt8ScaledMMLinearKernel",
+  "prefix_caching": true,
+  "concurrency": 1,
+  "gpu_memory_utilization": 0.9,
+  "boot_wait_healthy_ms": 22518.847,
+  "classes": {
+    "A": {
+      "request_class": "A_TEXT_SIMPLE_TOOL",
+      "request_id": "req_a5183074c024",
+      "question": "Rank channels by beta power for S001_R01_E000, top 3 descending.",
+      "success": true,
+      "errors": [],
+      "requires_vision": false,
+      "raw_intent": {
+        "requires_vision": false,
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E000",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_count": 1,
+      "tool_names": [
+        "rank_channels_for_sample"
+      ],
+      "verification_triggered": false,
+      "trigger_reason": [
+        "missing_answer_sections"
+      ],
+      "path_mode": "NORMAL",
+      "first_pass_verification": {
+        "passed": false,
+        "confidence_score": 0.3,
+        "failure_codes": [
+          "missing_answer_sections"
+        ],
+        "unsupported_claims": [],
+        "evidence_conflicts": [],
+        "missing_evidence": [],
+        "unit_issues": [],
+        "condition_mismatch": [],
+        "recommendation": "REWRITE",
+        "deterministic": {
+          "passed": false,
+          "failure_codes": [
+            "missing_answer_sections"
+          ],
+          "grounding": {
+            "numeric_claims": [],
+            "supported_claims": [],
+            "unsupported_claims": [],
+            "passed": true
+          },
+          "missing_channels": [],
+          "unit_issues": [],
+          "condition_mismatches": [],
+          "missing_evidence": [],
+          "evidence_conflicts": [],
+          "unsupported_candidates": [],
+          "ambiguous": false
+        },
+        "model_verified": false,
+        "raw_model_json": null
+      },
+      "recovery": null,
+      "model_calls": 2,
+      "final_answer_preview": "Answer: Top channel by beta_power is T8\nEvidence: T8=278.5670471191406 uV2; IZ=239.53125 uV2; O2=212.8015899658203 uV2\nTools used: rank_channels_for_sample\nUncertainty: None",
+      "trace": {
+        "e2e_ms": 1378.088,
+        "spans": [
+          {
+            "name": "intent_generation",
+            "ms": 825.646,
+            "ok": true,
+            "error": null,
+            "e2e_ms": 803.002,
+            "ttft_ms": 28.106,
+            "prefill_proxy_ms": 28.106,
+            "decode_ms": 774.896,
+            "prompt_tokens": 721,
+            "completion_tokens": 107,
+            "decode_tok_s": 138.08,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22536.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "intent_parse_validate",
+            "ms": 0.042
+          },
+          {
+            "name": "routing_total",
+            "ms": 825.701,
+            "requires_vision": false,
+            "intent_valid": true,
+            "intent_override": null
+          },
+          {
+            "name": "requires_vision_decision",
+            "ms": 0.042,
+            "requires_vision": false,
+            "raw_requires_vision": false
+          },
+          {
+            "name": "tool_execution_total",
+            "ms": 300.703,
+            "tool_count": 1,
+            "tool_names": [
+              "rank_channels_for_sample"
+            ],
+            "success": true
+          },
+          {
+            "name": "evidence_bundle_construction",
+            "ms": 0.098,
+            "construction_ms": 0.088,
+            "serialization_ms": 0.083,
+            "tool_wall_ms": 300.699
+          },
+          {
+            "name": "grounded_answer_generation",
+            "ms": 251.287,
+            "ok": true,
+            "error": null,
+            "e2e_ms": 234.955,
+            "ttft_ms": 119.134,
+            "prefill_proxy_ms": 119.134,
+            "decode_ms": 115.821,
+            "prompt_tokens": 2864,
+            "completion_tokens": 15,
+            "decode_tok_s": 129.51,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22538.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "verifier_block",
+            "ms": 0.137,
+            "triggered": false,
+            "mode": "format_only_repair",
+            "format_ms": 0.024
+          },
+          {
+            "name": "final_serialization",
+            "ms": 0.065
+          }
+        ],
+        "span_map_ms": {
+          "intent_generation": 825.646,
+          "intent_parse_validate": 0.042,
+          "routing_total": 825.701,
+          "requires_vision_decision": 0.042,
+          "tool_execution_total": 300.703,
+          "evidence_bundle_construction": 0.098,
+          "grounded_answer_generation": 251.287,
+          "verifier_block": 0.137,
+          "final_serialization": 0.065
+        }
+      },
+      "text_calls": [
+        {
+          "stage": "intent",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 803.002,
+          "ttft_ms": 28.106,
+          "prefill_proxy_ms": 28.106,
+          "decode_ms": 774.896,
+          "prompt_tokens": 721,
+          "completion_tokens": 107,
+          "decode_tok_s": 138.08,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22536.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "stage": "answer",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 234.955,
+          "ttft_ms": 119.134,
+          "prefill_proxy_ms": 119.134,
+          "decode_ms": 115.821,
+          "prompt_tokens": 2864,
+          "completion_tokens": 15,
+          "decode_tok_s": 129.51,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22538.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        }
+      ],
+      "gpu_end": {
+        "nvidia_smi_used_mb": 22538.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "timestamp": "2026-09-03T22:05:31.292489+00:00",
+      "intent_override": null
+    },
+    "B": {
+      "request_class": "B_TEXT_MULTI_TOOL",
+      "request_id": "req_674af5d3b19c",
+      "question": "Which channels have beta power at or above the upper quartile for S001_R01_E000?",
+      "success": true,
+      "errors": [],
+      "requires_vision": false,
+      "raw_intent": {
+        "requires_vision": false,
+        "question_type": "band_power",
+        "sample_id": "S001_R01_E000",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power",
+        "threshold_mode": "upper_quartile",
+        "comparator": "ge",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_count": 2,
+      "tool_names": [
+        "compute_band_power",
+        "select_channels_above_threshold"
+      ],
+      "verification_triggered": false,
+      "trigger_reason": [
+        "missing_answer_sections",
+        "multi_tool"
+      ],
+      "path_mode": "NORMAL",
+      "first_pass_verification": {
+        "passed": false,
+        "confidence_score": 0.3,
+        "failure_codes": [
+          "missing_answer_sections"
+        ],
+        "unsupported_claims": [],
+        "evidence_conflicts": [],
+        "missing_evidence": [],
+        "unit_issues": [],
+        "condition_mismatch": [],
+        "recommendation": "REWRITE",
+        "deterministic": {
+          "passed": false,
+          "failure_codes": [
+            "missing_answer_sections"
+          ],
+          "grounding": {
+            "numeric_claims": [],
+            "supported_claims": [],
+            "unsupported_claims": [],
+            "passed": true
+          },
+          "missing_channels": [],
+          "unit_issues": [],
+          "condition_mismatches": [],
+          "missing_evidence": [],
+          "evidence_conflicts": [],
+          "unsupported_candidates": [],
+          "ambiguous": false
+        },
+        "model_verified": false,
+        "raw_model_json": null
+      },
+      "recovery": null,
+      "model_calls": 2,
+      "final_answer_preview": "Answer: Selected channels: CP3, CP5, IZ, O1, O2, OZ, P3, P5, P7, PO3, PO7, POZ, T7, T8, T9, TP7\nEvidence: threshold=138.67868041992188 uV2, channels=['CP3', 'CP5', 'IZ', 'O1', 'O2', 'OZ', 'P3', 'P5', 'P7', 'PO3', 'PO7', 'POZ', 'T7', 'T8', 'T9', 'TP7']\nTools used: compute_band_power, select_channels_above_threshold\nUncertainty: Band power production uses source='features' (features.parquet). Welch ",
+      "trace": {
+        "e2e_ms": 1273.759,
+        "spans": [
+          {
+            "name": "intent_generation",
+            "ms": 934.941,
+            "ok": true,
+            "error": null,
+            "e2e_ms": 914.401,
+            "ttft_ms": 21.99,
+            "prefill_proxy_ms": 21.99,
+            "decode_ms": 892.411,
+            "prompt_tokens": 723,
+            "completion_tokens": 123,
+            "decode_tok_s": 137.83,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22538.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "intent_parse_validate",
+            "ms": 0.067
+          },
+          {
+            "name": "routing_total",
+            "ms": 935.029,
+            "requires_vision": false,
+            "intent_valid": true,
+            "intent_override": {
+              "natural_intent_question_type": "band_power",
+              "forced_question_type": "threshold_set",
+              "reason": "profile multi-tool/verifier path with production tools"
+            }
+          },
+          {
+            "name": "requires_vision_decision",
+            "ms": 0.067,
+            "requires_vision": false,
+            "raw_requires_vision": false
+          },
+          {
+            "name": "tool_execution_total",
+            "ms": 307.246,
+            "tool_count": 2,
+            "tool_names": [
+              "compute_band_power",
+              "select_channels_above_threshold"
+            ],
+            "success": true
+          },
+          {
+            "name": "evidence_bundle_construction",
+            "ms": 0.277,
+            "construction_ms": 0.267,
+            "serialization_ms": 0.226,
+            "tool_wall_ms": 307.242
+          },
+          {
+            "name": "grounded_answer_generation",
+            "ms": 30.418,
+            "ok": false,
+            "error": "http_400: {\"error\":{\"message\":\"This model's maximum context length is 4096 tokens. However, you requested 512 output tokens and your prompt contains at least 3585 input tokens, for a total of at least 4097 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (paramete",
+            "e2e_ms": 10.166,
+            "ttft_ms": null,
+            "prefill_proxy_ms": null,
+            "decode_ms": null,
+            "prompt_tokens": 8252,
+            "completion_tokens": 0,
+            "decode_tok_s": null,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22538.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "verifier_block",
+            "ms": 0.342,
+            "triggered": false,
+            "mode": "format_only_repair",
+            "format_ms": 0.027
+          },
+          {
+            "name": "final_serialization",
+            "ms": 0.342
+          }
+        ],
+        "span_map_ms": {
+          "intent_generation": 934.941,
+          "intent_parse_validate": 0.067,
+          "routing_total": 935.029,
+          "requires_vision_decision": 0.067,
+          "tool_execution_total": 307.246,
+          "evidence_bundle_construction": 0.277,
+          "grounded_answer_generation": 30.418,
+          "verifier_block": 0.342,
+          "final_serialization": 0.342
+        }
+      },
+      "text_calls": [
+        {
+          "stage": "intent",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 914.401,
+          "ttft_ms": 21.99,
+          "prefill_proxy_ms": 21.99,
+          "decode_ms": 892.411,
+          "prompt_tokens": 723,
+          "completion_tokens": 123,
+          "decode_tok_s": 137.83,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22538.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "stage": "answer",
+          "ok": false,
+          "error": "http_400: {\"error\":{\"message\":\"This model's maximum context length is 4096 tokens. However, you requested 512 output tokens and your prompt contains at least 3585 input tokens, for a total of at least 4097 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (paramete",
+          "e2e_ms": 10.166,
+          "ttft_ms": null,
+          "prefill_proxy_ms": null,
+          "decode_ms": null,
+          "prompt_tokens": 8252,
+          "completion_tokens": 0,
+          "decode_tok_s": null,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22538.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        }
+      ],
+      "gpu_end": {
+        "nvidia_smi_used_mb": 22538.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "timestamp": "2026-09-03T22:05:32.580290+00:00",
+      "intent_override": {
+        "natural_intent_question_type": "band_power",
+        "forced_question_type": "threshold_set",
+        "reason": "profile multi-tool/verifier path with production tools"
+      }
+    },
+    "C": {
+      "request_class": "C_TEXT_VERIFIER",
+      "request_id": "req_f87e3e1c7ff1",
+      "question": "Which channels have beta power at or above the upper quartile for S001_R01_E000?",
+      "success": true,
+      "errors": [],
+      "requires_vision": false,
+      "raw_intent": {
+        "requires_vision": false,
+        "question_type": "band_power",
+        "sample_id": "S001_R01_E000",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power",
+        "threshold_mode": "upper_quartile",
+        "comparator": "ge",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_count": 2,
+      "tool_names": [
+        "compute_band_power",
+        "select_channels_above_threshold"
+      ],
+      "verification_triggered": false,
+      "trigger_reason": [
+        "missing_answer_sections",
+        "multi_tool"
+      ],
+      "path_mode": "NORMAL",
+      "first_pass_verification": {
+        "passed": false,
+        "confidence_score": 0.3,
+        "failure_codes": [
+          "missing_answer_sections"
+        ],
+        "unsupported_claims": [],
+        "evidence_conflicts": [],
+        "missing_evidence": [],
+        "unit_issues": [],
+        "condition_mismatch": [],
+        "recommendation": "REWRITE",
+        "deterministic": {
+          "passed": false,
+          "failure_codes": [
+            "missing_answer_sections"
+          ],
+          "grounding": {
+            "numeric_claims": [],
+            "supported_claims": [],
+            "unsupported_claims": [],
+            "passed": true
+          },
+          "missing_channels": [],
+          "unit_issues": [],
+          "condition_mismatches": [],
+          "missing_evidence": [],
+          "evidence_conflicts": [],
+          "unsupported_candidates": [],
+          "ambiguous": false
+        },
+        "model_verified": false,
+        "raw_model_json": null
+      },
+      "recovery": null,
+      "model_calls": 2,
+      "final_answer_preview": "Answer: Selected channels: CP3, CP5, IZ, O1, O2, OZ, P3, P5, P7, PO3, PO7, POZ, T7, T8, T9, TP7\nEvidence: threshold=138.67868041992188 uV2, channels=['CP3', 'CP5', 'IZ', 'O1', 'O2', 'OZ', 'P3', 'P5', 'P7', 'PO3', 'PO7', 'POZ', 'T7', 'T8', 'T9', 'TP7']\nTools used: compute_band_power, select_channels_above_threshold\nUncertainty: Band power production uses source='features' (features.parquet). Welch ",
+      "trace": {
+        "e2e_ms": 1267.65,
+        "spans": [
+          {
+            "name": "intent_generation",
+            "ms": 926.333,
+            "ok": true,
+            "error": null,
+            "e2e_ms": 910.486,
+            "ttft_ms": 20.466,
+            "prefill_proxy_ms": 20.466,
+            "decode_ms": 890.02,
+            "prompt_tokens": 723,
+            "completion_tokens": 123,
+            "decode_tok_s": 138.2,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22538.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "intent_parse_validate",
+            "ms": 0.059
+          },
+          {
+            "name": "routing_total",
+            "ms": 926.412,
+            "requires_vision": false,
+            "intent_valid": true,
+            "intent_override": {
+              "natural_intent_question_type": "band_power",
+              "forced_question_type": "threshold_set",
+              "reason": "profile multi-tool/verifier path with production tools"
+            }
+          },
+          {
+            "name": "requires_vision_decision",
+            "ms": 0.059,
+            "requires_vision": false,
+            "raw_requires_vision": false
+          },
+          {
+            "name": "tool_execution_total",
+            "ms": 310.612,
+            "tool_count": 2,
+            "tool_names": [
+              "compute_band_power",
+              "select_channels_above_threshold"
+            ],
+            "success": true
+          },
+          {
+            "name": "evidence_bundle_construction",
+            "ms": 0.215,
+            "construction_ms": 0.205,
+            "serialization_ms": 0.181,
+            "tool_wall_ms": 310.609
+          },
+          {
+            "name": "grounded_answer_generation",
+            "ms": 29.582,
+            "ok": false,
+            "error": "http_400: {\"error\":{\"message\":\"This model's maximum context length is 4096 tokens. However, you requested 512 output tokens and your prompt contains at least 3585 input tokens, for a total of at least 4097 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (paramete",
+            "e2e_ms": 9.181,
+            "ttft_ms": null,
+            "prefill_proxy_ms": null,
+            "decode_ms": null,
+            "prompt_tokens": 8252,
+            "completion_tokens": 0,
+            "decode_tok_s": null,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22538.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "verifier_block",
+            "ms": 0.353,
+            "triggered": false,
+            "mode": "format_only_repair",
+            "format_ms": 0.027
+          },
+          {
+            "name": "final_serialization",
+            "ms": 0.365
+          }
+        ],
+        "span_map_ms": {
+          "intent_generation": 926.333,
+          "intent_parse_validate": 0.059,
+          "routing_total": 926.412,
+          "requires_vision_decision": 0.059,
+          "tool_execution_total": 310.612,
+          "evidence_bundle_construction": 0.215,
+          "grounded_answer_generation": 29.582,
+          "verifier_block": 0.353,
+          "final_serialization": 0.365
+        }
+      },
+      "text_calls": [
+        {
+          "stage": "intent",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 910.486,
+          "ttft_ms": 20.466,
+          "prefill_proxy_ms": 20.466,
+          "decode_ms": 890.02,
+          "prompt_tokens": 723,
+          "completion_tokens": 123,
+          "decode_tok_s": 138.2,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22538.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "stage": "answer",
+          "ok": false,
+          "error": "http_400: {\"error\":{\"message\":\"This model's maximum context length is 4096 tokens. However, you requested 512 output tokens and your prompt contains at least 3585 input tokens, for a total of at least 4097 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (paramete",
+          "e2e_ms": 9.181,
+          "ttft_ms": null,
+          "prefill_proxy_ms": null,
+          "decode_ms": null,
+          "prompt_tokens": 8252,
+          "completion_tokens": 0,
+          "decode_tok_s": null,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22538.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        }
+      ],
+      "gpu_end": {
+        "nvidia_smi_used_mb": 22538.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "timestamp": "2026-09-03T22:05:33.861783+00:00",
+      "intent_override": {
+        "natural_intent_question_type": "band_power",
+        "forced_question_type": "threshold_set",
+        "reason": "profile multi-tool/verifier path with production tools"
+      }
+    },
+    "D": {
+      "request_class": "D_TEXT_RECOVERY",
+      "request_id": "req_3e3cd160e00a",
+      "question": "What is the beta band power at channel C3 for sample S001_R01_E000?",
+      "success": true,
+      "errors": [],
+      "requires_vision": false,
+      "raw_intent": {
+        "requires_vision": false,
+        "question_type": "band_power",
+        "sample_id": "S001_R01_E000",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": [
+          "C3"
+        ],
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power"
+      },
+      "tool_count": 1,
+      "tool_names": [
+        "compute_band_power"
+      ],
+      "verification_triggered": true,
+      "trigger_reason": [
+        "missing_answer_sections",
+        "unsupported_numeric",
+        "unsupported_value_candidate"
+      ],
+      "path_mode": "RECOVERY",
+      "first_pass_verification": {
+        "passed": false,
+        "confidence_score": 0.0,
+        "failure_codes": [
+          "missing_answer_sections",
+          "unsupported_numeric"
+        ],
+        "unsupported_claims": [
+          "99999.0"
+        ],
+        "evidence_conflicts": [],
+        "missing_evidence": [],
+        "unit_issues": [],
+        "condition_mismatch": [],
+        "recommendation": "REWRITE",
+        "deterministic": {
+          "passed": false,
+          "failure_codes": [
+            "missing_answer_sections",
+            "unsupported_numeric"
+          ],
+          "grounding": {
+            "numeric_claims": [
+              99999.0
+            ],
+            "supported_claims": [],
+            "unsupported_claims": [
+              99999.0
+            ],
+            "passed": false
+          },
+          "missing_channels": [],
+          "unit_issues": [],
+          "condition_mismatches": [],
+          "missing_evidence": [],
+          "evidence_conflicts": [],
+          "unsupported_candidates": [
+            "99999.0"
+          ],
+          "ambiguous": false
+        },
+        "model_verified": true,
+        "raw_model_json": {
+          "passed": false,
+          "confidence_score": 0.0,
+          "failure_codes": [
+            "unsupported_numeric"
+          ],
+          "unsupported_claims": [
+            "99999.0"
+          ],
+          "evidence_conflicts": [],
+          "missing_evidence": [],
+          "unit_issues": [],
+          "condition_mismatch": [],
+          "recommendation": "REWRITE"
+        }
+      },
+      "recovery": {
+        "action": "REWRITE",
+        "success": true,
+        "latency_ms": 184.816
+      },
+      "model_calls": 4,
+      "final_answer_preview": "Answer: beta band power at C3 is 134.54469299316406 uV2\nEvidence: channel=C3, band=beta, value=134.54469299316406 uV2\nTools used: compute_band_power\nUncertainty: Band power production uses source='features' (features.parquet). Welch recompute from raw EEG may differ for low-frequency bands (delta/theta) due to integration window and filter edge effects.",
+      "trace": {
+        "e2e_ms": 1683.687,
+        "spans": [
+          {
+            "name": "intent_generation",
+            "ms": 709.68,
+            "ok": true,
+            "error": null,
+            "e2e_ms": 692.574,
+            "ttft_ms": 21.481,
+            "prefill_proxy_ms": 21.481,
+            "decode_ms": 671.094,
+            "prompt_tokens": 722,
+            "completion_tokens": 93,
+            "decode_tok_s": 138.58,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22538.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "intent_parse_validate",
+            "ms": 0.034
+          },
+          {
+            "name": "routing_total",
+            "ms": 709.72,
+            "requires_vision": false,
+            "intent_valid": true,
+            "intent_override": null
+          },
+          {
+            "name": "requires_vision_decision",
+            "ms": 0.034,
+            "requires_vision": false,
+            "raw_requires_vision": false
+          },
+          {
+            "name": "tool_execution_total",
+            "ms": 11.363,
+            "tool_count": 1,
+            "tool_names": [
+              "compute_band_power"
+            ],
+            "success": true
+          },
+          {
+            "name": "evidence_bundle_construction",
+            "ms": 0.071,
+            "construction_ms": 0.061,
+            "serialization_ms": 0.056,
+            "tool_wall_ms": 11.361
+          },
+          {
+            "name": "grounded_answer_generation",
+            "ms": 153.879,
+            "ok": true,
+            "error": null,
+            "e2e_ms": 136.899,
+            "ttft_ms": 26.428,
+            "prefill_proxy_ms": 26.428,
+            "decode_ms": 110.471,
+            "prompt_tokens": 1322,
+            "completion_tokens": 15,
+            "decode_tok_s": 135.78,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22538.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "draft_corruption_inject",
+            "ms": 0.196
+          },
+          {
+            "name": "verifier_model",
+            "ms": 623.346,
+            "ok": true,
+            "error": null,
+            "e2e_ms": 606.752,
+            "ttft_ms": 88.432,
+            "prefill_proxy_ms": 88.432,
+            "decode_ms": 518.319,
+            "prompt_tokens": 2116,
+            "completion_tokens": 68,
+            "decode_tok_s": 131.19,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22540.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "recovery",
+            "ms": 184.816,
+            "action": "REWRITE",
+            "success": true
+          },
+          {
+            "name": "verifier_block",
+            "ms": 808.348,
+            "triggered": true,
+            "mode": "model_verifier",
+            "passed": false
+          },
+          {
+            "name": "final_serialization",
+            "ms": 0.035
+          }
+        ],
+        "span_map_ms": {
+          "intent_generation": 709.68,
+          "intent_parse_validate": 0.034,
+          "routing_total": 709.72,
+          "requires_vision_decision": 0.034,
+          "tool_execution_total": 11.363,
+          "evidence_bundle_construction": 0.071,
+          "grounded_answer_generation": 153.879,
+          "draft_corruption_inject": 0.196,
+          "verifier_model": 623.346,
+          "recovery": 184.816,
+          "verifier_block": 808.348,
+          "final_serialization": 0.035
+        }
+      },
+      "text_calls": [
+        {
+          "stage": "intent",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 692.574,
+          "ttft_ms": 21.481,
+          "prefill_proxy_ms": 21.481,
+          "decode_ms": 671.094,
+          "prompt_tokens": 722,
+          "completion_tokens": 93,
+          "decode_tok_s": 138.58,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22538.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "stage": "answer",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 136.899,
+          "ttft_ms": 26.428,
+          "prefill_proxy_ms": 26.428,
+          "decode_ms": 110.471,
+          "prompt_tokens": 1322,
+          "completion_tokens": 15,
+          "decode_tok_s": 135.78,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22538.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "stage": "verifier",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 606.752,
+          "ttft_ms": 88.432,
+          "prefill_proxy_ms": 88.432,
+          "decode_ms": 518.319,
+          "prompt_tokens": 2116,
+          "completion_tokens": 68,
+          "decode_tok_s": 131.19,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22540.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "stage": "recovery_answer",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 167.948,
+          "ttft_ms": 50.089,
+          "prefill_proxy_ms": 50.089,
+          "decode_ms": 117.859,
+          "prompt_tokens": 1341,
+          "completion_tokens": 16,
+          "decode_tok_s": 135.76,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22540.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        }
+      ],
+      "gpu_end": {
+        "nvidia_smi_used_mb": 22540.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "timestamp": "2026-09-03T22:05:35.560427+00:00",
+      "intent_override": null
+    },
+    "C_model": {
+      "request_class": "C_TEXT_VERIFIER_MODEL",
+      "request_id": "req_2637b554b2fd",
+      "question": "Which channels have beta power at or above the upper quartile for S001_R01_E000?",
+      "success": true,
+      "errors": [],
+      "requires_vision": false,
+      "raw_intent": {
+        "requires_vision": false,
+        "question_type": "channel_ranking",
+        "sample_id": "S001_R01_E000",
+        "subject_id": "S001",
+        "run_id": "R01",
+        "epoch": 0,
+        "channels": "all",
+        "frequency_band": "beta",
+        "frequency_range": [
+          1.0,
+          40.0
+        ],
+        "metric": "beta_power",
+        "threshold_mode": "upper_quartile",
+        "comparator": "ge",
+        "top_k": 3,
+        "sort_direction": "descending"
+      },
+      "tool_count": 2,
+      "tool_names": [
+        "compute_band_power",
+        "select_channels_above_threshold"
+      ],
+      "verification_triggered": false,
+      "trigger_reason": [
+        "missing_answer_sections",
+        "multi_tool"
+      ],
+      "path_mode": "NORMAL",
+      "first_pass_verification": {
+        "passed": false,
+        "confidence_score": 0.3,
+        "failure_codes": [
+          "missing_answer_sections"
+        ],
+        "unsupported_claims": [],
+        "evidence_conflicts": [],
+        "missing_evidence": [],
+        "unit_issues": [],
+        "condition_mismatch": [],
+        "recommendation": "REWRITE",
+        "deterministic": {
+          "passed": false,
+          "failure_codes": [
+            "missing_answer_sections"
+          ],
+          "grounding": {
+            "numeric_claims": [],
+            "supported_claims": [],
+            "unsupported_claims": [],
+            "passed": true
+          },
+          "missing_channels": [],
+          "unit_issues": [],
+          "condition_mismatches": [],
+          "missing_evidence": [],
+          "evidence_conflicts": [],
+          "unsupported_candidates": [],
+          "ambiguous": false
+        },
+        "model_verified": false,
+        "raw_model_json": null
+      },
+      "recovery": null,
+      "model_calls": 2,
+      "final_answer_preview": "Answer: Selected channels: CP3, CP5, IZ, O1, O2, OZ, P3, P5, P7, PO3, PO7, POZ, T7, T8, T9, TP7\nEvidence: threshold=138.67868041992188 uV2, channels=['CP3', 'CP5', 'IZ', 'O1', 'O2', 'OZ', 'P3', 'P5', 'P7', 'PO3', 'PO7', 'POZ', 'T7', 'T8', 'T9', 'TP7']\nTools used: compute_band_power, select_channels_above_threshold\nUncertainty: Band power production uses source='features' (features.parquet). Welch ",
+      "trace": {
+        "e2e_ms": 1321.851,
+        "spans": [
+          {
+            "name": "intent_generation",
+            "ms": 972.828,
+            "ok": true,
+            "error": null,
+            "e2e_ms": 948.021,
+            "ttft_ms": 50.053,
+            "prefill_proxy_ms": 50.053,
+            "decode_ms": 897.968,
+            "prompt_tokens": 723,
+            "completion_tokens": 124,
+            "decode_tok_s": 138.09,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22536.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "intent_parse_validate",
+            "ms": 0.06
+          },
+          {
+            "name": "routing_total",
+            "ms": 972.911,
+            "requires_vision": false,
+            "intent_valid": true,
+            "intent_override": {
+              "natural_intent_question_type": "channel_ranking",
+              "forced_question_type": "threshold_set",
+              "reason": "profile multi-tool/verifier path with production tools"
+            }
+          },
+          {
+            "name": "requires_vision_decision",
+            "ms": 0.06,
+            "requires_vision": false,
+            "raw_requires_vision": false
+          },
+          {
+            "name": "tool_execution_total",
+            "ms": 315.749,
+            "tool_count": 2,
+            "tool_names": [
+              "compute_band_power",
+              "select_channels_above_threshold"
+            ],
+            "success": true
+          },
+          {
+            "name": "evidence_bundle_construction",
+            "ms": 0.219,
+            "construction_ms": 0.208,
+            "serialization_ms": 0.175,
+            "tool_wall_ms": 315.745
+          },
+          {
+            "name": "grounded_answer_generation",
+            "ms": 32.501,
+            "ok": false,
+            "error": "http_400: {\"error\":{\"message\":\"This model's maximum context length is 4096 tokens. However, you requested 512 output tokens and your prompt contains at least 3585 input tokens, for a total of at least 4097 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (paramete",
+            "e2e_ms": 10.35,
+            "ttft_ms": null,
+            "prefill_proxy_ms": null,
+            "decode_ms": null,
+            "prompt_tokens": 8252,
+            "completion_tokens": 0,
+            "decode_tok_s": null,
+            "queue_wait_ms": null,
+            "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+            "gpu": {
+              "nvidia_smi_used_mb": 22536.0,
+              "nvidia_smi_total_mb": 24564.0,
+              "gpu_util_pct": 100.0,
+              "torch_allocated_mb": 0.0,
+              "torch_reserved_mb": 0.0
+            }
+          },
+          {
+            "name": "verifier_block",
+            "ms": 0.205,
+            "triggered": false,
+            "mode": "format_only_repair",
+            "format_ms": 0.02
+          },
+          {
+            "name": "final_serialization",
+            "ms": 0.177
+          }
+        ],
+        "span_map_ms": {
+          "intent_generation": 972.828,
+          "intent_parse_validate": 0.06,
+          "routing_total": 972.911,
+          "requires_vision_decision": 0.06,
+          "tool_execution_total": 315.749,
+          "evidence_bundle_construction": 0.219,
+          "grounded_answer_generation": 32.501,
+          "verifier_block": 0.205,
+          "final_serialization": 0.177
+        }
+      },
+      "text_calls": [
+        {
+          "stage": "intent",
+          "ok": true,
+          "error": null,
+          "e2e_ms": 948.021,
+          "ttft_ms": 50.053,
+          "prefill_proxy_ms": 50.053,
+          "decode_ms": 897.968,
+          "prompt_tokens": 723,
+          "completion_tokens": 124,
+          "decode_tok_s": 138.09,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22536.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        },
+        {
+          "stage": "answer",
+          "ok": false,
+          "error": "http_400: {\"error\":{\"message\":\"This model's maximum context length is 4096 tokens. However, you requested 512 output tokens and your prompt contains at least 3585 input tokens, for a total of at least 4097 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (paramete",
+          "e2e_ms": 10.35,
+          "ttft_ms": null,
+          "prefill_proxy_ms": null,
+          "decode_ms": null,
+          "prompt_tokens": 8252,
+          "completion_tokens": 0,
+          "decode_tok_s": null,
+          "queue_wait_ms": null,
+          "note": "queue/scheduler wait not separately exposed; TTFT includes any queue at c=1 (~0).",
+          "gpu": {
+            "nvidia_smi_used_mb": 22536.0,
+            "nvidia_smi_total_mb": 24564.0,
+            "gpu_util_pct": 100.0,
+            "torch_allocated_mb": 0.0,
+            "torch_reserved_mb": 0.0
+          }
+        }
+      ],
+      "gpu_end": {
+        "nvidia_smi_used_mb": 22536.0,
+        "nvidia_smi_total_mb": 24564.0,
+        "gpu_util_pct": 100.0,
+        "torch_allocated_mb": 0.0,
+        "torch_reserved_mb": 0.0
+      },
+      "timestamp": "2026-09-03T22:31:13.209509+00:00",
+      "intent_override": {
+        "natural_intent_question_type": "channel_ranking",
+        "forced_question_type": "threshold_set",
+        "reason": "profile multi-tool/verifier path with production tools"
+      }
+    }
+  },
+  "summary": {
+    "A_e2e_ms": 1378.088,
+    "B_e2e_ms": 1273.759,
+    "C_e2e_ms": 1267.65,
+    "D_e2e_ms": 1683.687,
+    "A_span_map": {
+      "intent_generation": 825.646,
+      "intent_parse_validate": 0.042,
+      "routing_total": 825.701,
+      "requires_vision_decision": 0.042,
+      "tool_execution_total": 300.703,
+      "evidence_bundle_construction": 0.098,
+      "grounded_answer_generation": 251.287,
+      "verifier_block": 0.137,
+      "final_serialization": 0.065
+    },
+    "B_span_map": {
+      "intent_generation": 934.941,
+      "intent_parse_validate": 0.067,
+      "routing_total": 935.029,
+      "requires_vision_decision": 0.067,
+      "tool_execution_total": 307.246,
+      "evidence_bundle_construction": 0.277,
+      "grounded_answer_generation": 30.418,
+      "verifier_block": 0.342,
+      "final_serialization": 0.342
+    },
+    "C_span_map": {
+      "intent_generation": 926.333,
+      "intent_parse_validate": 0.059,
+      "routing_total": 926.412,
+      "requires_vision_decision": 0.059,
+      "tool_execution_total": 310.612,
+      "evidence_bundle_construction": 0.215,
+      "grounded_answer_generation": 29.582,
+      "verifier_block": 0.353,
+      "final_serialization": 0.365
+    },
+    "D_span_map": {
+      "intent_generation": 709.68,
+      "intent_parse_validate": 0.034,
+      "routing_total": 709.72,
+      "requires_vision_decision": 0.034,
+      "tool_execution_total": 11.363,
+      "evidence_bundle_construction": 0.071,
+      "grounded_answer_generation": 153.879,
+      "draft_corruption_inject": 0.196,
+      "verifier_model": 623.346,
+      "recovery": 184.816,
+      "verifier_block": 808.348,
+      "final_serialization": 0.035
+    }
+  }
+}

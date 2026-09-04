@@ -1,0 +1,76 @@
+{
+  "total_examples": 900,
+  "image_family": {
+    "channel_band": 198,
+    "comparison": 60,
+    "psd": 198,
+    "spectrogram": 197,
+    "topomap": 197,
+    "waveform": 50
+  },
+  "task_family": {
+    "band_power_beta_top3": 50,
+    "condition_higher_mean": 20,
+    "psd_peak_frequency": 66,
+    "spectrogram_dominant_band": 66,
+    "topomap_strongest_alpha_mu": 66,
+    "waveform_highest_rms": 17,
+    "band_power_weakest_alpha_mu": 50,
+    "condition_percent_difference": 20,
+    "psd_dominant_band": 66,
+    "spectrogram_peak_frequency": 66,
+    "topomap_beta_top3": 66,
+    "waveform_rms_order": 17,
+    "band_power_high_beta_set": 49,
+    "condition_largest_channel_difference": 20,
+    "psd_band_order": 66,
+    "spectrogram_strongest_vs_weakest": 65,
+    "topomap_high_delta_set": 65,
+    "waveform_max_rms_numeric": 16,
+    "band_power_dominant_mean_band": 49
+  },
+  "verification_type": {
+    "ranking": 199,
+    "categorical": 419,
+    "numeric": 168,
+    "set": 114
+  },
+  "target_format": {
+    "ranking": 199,
+    "comparison": 105,
+    "numeric": 168,
+    "categorical": 314,
+    "set_membership": 114
+  },
+  "subject_split": {
+    "S001": 47,
+    "S002": 58,
+    "S003": 41,
+    "S004": 59,
+    "S005": 48,
+    "S006": 36,
+    "S007": 46,
+    "S008": 29,
+    "S009": 41,
+    "S010": 42,
+    "S011": 58,
+    "S012": 28,
+    "S013": 68,
+    "S014": 49,
+    "S015": 44,
+    "S016": 56,
+    "S017": 32,
+    "S018": 41,
+    "S019": 31,
+    "S020": 46
+  },
+  "held_out_leakage": {},
+  "subject_safe": true,
+  "forbidden_subjects": [
+    "S026",
+    "S027",
+    "S028",
+    "S029",
+    "S030"
+  ]
+}

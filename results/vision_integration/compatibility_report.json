@@ -1,0 +1,210 @@
+{
+  "datasets": {
+    "multimodal_sft_train": {
+      "path": "data/processed/vision/multimodal_sft_train.jsonl",
+      "count": 700,
+      "schema_keys": [
+        "ground_truth",
+        "grounded_answer",
+        "id",
+        "image_id",
+        "image_path",
+        "relevant_context",
+        "researcher_question",
+        "source_samples",
+        "supporting_numeric_evidence",
+        "task_class",
+        "task_family"
+      ],
+      "image_validation": {
+        "total_with_image_path": 700,
+        "resolved_count": 700,
+        "missing_count": 0,
+        "missing_samples": [],
+        "all_resolved": true
+      },
+      "subject_integrity": {
+        "subjects": {
+          "S001": 36,
+          "S002": 47,
+          "S003": 33,
+          "S004": 43,
+          "S005": 33,
+          "S006": 26,
+          "S007": 37,
+          "S008": 24,
+          "S009": 29,
+          "S010": 35,
+          "S011": 45,
+          "S012": 24,
+          "S013": 49,
+          "S014": 39,
+          "S015": 36,
+          "S016": 44,
+          "S017": 23,
+          "S018": 36,
+          "S019": 25,
+          "S020": 36
+        },
+        "violations": [],
+        "violation_count": 0,
+        "subject_safe": true
+      }
+    },
+    "multimodal_rlvr_train": {
+      "path": "data/processed/vision/multimodal_rlvr_train.jsonl",
+      "count": 900,
+      "schema_keys": [
+        "context",
+        "ground_truth",
+        "id",
+        "image_id",
+        "image_path",
+        "question",
+        "source_samples",
+        "source_values",
+        "task_class",
+        "task_family",
+        "tolerance",
+        "verification_type"
+      ],
+      "image_validation": {
+        "total_with_image_path": 900,
+        "resolved_count": 900,
+        "missing_count": 0,
+        "missing_samples": [],
+        "all_resolved": true
+      },
+      "subject_integrity": {
+        "subjects": {
+          "S001": 47,
+          "S002": 58,
+          "S003": 41,
+          "S004": 59,
+          "S005": 48,
+          "S006": 36,
+          "S007": 46,
+          "S008": 29,
+          "S009": 41,
+          "S010": 42,
+          "S011": 58,
+          "S012": 28,
+          "S013": 68,
+          "S014": 49,
+          "S015": 44,
+          "S016": 56,
+          "S017": 32,
+          "S018": 41,
+          "S019": 31,
+          "S020": 46
+        },
+        "violations": [],
+        "violation_count": 0,
+        "subject_safe": true
+      }
+    },
+    "multimodal_eval_heldout": {
+      "path": "data/processed/vision/multimodal_eval_heldout.jsonl",
+      "count": 440,
+      "schema_keys": [
+        "context",
+        "ground_truth",
+        "id",
+        "image_id",
+        "image_path",
+        "question",
+        "source_samples",
+        "source_values",
+        "task_class",
+        "task_family",
+        "tolerance",
+        "verification_type"
+      ],
+      "image_validation": {
+        "total_with_image_path": 440,
+        "resolved_count": 440,
+        "missing_count": 0,
+        "missing_samples": [],
+        "all_resolved": true
+      },
+      "subject_integrity": {
+        "subjects": {
+          "S026": 89,
+          "S027": 76,
+          "S028": 102,
+          "S029": 83,
+          "S030": 90
+        },
+        "violations": [],
+        "violation_count": 0,
+        "subject_safe": true
+      }
+    }
+  },
+  "future_multimodal_requirements": {
+    "vision_encoder": "SigLIP or CLIP encoder required for image embeddings",
+    "projector": "Linear/MLP projector to map vision tokens into LLM hidden size",
+    "input_format": "Interleave image tokens with chat template user message",
+    "image_fields": [
+      "image_id",
+      "image_path"
+    ],
+    "context_fields": [
+      "relevant_context",
+      "context",
+      "supporting_numeric_evidence",
+      "source_values"
+    ],
+    "answer_fields": [
+      "grounded_answer",
+      "ground_truth"
+    ],
+    "chat_template": "Extend Qwen chat template with vision placeholders",
+    "training_stages": [
+      "SFT with image+text pairs",
+      "RLVR with verifier rewards"
+    ]
+  },
+  "blockers": [],
+  "train_test_separation": {
+    "train_subjects": [
+      "S001",
+      "S002",
+      "S003",
+      "S004",
+      "S005",
+      "S006",
+      "S007",
+      "S008",
+      "S009",
+      "S010",
+      "S011",
+      "S012",
+      "S013",
+      "S014",
+      "S015",
+      "S016",
+      "S017",
+      "S018",
+      "S019",
+      "S020"
+    ],
+    "validation_subjects": [
+      "S021",
+      "S022",
+      "S023",
+      "S024",
+      "S025"
+    ],
+    "held_out_subjects": [
+      "S026",
+      "S027",
+      "S028",
+      "S029",
+      "S030"
+    ],
+    "sft_train_uses_train_only": true,
+    "rlvr_train_uses_train_only": true,
+    "eval_uses_held_out_only": true
+  }
+}

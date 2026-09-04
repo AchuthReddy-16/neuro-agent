@@ -1,0 +1,7 @@
+{
+  "stage": "K.2",
+  "gpu_memory_utilization": 0.5,
+  "tested": false,
+  "reason": "Stopped after util=0.45 OOM co-loading VLM; higher util unsafe.",
+  "timestamp": "2026-09-03T22:52:28.386500+00:00"
+}

@@ -1,0 +1,50 @@
+{
+  "stage": "H.1",
+  "scope": "text_model_quantization_audit",
+  "model": {
+    "base": "Qwen/Qwen3-4B-Instruct-2507",
+    "adapter": "checkpoints/sft_corrected_v2/final",
+    "adapter_type": "LoRA (PEFT)",
+    "approx_params": 4000000000
+  },
+  "library_stack": {
+    "preferred": "bitsandbytes + Transformers + PEFT",
+    "not_used": ["vLLM", "GPTQ", "AWQ", "AutoGPTQ"]
+  },
+  "methods": {
+    "bf16": {
+      "method": "Transformers AutoModelForCausalLM with torch_dtype=bfloat16",
+      "library": "transformers + peft",
+      "lora_compatible": true,
+      "expected_weight_vram_mb": 8000,
+      "limitations": [
+        "Highest quality reference",
+        "Highest VRAM (~8 GB weights + activations/KV)"
+      ]
+    },
+    "int8": {
+      "method": "BitsAndBytesConfig(load_in_8bit=True)",
+      "library": "bitsandbytes + transformers + peft",
+      "lora_compatible": true,
+      "expected_weight_vram_mb": 4000,
+      "limitations": [
+        "Weight-only INT8; activations remain higher precision",
+        "May be slower than BF16 on RTX 4090 Tensor Cores",
+        "Adapter stays BF16/FP16 on top of quantized base"
+      ]
+    },
+    "int4": {
+      "method": "BitsAndBytesConfig load_in_4bit NF4 + double quant (QLoRA recipe)",
+      "library": "bitsandbytes + transformers + peft",
+      "lora_compatible": true,
+      "expected_weight_vram_mb": 2000,
+      "limitations": [
+        "More aggressive PTQ; possible quality regression",
+        "Compute dtype remains BF16",
+        "Same recipe as training QLoRA base load"
+      ]
+    }
+  },
+  "loader_integration": "src/neuro_agent/inference/model_loader.py via InferenceConfig.quantization",
+  "status": "paths_implemented; awaiting smoke validation"
+}

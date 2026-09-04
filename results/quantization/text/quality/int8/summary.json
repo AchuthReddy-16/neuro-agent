@@ -1,0 +1,50 @@
+{
+  "model_name": "Qwen/Qwen3-4B-Instruct-2507",
+  "variant": "sft_corrected_v2_INT8",
+  "dtype": "bfloat16",
+  "total_examples": 1000,
+  "verifier_pass_rate": 0.866,
+  "task_accuracy": 0.866,
+  "invalid_parse_rate": 0.0,
+  "empty_refusal_rate": 0.0,
+  "avg_generated_tokens": 7.834,
+  "runtime_s": 410.5192227009684,
+  "examples_per_second": 2.435939524148478,
+  "avg_latency_ms": 2377.203226301819,
+  "peak_torch_allocated_mb": 4951.0166015625,
+  "peak_torch_reserved_mb": 5248.0,
+  "nvidia_smi_peak_mb": 5732.0,
+  "held_out_subjects": [
+    "S026",
+    "S027",
+    "S028",
+    "S029",
+    "S030"
+  ],
+  "task_distribution": {
+    "numerical_reasoning": 125,
+    "channel_ranking": 125,
+    "band_power_analysis": 125,
+    "movement_task_classification": 125,
+    "execution_vs_imagery": 125,
+    "statistical_comparison": 125,
+    "tool_selection": 125,
+    "factual_grounding": 125
+  },
+  "verification_type_distribution": {
+    "numeric": 125,
+    "ranking": 250,
+    "categorical": 625
+  },
+  "unsupported_claim_available": true,
+  "unsupported_claim_rate": 0.0,
+  "metadata": {
+    "model_load_time_s": 13.04720935691148,
+    "weight_memory_mb": 4468.736328125,
+    "num_parameters": 4088528384,
+    "failure_count": 134,
+    "seed": 42,
+    "max_new_tokens": 128,
+    "do_sample": false
+  }
+}

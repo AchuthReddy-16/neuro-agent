@@ -1,0 +1,227 @@
+{
+  "stage": "H.6",
+  "timestamp": "2026-09-03T18:39:58.142926+00:00",
+  "analysis_only": true,
+  "gpu": "NVIDIA GeForce RTX 4090 24GB",
+  "hourly_rate_usd": 0.74,
+  "hourly_rate_source": "user-provided RTX 4090 RunPod GPU rate for this project ($0.74/hour)",
+  "cost_formulas": {
+    "requests_per_hour": "3600 / (e2e_ms/1000)  # single-request E2E, no concurrency",
+    "generated_tokens_per_hour": "decode_tok_per_s * 3600  # measured decode throughput",
+    "cost_per_1k_requests_usd": "hourly_rate * 1000 / requests_per_hour",
+    "cost_per_1m_generated_tokens_usd": "hourly_rate * 1e6 / generated_tokens_per_hour"
+  },
+  "baseline_for_deltas": "A_hf_bf16",
+  "contract_note": "HF rows use ~512 prompt / 64 generated / single request. vLLM used matching generated-token count in offline mode; TTFT not split.",
+  "quality_comparability": {
+    "A_B": "full 1000-example held-out verifier",
+    "C_D": "32-example sanity only",
+    "E_F": "16-example vLLM smoke; not a substitute for the 1000-example protocol"
+  },
+  "rows": {
+    "A_hf_bf16": {
+      "id": "A",
+      "name": "HF BF16",
+      "backend": "huggingface",
+      "precision": "bfloat16",
+      "quality": 0.864,
+      "quality_n": 1000,
+      "quality_protocol": "full held-out verifier (H.1)",
+      "model_vram_mb": 7938.4,
+      "peak_vram_mb": 8164.2,
+      "load_time_s": 23.71,
+      "ttft_ms": 51.05,
+      "decode_tok_per_s": 52.74,
+      "latency_per_token_ms": 18.96,
+      "e2e_ms": 1264.5,
+      "sources": [
+        "results/model_comparison/text_quantization_bf16_int8_int4.json systems.bf16 + quality.full_1000_examples.bf16"
+      ],
+      "notes": [
+        "Canonical H.1 systems contract: ~512 prompt tokens, 64 generated, use_cache=True."
+      ],
+      "vram_reduction_pct_vs_hf_bf16": 0.0,
+      "throughput_change_pct_vs_hf_bf16": 0.0,
+      "e2e_latency_change_pct_vs_hf_bf16": 0.0,
+      "requests_per_hour": 2846.98,
+      "generated_tokens_per_hour": 189864.0,
+      "cost_per_1k_requests_usd": 0.259925,
+      "cost_per_1m_generated_tokens_usd": 3.8975
+    },
+    "B_hf_bnb_int8_h1b": {
+      "id": "B",
+      "name": "HF bitsandbytes INT8 (original H.1B)",
+      "backend": "huggingface + bitsandbytes load_in_8bit",
+      "precision": "int8_llm_int8",
+      "quality": 0.866,
+      "quality_n": 1000,
+      "quality_protocol": "full held-out verifier (H.1)",
+      "model_vram_mb": 4479.0,
+      "peak_vram_mb": 4709.3,
+      "load_time_s": 6.15,
+      "ttft_ms": 112.5,
+      "decode_tok_per_s": 12.5,
+      "latency_per_token_ms": 84.7,
+      "e2e_ms": 5450.0,
+      "sources": [
+        "results/model_comparison/int8_before_vs_after_optimization.json final_comparison.original_int8_h1b (ttft/decode/e2e/quality/peak 4.6 GB)",
+        "results/model_comparison/hf_vs_vllm_text.json hf_int8 (latency_per_token_ms, vram_load)",
+        "results/model_comparison/text_quantization_bf16_int8_int4.json systems.int8 (load_time_s, allocated_after_load, peak_vram_mb 4709.3)"
+      ],
+      "notes": [
+        "H.1B preserved latency/quality are the original INT8 baseline, not an optimized path.",
+        "bitsandbytes INT8 saved memory but suffered backend-wide latency overhead (quantize\u2192INT8 GEMM\u2192dequant + outlier mixed precision).",
+        "Peak VRAM listed as 4.6 GB in H.1B summary; H.1 systems peak is 4709.3 MB (same order)."
+      ],
+      "vram_reduction_pct_vs_hf_bf16": 42.32,
+      "throughput_change_pct_vs_hf_bf16": -76.3,
+      "e2e_latency_change_pct_vs_hf_bf16": 331.0,
+      "requests_per_hour": 660.55,
+      "generated_tokens_per_hour": 45000.0,
+      "cost_per_1k_requests_usd": 1.120278,
+      "cost_per_1m_generated_tokens_usd": 16.4444
+    },
+    "C_h4_fair_int8": {
+      "id": "C",
+      "name": "H.4 fair INT8 rerun",
+      "backend": "huggingface + bitsandbytes load_in_8bit (unmodified)",
+      "precision": "int8_llm_int8",
+      "quality": 0.875,
+      "quality_n": 32,
+      "quality_protocol": "quality sanity only (not full 1000)",
+      "model_vram_mb": 4476.9,
+      "peak_vram_mb": 4697.1,
+      "load_time_s": 13.567,
+      "ttft_ms": 79.3,
+      "decode_tok_per_s": 18.73,
+      "latency_per_token_ms": 53.41,
+      "e2e_ms": 3497.46,
+      "sources": [
+        "results/optimization/int8/h4_fair_remeasure.json baseline",
+        "results/model_comparison/int8_before_vs_after_optimization.json h4_baseline_remeasured / quality_sanity"
+      ],
+      "notes": [
+        "Fair rerun with MatMul8bitLt warning spam suppressed. H.4 runtime variants were REJECTED.",
+        "Do not call bitsandbytes INT8 optimized. Faster than H.1B mainly due to fair timing (no log I/O), not a new backend."
+      ],
+      "vram_reduction_pct_vs_hf_bf16": 42.47,
+      "throughput_change_pct_vs_hf_bf16": -64.49,
+      "e2e_latency_change_pct_vs_hf_bf16": 176.59,
+      "requests_per_hour": 1029.32,
+      "generated_tokens_per_hour": 67428.0,
+      "cost_per_1k_requests_usd": 0.718922,
+      "cost_per_1m_generated_tokens_usd": 10.9747
+    },
+    "D_h5_triton_int8": {
+      "id": "D",
+      "name": "H.5 Triton-patched INT8",
+      "backend": "huggingface + bitsandbytes INT8 + Triton fuse on 72 gate/up layers",
+      "precision": "int8_llm_int8",
+      "quality": 0.875,
+      "quality_n": 32,
+      "quality_protocol": "quality sanity only (not full 1000)",
+      "model_vram_mb": 4691.4,
+      "peak_vram_mb": 4911.6,
+      "load_time_s": 6.55,
+      "ttft_ms": 105.67,
+      "decode_tok_per_s": 15.6,
+      "latency_per_token_ms": 64.11,
+      "e2e_ms": 4208.68,
+      "sources": [
+        "results/optimization/int8_kernel/integration_benchmark.json triton_patched + quality_sanity",
+        "results/model_comparison/int8_bnb_vs_triton_kernel.json",
+        "results/optimization/int8_kernel/h5_run.log (INT8 reload ~6.55\u20136.6 s)"
+      ],
+      "notes": [
+        "Triton improved one hot decode microkernel (M=1, 9728\u00d72560, +29.5% isolated) but did not improve full-model generate() throughput.",
+        "Not a production win. Prefill Triton path was slower than cuBLASLt; 180 other INT8 linears remained bitsandbytes."
+      ],
+      "vram_reduction_pct_vs_hf_bf16": 39.84,
+      "throughput_change_pct_vs_hf_bf16": -70.42,
+      "e2e_latency_change_pct_vs_hf_bf16": 232.83,
+      "requests_per_hour": 855.38,
+      "generated_tokens_per_hour": 56160.0,
+      "cost_per_1k_requests_usd": 0.865118,
+      "cost_per_1m_generated_tokens_usd": 13.1766
+    },
+    "E_vllm_bf16": {
+      "id": "E",
+      "name": "vLLM BF16",
+      "backend": "vllm 0.28.0",
+      "precision": "bfloat16",
+      "quality": 0.938,
+      "quality_n": 16,
+      "quality_protocol": "vLLM smoke only (not full 1000 verifier)",
+      "model_vram_mb": 7966.7,
+      "peak_vram_mb": 8243.2,
+      "load_time_s": 62.35,
+      "ttft_ms": null,
+      "decode_tok_per_s": 61.3,
+      "latency_per_token_ms": 16.3,
+      "e2e_ms": 1043.8,
+      "sources": [
+        "results/model_comparison/hf_vs_vllm_text.json vllm_bf16"
+      ],
+      "notes": [
+        "Current low-latency serving baseline.",
+        "TTFT not separately measured (offline generate).",
+        "Quality 0.938 is a 16-example smoke; not comparable to H.1 1000-example pass rate."
+      ],
+      "vram_reduction_pct_vs_hf_bf16": -0.97,
+      "throughput_change_pct_vs_hf_bf16": 16.23,
+      "e2e_latency_change_pct_vs_hf_bf16": -17.45,
+      "requests_per_hour": 3448.94,
+      "generated_tokens_per_hour": 220680.0,
+      "cost_per_1k_requests_usd": 0.214559,
+      "cost_per_1m_generated_tokens_usd": 3.3533
+    },
+    "F_vllm_fp8_ref": {
+      "id": "F",
+      "name": "vLLM FP8 reference",
+      "backend": "vllm 0.28.0 quantization=fp8",
+      "precision": "fp8",
+      "quality": 0.938,
+      "quality_n": 16,
+      "quality_protocol": "vLLM smoke only (not full 1000 verifier)",
+      "model_vram_mb": 4720.6,
+      "peak_vram_mb": 5181.4,
+      "load_time_s": 13.96,
+      "ttft_ms": null,
+      "decode_tok_per_s": 54.1,
+      "latency_per_token_ms": 18.5,
+      "e2e_ms": 1182.5,
+      "sources": [
+        "results/model_comparison/hf_vs_vllm_text.json vllm_fp8"
+      ],
+      "notes": [
+        "FP8 is 8-bit floating-point serving, NOT bitsandbytes INT8 and NOT integer INT8.",
+        "Reference only until full production selection is decided later.",
+        "vLLM 0.28.0 does not load bitsandbytes INT8 checkpoints."
+      ],
+      "vram_reduction_pct_vs_hf_bf16": 36.53,
+      "throughput_change_pct_vs_hf_bf16": 2.58,
+      "e2e_latency_change_pct_vs_hf_bf16": -6.48,
+      "requests_per_hour": 3044.4,
+      "generated_tokens_per_hour": 194760.0,
+      "cost_per_1k_requests_usd": 0.243069,
+      "cost_per_1m_generated_tokens_usd": 3.7995
+    }
+  },
+  "interpretation": [
+    "bitsandbytes INT8 saved memory but suffered backend-wide latency overhead.",
+    "H.4 did not produce an optimized INT8 runtime; fair rerun is still the unmodified bitsandbytes path.",
+    "Triton improved one hot decode microkernel but did not improve full-model generate() throughput. Not a production win.",
+    "vLLM BF16 is the current low-latency serving baseline.",
+    "vLLM FP8 is an 8-bit floating-point serving reference only. FP8 is not INT8.",
+    "Cost assumes 100% GPU occupancy at the measured single-request rate; no queueing, batching, or concurrency."
+  ],
+  "production_implications": [
+    "Do not ship bitsandbytes INT8 for latency-sensitive serving on this GPU: memory win, large E2E/throughput loss.",
+    "Do not ship the H.5 Triton patch: isolated kernel gain, worse generate() than H.4 fair INT8.",
+    "Prefer vLLM BF16 as the current serving baseline among measured options.",
+    "Keep FP8 as a memory-saving serving reference pending a later production selection (quality protocol still smoke-only).",
+    "Do not start concurrency/load testing as part of H.6."
+  ],
+  "verdict": "PASS",
+  "verdict_reason": "Comparison and cost matrix assembled from existing measured artifacts with the provided $0.74/hour rate. No new runs."
+}

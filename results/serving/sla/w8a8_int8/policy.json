@@ -1,0 +1,50 @@
+{
+  "stage": "I.3",
+  "timestamp": "2026-09-03T20:38:37.076679+00:00",
+  "sla_target": {
+    "metric": "p95_e2e_latency_ms",
+    "budget_ms": 1000.0,
+    "rationale": "I.1 concurrency-16 p95 E2E ~923.5 ms is close to 1 second; 1.0 s is the production latency budget under overload."
+  },
+  "admission_policy": {
+    "max_active_model_concurrency": 16,
+    "queue_capacity": 16,
+    "queue_timeout_ms": 500.0,
+    "reject_when": [
+      "queue is full (active==16 and queued==16)",
+      "queued request waits longer than 500 ms"
+    ],
+    "accept_when": [
+      "active slots available (<16): immediate accept",
+      "queue has capacity and a slot opens before 500 ms"
+    ],
+    "implementation": "asyncio SLAAdmissionController in front of vLLM OpenAI completions; vLLM internals unmodified",
+    "fixed": true,
+    "note": "Policy is fixed before benchmarking and not changed mid-run."
+  },
+  "serving": {
+    "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+    "prefix_caching": true,
+    "dtype": "auto",
+    "gpu_memory_utilization": 0.9,
+    "max_model_len": 4096,
+    "enforce_eager": true,
+    "max_tokens": 64
+  },
+  "workload": {
+    "shared_prefix_tokens": 875,
+    "mean_total_tokens": 905.1,
+    "n_suffixes": 16,
+    "source": "I.2 production shared prefix family",
+    "max_tokens": 64,
+    "offered_concurrency_levels": [
+      24,
+      32
+    ],
+    "timed_offered_per_level": {
+      "24": 96,
+      "32": 128
+    },
+    "above_i1_saturation_point": 16
+  }
+}

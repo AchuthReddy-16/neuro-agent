@@ -1,0 +1,6 @@
+,pred_Both feet,pred_Both fists,pred_Left fist,pred_Rest,pred_Right fist
+true_Both feet,113,19,13,44,35
+true_Both fists,70,52,23,49,32
+true_Left fist,82,40,45,33,29
+true_Rest,340,110,56,401,143
+true_Right fist,77,51,15,30,48

@@ -1,0 +1,369 @@
+{
+  "stage": "I.2",
+  "timestamp": "2026-09-03T20:25:58.407993+00:00",
+  "verdict": "PASS",
+  "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "kernel_evidence": [
+    "(EngineCore pid=168145) INFO 09-03 20:23:33 [__init__.py:755] Selected CutlassInt8ScaledMMLinearKernel for CompressedTensorsW8A8Int8",
+    "(EngineCore pid=173278) INFO 09-03 20:24:29 [__init__.py:755] Selected CutlassInt8ScaledMMLinearKernel for CompressedTensorsW8A8Int8"
+  ],
+  "config": {
+    "stage": "I.2",
+    "timestamp": "2026-09-03T20:23:19.410801+00:00",
+    "vllm_version": "0.28.0",
+    "cuda_version": "13.0",
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "compute_capability": [
+      8,
+      9
+    ],
+    "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+    "served_model_name": "w8a8-int8",
+    "dtype": "auto",
+    "max_model_len": 4096,
+    "gpu_memory_utilization": 0.9,
+    "tensor_parallel_size": 1,
+    "enforce_eager": true,
+    "max_tokens": 64,
+    "temperature": 0.0,
+    "ignore_eos": true,
+    "i1_reference": {
+      "1": {
+        "tok_s": 131.38,
+        "rps": 2.05,
+        "e2e_p95_ms": 486.5
+      },
+      "8": {
+        "tok_s": 765.88,
+        "rps": 11.97,
+        "e2e_p95_ms": 674.3
+      },
+      "16": {
+        "tok_s": 1176.01,
+        "rps": 18.45,
+        "e2e_p95_ms": 923.5
+      }
+    },
+    "main_prefix": "production",
+    "prefix_shared_tokens": {
+      "short": 90,
+      "medium": 435,
+      "production": 875
+    }
+  },
+  "production_shared_prefix_tokens": 875,
+  "production_mean_user_tokens": 25.1,
+  "production_mean_total_tokens": 905.1,
+  "cache_configuration": {
+    "off_flag": "--no-enable-prefix-caching",
+    "on_flag": "--enable-prefix-caching",
+    "fresh_engine_starts": true,
+    "cold_method": "POST /reset_prefix_cache before each cold request",
+    "warm_method": "prime then repeated shared-prefix / varying-suffix requests"
+  },
+  "cold_vs_warm": {
+    "cache_off_c1_ttft": {
+      "p50": 40.068,
+      "p95": 42.4468,
+      "p99": 54.0468,
+      "mean": 40.841,
+      "min": 38.652,
+      "max": 58.946
+    },
+    "cache_on_true_cold_ttft": {
+      "p50": 40.941,
+      "p95": 49.6904,
+      "p99": 57.0213,
+      "mean": 42.5,
+      "min": 39.966,
+      "max": 58.854
+    },
+    "cache_on_warm_c1_ttft": {
+      "p50": 18.9445,
+      "p95": 26.0483,
+      "p99": 33.1823,
+      "mean": 20.463,
+      "min": 17.871,
+      "max": 35.418
+    },
+    "warm_vs_true_cold_ttft_p50_reduction_pct": 53.73,
+    "warm_vs_off_ttft_p50_reduction_pct": 52.72,
+    "true_cold_vs_off_ttft_p50_reduction_pct": -2.18,
+    "paired_warm_vs_true_cold_ttft_p50_reduction_pct": 57.78,
+    "note": "True cold from supplemental engine with working reset API. Original labeled cold was contaminated (reset 404)."
+  },
+  "ttft_before_after_c1": {
+    "cache_off": {
+      "p50": 40.068,
+      "p95": 42.4468,
+      "p99": 54.0468,
+      "mean": 40.841,
+      "min": 38.652,
+      "max": 58.946
+    },
+    "cache_on_warm": {
+      "p50": 18.9445,
+      "p95": 26.0483,
+      "p99": 33.1823,
+      "mean": 20.463,
+      "min": 17.871,
+      "max": 35.418
+    },
+    "cache_on_cold": {
+      "p50": 40.941,
+      "p95": 49.6904,
+      "p99": 57.0213,
+      "mean": 42.5,
+      "min": 39.966,
+      "max": 58.854
+    },
+    "p50_reduction_pct_warm_vs_off": 52.72,
+    "p95_reduction_pct_warm_vs_off": 38.63,
+    "p99_reduction_pct_warm_vs_off": 38.6,
+    "cache_on_cold_is_true_cold": true
+  },
+  "e2e_before_after_c1": {
+    "cache_off": {
+      "p50": 501.3345,
+      "p95": 532.1206,
+      "p99": 554.1901,
+      "mean": 506.94
+    },
+    "cache_on_warm": {
+      "p50": 481.045,
+      "p95": 495.4334,
+      "p99": 507.7099,
+      "mean": 482.907
+    },
+    "p50_reduction_pct_warm_vs_off": 4.05,
+    "p95_reduction_pct_warm_vs_off": 6.89,
+    "p99_reduction_pct_warm_vs_off": 8.39
+  },
+  "throughput_before_after_c1": {
+    "cache_off_tok_s": 125.45,
+    "cache_on_warm_tok_s": 131.51,
+    "change_pct": 4.83,
+    "cache_off_rps": 1.9689,
+    "cache_on_warm_rps": 2.0609,
+    "rps_change_pct": 4.67,
+    "note": "Decode path unchanged; throughput gains come from reduced prefill/TTFT overlap only."
+  },
+  "concurrency_8": {
+    "cache_off_ttft": {
+      "p50": 129.7215,
+      "p95": 224.9977,
+      "p99": 241.9247,
+      "mean": 135.861,
+      "min": 41.576,
+      "max": 248.061
+    },
+    "cache_on_warm_ttft": {
+      "p50": 27.5905,
+      "p95": 34.502,
+      "p99": 36.7772,
+      "mean": 27.296,
+      "min": 20.088,
+      "max": 38.699
+    },
+    "ttft_p50_reduction_pct": 78.73,
+    "ttft_p95_reduction_pct": 84.67,
+    "e2e_p50_reduction_pct": 31.82,
+    "throughput_change_pct": 46.08,
+    "cache_hit_rate_warm": null
+  },
+  "cache_hit_reuse_evidence": {
+    "warm_c1": {
+      "delta_prefix_cache_hits": null,
+      "delta_prefix_cache_queries": null,
+      "hit_rate_over_window": null,
+      "before": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      },
+      "after": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      }
+    },
+    "warm_c8": {
+      "delta_prefix_cache_hits": null,
+      "delta_prefix_cache_queries": null,
+      "hit_rate_over_window": null,
+      "before": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      },
+      "after": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      }
+    },
+    "cold": {
+      "delta_prefix_cache_hits": null,
+      "delta_prefix_cache_queries": null,
+      "hit_rate_over_window": null,
+      "before": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      },
+      "after": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      }
+    },
+    "prometheus_metrics": [
+      "vllm:prefix_cache_hits",
+      "vllm:prefix_cache_queries"
+    ],
+    "server_log_prefix_cache_hit_rate_pct": {
+      "cache_off_observed": [
+        0.0,
+        0.0
+      ],
+      "cache_on_observed": [
+        89.9,
+        94.7,
+        96.9,
+        92.8,
+        91.7,
+        92.0,
+        92.8,
+        93.0
+      ],
+      "cache_off_mean": 0.0,
+      "cache_on_mean": 92.97,
+      "source": "vLLM Engine periodic logger lines in vllm_server.log",
+      "prometheus_note": "vllm:prefix_cache_hits/queries were not present on /metrics in this run; log hit-rate used instead (not invented)."
+    }
+  },
+  "prefix_length_sensitivity_summary": [
+    {
+      "variant": "short",
+      "shared_tokens": 90,
+      "ttft_reduction_pct_warm_vs_cold": 12.52
+    },
+    {
+      "variant": "medium",
+      "shared_tokens": 435,
+      "ttft_reduction_pct_warm_vs_cold": 15.38
+    },
+    {
+      "variant": "production",
+      "shared_tokens": 875,
+      "ttft_reduction_pct_warm_vs_cold": 16.34
+    }
+  ],
+  "material_help_begins_at": {
+    "variant": "short",
+    "shared_tokens": 90,
+    "ttft_reduction_pct_warm_vs_cold": 12.52
+  },
+  "vram": {
+    "cache_off_after_load_mb": 22536.0,
+    "cache_on_after_load_mb": 22536.0,
+    "delta_mb": 0.0,
+    "note": "nvidia-smi includes KV reservation at gpu_memory_utilization=0.90; delta isolates enable-flag overhead at idle."
+  },
+  "correctness": {
+    "passed": true,
+    "all_requests_ok": true,
+    "different_suffixes_produce_independent_outputs": true,
+    "identical_prompt_repeat_deterministic": true,
+    "altered_prefix_request_ok": true,
+    "altered_prefix_output_differs_from_original": false,
+    "outputs_preview": {
+      "same_prefix_q0": "{\"question_type\": \"band_power\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"frequency_band\": \"beta\", \"frequency_range\": [1.0,",
+      "same_prefix_q1": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S002_R04_E008\", \"channels\": \"all\", \"metric\": \"alpha_mu_power\", \"top_k\": 5, \"",
+      "same_prefix_q0_repeat": "{\"question_type\": \"band_power\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"frequency_band\": \"beta\", \"frequency_range\": [1.0,",
+      "altered_prefix_q0": "{\"question_type\": \"band_power\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"frequency_band\": \"beta\", \"frequency_range\": [1.0,"
+    },
+    "checks": [
+      "Requests sharing an identical prefix still produce suffix-dependent outputs.",
+      "Repeating the exact same prompt under greedy+ignore_eos is byte-stable (no KV corruption).",
+      "A content-changed prefix still serves successfully (no stale-state crash)."
+    ],
+    "note": "Correctness here is serving/KV integrity under prefix reuse, not full agent quality eval."
+  },
+  "worth_enabling_in_production": true,
+  "recommendation": "Enable --enable-prefix-caching for research-agent serving: warm TTFT improves materially vs cache-off (52.72% p50) with server-log prefix cache hit rates ~93.0% and correctness PASS. Prometheus hit counters were unavailable; evidence is log hit-rate + TTFT.",
+  "quantified_improvement_production_prefix": {
+    "ttft_reduction_pct_p50_warm_vs_off": 52.72,
+    "ttft_reduction_pct_p95_warm_vs_off": 38.63,
+    "e2e_reduction_pct_p50_warm_vs_off": 4.05,
+    "e2e_reduction_pct_p95_warm_vs_off": 6.89,
+    "prefill_reduction_pct": {
+      "observable_directly": false,
+      "proxy_ttft_p50_reduction_pct": 52.72
+    },
+    "throughput_change_pct": 4.83,
+    "vram_delta_mb": 0.0,
+    "cold_ttft_p50_ms": 40.941,
+    "warm_ttft_p50_ms": 18.9445,
+    "off_ttft_p50_ms": 40.068,
+    "warm_vs_true_cold_ttft_p50_reduction_pct": 53.73
+  },
+  "material_improvement_observed": true,
+  "true_cold_supplement": {
+    "completed": true,
+    "result": {
+      "label": "true-cold",
+      "completed_requests": 12,
+      "failed_requests": 0,
+      "ttft_ms": {
+        "p50": 40.941,
+        "p95": 49.6904,
+        "p99": 57.0213,
+        "mean": 42.5,
+        "min": 39.966,
+        "max": 58.854
+      },
+      "e2e_ms": {
+        "p50": 502.2075,
+        "p95": 513.9916,
+        "p99": 522.2055,
+        "mean": 504.477
+      },
+      "reset_ok": true
+    },
+    "paired_warm_check": {
+      "label": "paired-warm-after-true-cold",
+      "completed_requests": 16,
+      "failed_requests": 0,
+      "ttft_ms": {
+        "p50": 17.285,
+        "p95": 20.9335,
+        "p99": 21.1267,
+        "mean": 18.099,
+        "min": 16.816,
+        "max": 21.175
+      },
+      "e2e_ms": {
+        "p50": 476.654,
+        "p95": 484.8635,
+        "p99": 491.3399,
+        "mean": 478.036
+      },
+      "reset_ok": true
+    }
+  },
+  "prefix_length_sensitivity_caveat": "Main-run sensitivity cold values were warm-contaminated because /reset_prefix_cache returned 404. Ordering still shows larger shared prefixes help more. Absolute production cold/warm uses true_cold_correction.",
+  "prefix_length_sensitivity_summary_note": "For production (875 tok), true-cold\u2192paired-warm TTFT p50 reduction was 57.78% in the supplemental run."
+}

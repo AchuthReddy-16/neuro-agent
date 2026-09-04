@@ -1,0 +1,489 @@
+{
+  "stage": "J",
+  "timestamp": "2026-09-03T21:12:03.009575+00:00",
+  "checkpoint": "/workspace/neuro-agent/checkpoints/multimodal_sft_corrected/final",
+  "n_examples": 39,
+  "verifier_pass_rate": 0.5385,
+  "reference_corrected_sft": 0.493,
+  "reference_table": {
+    "base": 0.114,
+    "initial_sft": 0.164,
+    "corrected_sft": 0.493,
+    "multimodal_rlvr": 0.482
+  },
+  "per_gate_group": {
+    "waveform": {
+      "n": 9,
+      "pass_rate": 0.3333
+    },
+    "categorical": {
+      "n": 15,
+      "pass_rate": 0.7333
+    },
+    "ranking": {
+      "n": 9,
+      "pass_rate": 0.4444
+    },
+    "numeric": {
+      "n": 6,
+      "pass_rate": 0.5
+    }
+  },
+  "parity_plausible": true,
+  "full_440_rerun_needed": false,
+  "note": "Targeted production-serving validation on gate families using HF+PEFT path. Full 440 only if parity fails.",
+  "predictions_sample": [
+    {
+      "id": "veval_3da5f7746a8d1833",
+      "category": "waveform_highest_rms",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "cz",
+      "expected": "c3",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 4307.912
+    },
+    {
+      "id": "veval_aa15d2509e115a33",
+      "category": "waveform_highest_rms",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "c3",
+      "expected": "cz",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 134.684
+    },
+    {
+      "id": "veval_39a897354d9a225b",
+      "category": "waveform_highest_rms",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "c3",
+      "expected": "cz",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 134.628
+    },
+    {
+      "id": "veval_40e8ab0a60370438",
+      "category": "waveform_max_rms_numeric",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "40.40785598754883",
+      "expected": 43.401309967041016,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 377.548
+    },
+    {
+      "id": "veval_791d6b5c214a7efd",
+      "category": "waveform_max_rms_numeric",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "46.166587829589844",
+      "expected": 53.37122344970703,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 384.653
+    },
+    {
+      "id": "veval_ee42054f1d11085b",
+      "category": "waveform_max_rms_numeric",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "20.053438186645508",
+      "expected": 20.86023712158203,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 384.454
+    },
+    {
+      "id": "veval_e5f29fbcfb21b39d",
+      "category": "waveform_rms_order",
+      "gate_group": "waveform",
+      "passed": true,
+      "prediction": "CZ, C3, C4",
+      "expected": [
+        "CZ",
+        "C3",
+        "C4"
+      ],
+      "verification_type": "ranking",
+      "reason": "match",
+      "e2e_ms": 227.823
+    },
+    {
+      "id": "veval_f4d77eb27988ab3c",
+      "category": "waveform_rms_order",
+      "gate_group": "waveform",
+      "passed": true,
+      "prediction": "C4, CZ, C3",
+      "expected": [
+        "CZ",
+        "C4",
+        "C3"
+      ],
+      "verification_type": "ranking",
+      "reason": "match",
+      "e2e_ms": 210.808
+    },
+    {
+      "id": "veval_8bd0355b5234b210",
+      "category": "waveform_rms_order",
+      "gate_group": "waveform",
+      "passed": true,
+      "prediction": "CZ, C4, C3",
+      "expected": [
+        "CZ",
+        "C3",
+        "C4"
+      ],
+      "verification_type": "ranking",
+      "reason": "match",
+      "e2e_ms": 224.265
+    },
+    {
+      "id": "veval_ccc86c0f26378614",
+      "category": "spectrogram_strongest_vs_weakest",
+      "gate_group": "categorical",
+      "passed": true,
+      "prediction": "beta_power",
+      "expected": "beta_power",
+      "verification_type": "categorical",
+      "reason": "match",
+      "e2e_ms": 122.702
+    },
+    {
+      "id": "veval_ad79a35e47ed6b12",
+      "category": "spectrogram_strongest_vs_weakest",
+      "gate_group": "categorical",
+      "passed": true,
+      "prediction": "delta_power",
+      "expected": "delta_power",
+      "verification_type": "categorical",
+      "reason": "match",
+      "e2e_ms": 122.749
+    },
+    {
+      "id": "veval_330a28ab1bab97b7",
+      "category": "spectrogram_strongest_vs_weakest",
+      "gate_group": "categorical",
+      "passed": true,
+      "prediction": "beta_power",
+      "expected": "beta_power",
+      "verification_type": "categorical",
+      "reason": "match",
+      "e2e_ms": 122.343
+    },
+    {
+      "id": "veval_0ba1fd7356173ad9",
+      "category": "spectrogram_dominant_band",
+      "gate_group": "categorical",
+      "passed": false,
+      "prediction": "delta_power",
+      "expected": "alpha_mu_power",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 125.453
+    },
+    {
+      "id": "veval_55c79b1e57472b44",
+      "category": "spectrogram_dominant_band",
+      "gate_group": "categorical",
+      "passed": true,
+      "prediction": "delta_power",
+      "expected": "delta_power",
+      "verification_type": "categorical",
+      "reason": "match",
+      "e2e_ms": 121.815
+    },
+    {
+      "id": "veval_a70a656072fed165",
+      "category": "spectrogram_dominant_band",
+      "gate_group": "categorical",
+      "passed": false,
+      "prediction": "delta_power",
+      "expected": "alpha_mu_power",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 121.483
+    },
+    {
+      "id": "veval_780d09f8cd151313",
+      "category": "topomap_strongest_alpha_mu",
+      "gate_group": "categorical",
+      "passed": false,
+      "prediction": "AF8",
+      "expected": "fc3",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 284.642
+    },
+    {
+      "id": "veval_f3bcf592eefa75be",
+      "category": "topomap_strongest_alpha_mu",
+      "gate_group": "categorical",
+      "passed": true,
+      "prediction": "AF8",
+      "expected": "af8",
+      "verification_type": "categorical",
+      "reason": "match",
+      "e2e_ms": 259.609
+    },
+    {
+      "id": "veval_ee8acf4833f35a17",
+      "category": "topomap_strongest_alpha_mu",
+      "gate_group": "categorical",
+      "passed": false,
+      "prediction": "AF7",
+      "expected": "fpz",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 259.917
+    },
+    {
+      "id": "veval_7bcdfa2a2641dd6e",
+      "category": "band_power_weakest_alpha_mu",
+      "gate_group": "categorical",
+      "passed": true,
+      "prediction": "t10",
+      "expected": "t10",
+      "verification_type": "categorical",
+      "reason": "match",
+      "e2e_ms": 315.709
+    },
+    {
+      "id": "veval_c1e23e125eba16a5",
+      "category": "band_power_weakest_alpha_mu",
+      "gate_group": "categorical",
+      "passed": true,
+      "prediction": "t10",
+      "expected": "t10",
+      "verification_type": "categorical",
+      "reason": "match",
+      "e2e_ms": 320.295
+    }
+  ],
+  "failures": [
+    {
+      "id": "veval_3da5f7746a8d1833",
+      "category": "waveform_highest_rms",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "cz",
+      "expected": "c3",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 4307.912
+    },
+    {
+      "id": "veval_aa15d2509e115a33",
+      "category": "waveform_highest_rms",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "c3",
+      "expected": "cz",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 134.684
+    },
+    {
+      "id": "veval_39a897354d9a225b",
+      "category": "waveform_highest_rms",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "c3",
+      "expected": "cz",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 134.628
+    },
+    {
+      "id": "veval_40e8ab0a60370438",
+      "category": "waveform_max_rms_numeric",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "40.40785598754883",
+      "expected": 43.401309967041016,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 377.548
+    },
+    {
+      "id": "veval_791d6b5c214a7efd",
+      "category": "waveform_max_rms_numeric",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "46.166587829589844",
+      "expected": 53.37122344970703,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 384.653
+    },
+    {
+      "id": "veval_ee42054f1d11085b",
+      "category": "waveform_max_rms_numeric",
+      "gate_group": "waveform",
+      "passed": false,
+      "prediction": "20.053438186645508",
+      "expected": 20.86023712158203,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 384.454
+    },
+    {
+      "id": "veval_0ba1fd7356173ad9",
+      "category": "spectrogram_dominant_band",
+      "gate_group": "categorical",
+      "passed": false,
+      "prediction": "delta_power",
+      "expected": "alpha_mu_power",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 125.453
+    },
+    {
+      "id": "veval_a70a656072fed165",
+      "category": "spectrogram_dominant_band",
+      "gate_group": "categorical",
+      "passed": false,
+      "prediction": "delta_power",
+      "expected": "alpha_mu_power",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 121.483
+    },
+    {
+      "id": "veval_780d09f8cd151313",
+      "category": "topomap_strongest_alpha_mu",
+      "gate_group": "categorical",
+      "passed": false,
+      "prediction": "AF8",
+      "expected": "fc3",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 284.642
+    },
+    {
+      "id": "veval_ee8acf4833f35a17",
+      "category": "topomap_strongest_alpha_mu",
+      "gate_group": "categorical",
+      "passed": false,
+      "prediction": "AF7",
+      "expected": "fpz",
+      "verification_type": "categorical",
+      "reason": "categorical_mismatch",
+      "e2e_ms": 259.917
+    },
+    {
+      "id": "veval_f8b5fa4608177392",
+      "category": "band_power_beta_top3",
+      "gate_group": "ranking",
+      "passed": false,
+      "prediction": "AF7, AFZ, F7",
+      "expected": [
+        "C5",
+        "C6",
+        "FP1"
+      ],
+      "verification_type": "ranking",
+      "reason": "ranking_mismatch",
+      "e2e_ms": 394.125
+    },
+    {
+      "id": "veval_8e9c16381a073b3d",
+      "category": "band_power_beta_top3",
+      "gate_group": "ranking",
+      "passed": false,
+      "prediction": "AF7, F7, FC5",
+      "expected": [
+        "OZ",
+        "FP1",
+        "O2"
+      ],
+      "verification_type": "ranking",
+      "reason": "ranking_mismatch",
+      "e2e_ms": 400.228
+    },
+    {
+      "id": "veval_03e329d530c19f09",
+      "category": "band_power_beta_top3",
+      "gate_group": "ranking",
+      "passed": false,
+      "prediction": "F7, FZ, FT7",
+      "expected": [
+        "AF7",
+        "FP2",
+        "AF4"
+      ],
+      "verification_type": "ranking",
+      "reason": "ranking_mismatch",
+      "e2e_ms": 400.127
+    },
+    {
+      "id": "veval_5d3988e84a963b6c",
+      "category": "topomap_beta_top3",
+      "gate_group": "ranking",
+      "passed": false,
+      "prediction": "C5, CP5, CP6",
+      "expected": [
+        "FC6",
+        "C6",
+        "FC4"
+      ],
+      "verification_type": "ranking",
+      "reason": "ranking_mismatch",
+      "e2e_ms": 354.686
+    },
+    {
+      "id": "veval_a8caeda764bff7ee",
+      "category": "topomap_beta_top3",
+      "gate_group": "ranking",
+      "passed": false,
+      "prediction": "AF8, AF3, AF7",
+      "expected": [
+        "FP1",
+        "FC6",
+        "FPZ"
+      ],
+      "verification_type": "ranking",
+      "reason": "ranking_mismatch",
+      "e2e_ms": 354.079
+    },
+    {
+      "id": "veval_3e9a6ad9945a6250",
+      "category": "psd_peak_frequency",
+      "gate_group": "numeric",
+      "passed": false,
+      "prediction": "5.0",
+      "expected": 1.0,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 135.923
+    },
+    {
+      "id": "veval_087ed55cee5041a3",
+      "category": "spectrogram_peak_frequency",
+      "gate_group": "numeric",
+      "passed": false,
+      "prediction": "1.5",
+      "expected": 2.5,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 136.685
+    },
+    {
+      "id": "veval_a31b735422340aca",
+      "category": "spectrogram_peak_frequency",
+      "gate_group": "numeric",
+      "passed": false,
+      "prediction": "1.875",
+      "expected": 11.25,
+      "verification_type": "numeric",
+      "reason": "numeric_mismatch",
+      "e2e_ms": 166.082
+    }
+  ]
+}

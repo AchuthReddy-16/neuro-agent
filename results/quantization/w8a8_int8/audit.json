@@ -1,0 +1,77 @@
+{
+  "stage": "H.7A",
+  "status": "PASS",
+  "timestamp_utc": "2026-09-03T19:05:00Z",
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "compute_capability": "8.9",
+    "compute_capability_tuple": [8, 9],
+    "driver": "580.173.02",
+    "cuda": "13.0",
+    "python": "3.12.3",
+    "pytorch": "2.13.0+cu130",
+    "transformers": "5.16.1",
+    "peft": "0.20.0",
+    "vllm": "0.28.0",
+    "llmcompressor_production_env": null,
+    "llmcompressor_quantization_env": "0.13.0",
+    "compressed_tensors_quantization_env": "0.18.0",
+    "compressed_tensors_production_env": "0.17.0",
+    "bitsandbytes": "0.50.2",
+    "notes": "llm-compressor is NOT installed in the production vLLM/HF environment. compressed-tensors 0.17.0 is present as a vLLM dependency."
+  },
+  "compatibility": {
+    "vllm_serves_compressed_tensors_w8a8_int8": true,
+    "evidence": [
+      "vllm.model_executor.layers.quantization.compressed_tensors.schemes.compressed_tensors_w8a8_int8.CompressedTensorsW8A8Int8",
+      "scheme selected by CompressedTensorsConfig._is_dynamic_token_w8a8 and _is_static_tensor_w8a8",
+      "min capability CompressedTensorsW8A8Int8.get_min_capability() == 75 (Turing+)"
+    ],
+    "qwen3_4b_instruct_2507_supported": true,
+    "qwen3_evidence": "vLLM registry maps Qwen3ForCausalLM -> qwen3.Qwen3ForCausalLM; dense Qwen3-4B-Instruct-2507 already served as vLLM BF16 in H.2",
+    "rtx4090_ada_supported": true,
+    "ada_evidence": "sm_89 >= 75; CutlassInt8ScaledMMLinearKernel.is_supported() == (True, None) on this GPU",
+    "quantization_scheme": {
+      "name": "W8A8 INT8",
+      "format": "compressed-tensors",
+      "weights": "INT8, symmetric, per-channel (static) via GPTQModifier scheme=W8A8",
+      "activations": "INT8, symmetric, dynamic per-token",
+      "smoothquant": "SmoothQuantModifier smoothing_strength=0.8 (SmoothQuant alpha/strength)",
+      "excluded_layers": ["lm_head"],
+      "not_used": ["W4A16", "W4A8", "FP8", "bitsandbytes INT8"]
+    },
+    "serving_args": {
+      "engine": "vllm.LLM",
+      "model": "checkpoints/text_w8a8_int8_compressed",
+      "quantization": null,
+      "quantization_note": "Leave quantization unset so vLLM reads compression_config / quant_method=compressed-tensors from the checkpoint. Do not pass quantization='bitsandbytes'. Do not pass enable_lora; LoRA is merged before PTQ.",
+      "dtype": "auto",
+      "enable_prefix_caching": false,
+      "tensor_parallel_size": 1,
+      "gpu_memory_utilization": 0.90,
+      "max_model_len": 4096,
+      "trust_remote_code": false
+    },
+    "native_kernels_not_bitsandbytes": true,
+    "kernel_path": {
+      "linear_scheme": "CompressedTensorsW8A8Int8",
+      "kernel_init": "vllm.model_executor.kernels.linear.init_int8_linear_kernel",
+      "cuda_priority": [
+        "CutlassInt8ScaledMMLinearKernel",
+        "TritonInt8ScaledMMLinearKernel",
+        "HummingInt8ScaledMMLinearKernel"
+      ],
+      "bitsandbytes_Linear8bitLt": false
+    },
+    "same_environment_as_vllm": false,
+    "environment_split_reason": "Installing llmcompressor==0.13.0 into the production env would replace compressed-tensors 0.17.0 with 0.18.0 and transformers 5.16.1 with 5.14.1. Installing llmcompressor==0.8.1 would additionally pin torch<=2.8.0, breaking vLLM 0.28 / torch 2.13.0+cu130. Quantization therefore runs in an isolated .venv-llmcompressor; serving stays on system/vLLM python.",
+    "quantization_env": {
+      "path": "/workspace/neuro-agent/.venv-llmcompressor",
+      "purpose": "llm-compressor oneshot W8A8 only",
+      "target_package": "llmcompressor==0.13.0"
+    }
+  },
+  "hard_stop": false,
+  "fp8_substitution": false,
+  "bitsandbytes_production": false
+}

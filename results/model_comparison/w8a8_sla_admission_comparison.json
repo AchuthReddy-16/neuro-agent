@@ -1,0 +1,573 @@
+{
+  "stage": "I.3",
+  "timestamp": "2026-09-03T20:39:17.047395+00:00",
+  "verdict": "PASS",
+  "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "kernel_evidence": [
+    "(EngineCore pid=218021) INFO 09-03 20:38:50 [__init__.py:755] Selected CutlassInt8ScaledMMLinearKernel for CompressedTensorsW8A8Int8"
+  ],
+  "prefix_caching": true,
+  "prefix_caching_log": [
+    "(APIServer pid=217249) INFO 09-03 20:38:42 [api_utils.py:272] non-default args: {'host': '127.0.0.1', 'model': '/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed', 'max_model_len': 4096, 'enforce_eager': True, 'served_model_name': ['w8a8-int8'], 'gpu_memory_utilization': 0.9, 'enable_prefix_caching': True}",
+    "(EngineCore pid=218021) INFO 09-03 20:38:49 [core.py:122] Initializing a V1 LLM engine (v0.28.0) with config: model='/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed', speculative_config=None, tokenizer='/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=compressed-tensors, quantization_config=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=w8a8-int8, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, enable_bf16x3_router_gemm=False, moe_backend='auto', linear_backend='auto')"
+  ],
+  "vram_after_load_mb": 22536.0,
+  "vllm_version": "0.28.0",
+  "cuda_version": "13.0",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "policy": {
+    "stage": "I.3",
+    "timestamp": "2026-09-03T20:38:37.076679+00:00",
+    "sla_target": {
+      "metric": "p95_e2e_latency_ms",
+      "budget_ms": 1000.0,
+      "rationale": "I.1 concurrency-16 p95 E2E ~923.5 ms is close to 1 second; 1.0 s is the production latency budget under overload."
+    },
+    "admission_policy": {
+      "max_active_model_concurrency": 16,
+      "queue_capacity": 16,
+      "queue_timeout_ms": 500.0,
+      "reject_when": [
+        "queue is full (active==16 and queued==16)",
+        "queued request waits longer than 500 ms"
+      ],
+      "accept_when": [
+        "active slots available (<16): immediate accept",
+        "queue has capacity and a slot opens before 500 ms"
+      ],
+      "implementation": "asyncio SLAAdmissionController in front of vLLM OpenAI completions; vLLM internals unmodified",
+      "fixed": true,
+      "note": "Policy is fixed before benchmarking and not changed mid-run."
+    },
+    "serving": {
+      "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+      "prefix_caching": true,
+      "dtype": "auto",
+      "gpu_memory_utilization": 0.9,
+      "max_model_len": 4096,
+      "enforce_eager": true,
+      "max_tokens": 64
+    },
+    "workload": {
+      "shared_prefix_tokens": 875,
+      "mean_total_tokens": 905.1,
+      "n_suffixes": 16,
+      "source": "I.2 production shared prefix family",
+      "max_tokens": 64,
+      "offered_concurrency_levels": [
+        24,
+        32
+      ],
+      "timed_offered_per_level": {
+        "24": 96,
+        "32": 128
+      },
+      "above_i1_saturation_point": 16
+    }
+  },
+  "prompt_meta": {
+    "shared_prefix_tokens": 875,
+    "mean_total_tokens": 905.1,
+    "n_suffixes": 16,
+    "source": "I.2 production shared prefix family"
+  },
+  "i1_saturation_reference": {
+    "16": {
+      "rps": 18.45,
+      "e2e_p95_ms": 923.5,
+      "tok_s": 1176.01
+    }
+  },
+  "scenarios": {
+    "no_admission_c24": {
+      "tag": "no_admission_c24",
+      "admission_enabled": false,
+      "offered_concurrency": 24,
+      "wall_s": 2.778,
+      "counts": {
+        "total_offered": 96,
+        "accepted_admitted": 96,
+        "completed": 96,
+        "queued": 0,
+        "rejected_queue_full": 0,
+        "rejected_timeout": 0,
+        "rejected_total": 0,
+        "failed": 0
+      },
+      "rates": {
+        "acceptance_rate_pct": 100.0,
+        "completion_rate_pct": 100.0,
+        "rejection_rate_pct": 0.0,
+        "timeout_rate_pct": 0.0,
+        "requests_per_sec_completed": 34.562
+      },
+      "latency_completed": {
+        "ttft_ms": {
+          "p50": 42.739,
+          "p95": 68.5907,
+          "p99": 68.8032,
+          "mean": 45.201
+        },
+        "e2e_ms": {
+          "p50": 688.08,
+          "p95": 704.3792,
+          "p99": 705.9853,
+          "mean": 687.729
+        },
+        "queue_wait_ms_queued_only": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "mean": null,
+          "n": 0
+        },
+        "queue_wait_ms_completed": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "mean": 0.0
+        }
+      },
+      "sla": {
+        "target_p95_e2e_ms": 1000.0,
+        "completed_above_1s": 0,
+        "sla_violation_rate_among_completed_pct": 0.0,
+        "sla_violation_rate_among_offered_latency_only_pct": 0.0,
+        "unmet_successful_sub1s_rate_among_offered_pct": 0.0,
+        "completed_p95_e2e_ms": 704.3792,
+        "completed_p95_meets_target": true,
+        "labels": {
+          "among_completed": "fraction of completed requests with E2E > 1000 ms",
+          "among_offered_latency_only": "completed>1s / all offered; rejects/timeouts are NOT counted as latency SLA violations",
+          "unmet_successful_sub1s_among_offered": "1 - (completed with E2E<=1s)/offered; includes rejects/failures/slow completes"
+        }
+      },
+      "throughput": {
+        "output_tokens_per_sec": 2204.04,
+        "mean_output_tokens": 63.77
+      },
+      "gpu": {
+        "avg_gpu_util": 100.0,
+        "peak_gpu_util": 100.0,
+        "peak_vram_mb": 22540.0,
+        "n_samples": 9,
+        "oom_count": 0
+      },
+      "admission_controller_stats": null,
+      "failures_sample": [],
+      "fairness_note": "Latency and throughput below must be read together with rejection_rate_pct; lower p95 with high rejection is a tradeoff, not a free improvement."
+    },
+    "admission_c24": {
+      "tag": "admission_c24",
+      "admission_enabled": true,
+      "offered_concurrency": 24,
+      "wall_s": 2.373,
+      "counts": {
+        "total_offered": 96,
+        "accepted_admitted": 64,
+        "completed": 64,
+        "queued": 61,
+        "rejected_queue_full": 0,
+        "rejected_timeout": 32,
+        "rejected_total": 32,
+        "failed": 0
+      },
+      "rates": {
+        "acceptance_rate_pct": 66.67,
+        "completion_rate_pct": 66.67,
+        "rejection_rate_pct": 33.33,
+        "timeout_rate_pct": 33.33,
+        "requests_per_sec_completed": 26.974
+      },
+      "latency_completed": {
+        "ttft_ms": {
+          "p50": 34.4415,
+          "p95": 43.101,
+          "p99": 43.2585,
+          "mean": 33.398
+        },
+        "e2e_ms": {
+          "p50": 593.099,
+          "p95": 679.8351,
+          "p99": 685.028,
+          "mean": 612.55
+        },
+        "queue_wait_ms_queued_only": {
+          "p50": 500.129,
+          "p95": 504.892,
+          "p99": 505.4616,
+          "mean": 294.611,
+          "n": 61
+        },
+        "queue_wait_ms_completed": {
+          "p50": 0.0,
+          "p95": 87.8867,
+          "p99": 92.2361,
+          "mean": 29.748
+        }
+      },
+      "sla": {
+        "target_p95_e2e_ms": 1000.0,
+        "completed_above_1s": 0,
+        "sla_violation_rate_among_completed_pct": 0.0,
+        "sla_violation_rate_among_offered_latency_only_pct": 0.0,
+        "unmet_successful_sub1s_rate_among_offered_pct": 33.33,
+        "completed_p95_e2e_ms": 679.8351,
+        "completed_p95_meets_target": true,
+        "labels": {
+          "among_completed": "fraction of completed requests with E2E > 1000 ms",
+          "among_offered_latency_only": "completed>1s / all offered; rejects/timeouts are NOT counted as latency SLA violations",
+          "unmet_successful_sub1s_among_offered": "1 - (completed with E2E<=1s)/offered; includes rejects/failures/slow completes"
+        }
+      },
+      "throughput": {
+        "output_tokens_per_sec": 1720.01,
+        "mean_output_tokens": 63.77
+      },
+      "gpu": {
+        "avg_gpu_util": 62.5,
+        "peak_gpu_util": 100.0,
+        "peak_vram_mb": 22540.0,
+        "n_samples": 8,
+        "oom_count": 0
+      },
+      "admission_controller_stats": {
+        "accept_immediate": 35,
+        "queued": 61,
+        "admitted_from_queue": 29,
+        "reject_queue_full": 0,
+        "reject_timeout": 32,
+        "peak_active": 16,
+        "peak_queue": 8
+      },
+      "failures_sample": [],
+      "fairness_note": "Latency and throughput below must be read together with rejection_rate_pct; lower p95 with high rejection is a tradeoff, not a free improvement."
+    },
+    "no_admission_c32": {
+      "tag": "no_admission_c32",
+      "admission_enabled": false,
+      "offered_concurrency": 32,
+      "wall_s": 2.812,
+      "counts": {
+        "total_offered": 128,
+        "accepted_admitted": 128,
+        "completed": 128,
+        "queued": 0,
+        "rejected_queue_full": 0,
+        "rejected_timeout": 0,
+        "rejected_total": 0,
+        "failed": 0
+      },
+      "rates": {
+        "acceptance_rate_pct": 100.0,
+        "completion_rate_pct": 100.0,
+        "rejection_rate_pct": 0.0,
+        "timeout_rate_pct": 0.0,
+        "requests_per_sec_completed": 45.5128
+      },
+      "latency_completed": {
+        "ttft_ms": {
+          "p50": 42.3695,
+          "p95": 58.5782,
+          "p99": 58.8653,
+          "mean": 43.475
+        },
+        "e2e_ms": {
+          "p50": 694.0875,
+          "p95": 707.4215,
+          "p99": 718.1701,
+          "mean": 694.852
+        },
+        "queue_wait_ms_queued_only": {
+          "p50": null,
+          "p95": null,
+          "p99": null,
+          "mean": null,
+          "n": 0
+        },
+        "queue_wait_ms_completed": {
+          "p50": 0.0,
+          "p95": 0.0,
+          "p99": 0.0,
+          "mean": 0.0
+        }
+      },
+      "sla": {
+        "target_p95_e2e_ms": 1000.0,
+        "completed_above_1s": 0,
+        "sla_violation_rate_among_completed_pct": 0.0,
+        "sla_violation_rate_among_offered_latency_only_pct": 0.0,
+        "unmet_successful_sub1s_rate_among_offered_pct": 0.0,
+        "completed_p95_e2e_ms": 707.4215,
+        "completed_p95_meets_target": true,
+        "labels": {
+          "among_completed": "fraction of completed requests with E2E > 1000 ms",
+          "among_offered_latency_only": "completed>1s / all offered; rejects/timeouts are NOT counted as latency SLA violations",
+          "unmet_successful_sub1s_among_offered": "1 - (completed with E2E<=1s)/offered; includes rejects/failures/slow completes"
+        }
+      },
+      "throughput": {
+        "output_tokens_per_sec": 2901.08,
+        "mean_output_tokens": 63.74
+      },
+      "gpu": {
+        "avg_gpu_util": 70.0,
+        "peak_gpu_util": 100.0,
+        "peak_vram_mb": 22542.0,
+        "n_samples": 10,
+        "oom_count": 0
+      },
+      "admission_controller_stats": null,
+      "failures_sample": [],
+      "fairness_note": "Latency and throughput below must be read together with rejection_rate_pct; lower p95 with high rejection is a tradeoff, not a free improvement."
+    },
+    "admission_c32": {
+      "tag": "admission_c32",
+      "admission_enabled": true,
+      "offered_concurrency": 32,
+      "wall_s": 2.37,
+      "counts": {
+        "total_offered": 128,
+        "accepted_admitted": 64,
+        "completed": 64,
+        "queued": 95,
+        "rejected_queue_full": 0,
+        "rejected_timeout": 64,
+        "rejected_total": 64,
+        "failed": 0
+      },
+      "rates": {
+        "acceptance_rate_pct": 50.0,
+        "completion_rate_pct": 50.0,
+        "rejection_rate_pct": 50.0,
+        "timeout_rate_pct": 50.0,
+        "requests_per_sec_completed": 26.9993
+      },
+      "latency_completed": {
+        "ttft_ms": {
+          "p50": 33.7495,
+          "p95": 37.6354,
+          "p99": 38.8424,
+          "mean": 32.072
+        },
+        "e2e_ms": {
+          "p50": 599.0095,
+          "p95": 742.4363,
+          "p99": 785.1873,
+          "mean": 638.068
+        },
+        "queue_wait_ms_queued_only": {
+          "p50": 500.723,
+          "p95": 508.6832,
+          "p99": 510.5028,
+          "mean": 375.038,
+          "n": 95
+        },
+        "queue_wait_ms_completed": {
+          "p50": 0.0,
+          "p95": 160.3184,
+          "p99": 199.3542,
+          "mean": 53.792
+        }
+      },
+      "sla": {
+        "target_p95_e2e_ms": 1000.0,
+        "completed_above_1s": 0,
+        "sla_violation_rate_among_completed_pct": 0.0,
+        "sla_violation_rate_among_offered_latency_only_pct": 0.0,
+        "unmet_successful_sub1s_rate_among_offered_pct": 50.0,
+        "completed_p95_e2e_ms": 742.4363,
+        "completed_p95_meets_target": true,
+        "labels": {
+          "among_completed": "fraction of completed requests with E2E > 1000 ms",
+          "among_offered_latency_only": "completed>1s / all offered; rejects/timeouts are NOT counted as latency SLA violations",
+          "unmet_successful_sub1s_among_offered": "1 - (completed with E2E<=1s)/offered; includes rejects/failures/slow completes"
+        }
+      },
+      "throughput": {
+        "output_tokens_per_sec": 1721.63,
+        "mean_output_tokens": 63.77
+      },
+      "gpu": {
+        "avg_gpu_util": 87.5,
+        "peak_gpu_util": 100.0,
+        "peak_vram_mb": 22542.0,
+        "n_samples": 8,
+        "oom_count": 0
+      },
+      "admission_controller_stats": {
+        "accept_immediate": 33,
+        "queued": 95,
+        "admitted_from_queue": 31,
+        "reject_queue_full": 0,
+        "reject_timeout": 64,
+        "peak_active": 16,
+        "peak_queue": 16
+      },
+      "failures_sample": [],
+      "fairness_note": "Latency and throughput below must be read together with rejection_rate_pct; lower p95 with high rejection is a tradeoff, not a free improvement."
+    }
+  },
+  "comparison_table": [
+    {
+      "offered_concurrency": 24,
+      "admission": true,
+      "accepted": 64,
+      "completed": 64,
+      "rejected": 32,
+      "rejection_pct": 33.33,
+      "rps": 26.974,
+      "output_tok_s": 1720.01,
+      "ttft_p95_ms": 43.101,
+      "e2e_p95_ms": 679.8351,
+      "queue_p95_ms": 87.8867,
+      "sla_violation_pct_completed": 0.0,
+      "sla_violation_pct_offered_latency_only": 0.0,
+      "gpu_util_avg": 62.5,
+      "peak_vram_mb": 22540.0
+    },
+    {
+      "offered_concurrency": 32,
+      "admission": true,
+      "accepted": 64,
+      "completed": 64,
+      "rejected": 64,
+      "rejection_pct": 50.0,
+      "rps": 26.9993,
+      "output_tok_s": 1721.63,
+      "ttft_p95_ms": 37.6354,
+      "e2e_p95_ms": 742.4363,
+      "queue_p95_ms": 160.3184,
+      "sla_violation_pct_completed": 0.0,
+      "sla_violation_pct_offered_latency_only": 0.0,
+      "gpu_util_avg": 87.5,
+      "peak_vram_mb": 22542.0
+    },
+    {
+      "offered_concurrency": 24,
+      "admission": false,
+      "accepted": 96,
+      "completed": 96,
+      "rejected": 0,
+      "rejection_pct": 0.0,
+      "rps": 34.562,
+      "output_tok_s": 2204.04,
+      "ttft_p95_ms": 68.5907,
+      "e2e_p95_ms": 704.3792,
+      "queue_p95_ms": 0.0,
+      "sla_violation_pct_completed": 0.0,
+      "sla_violation_pct_offered_latency_only": 0.0,
+      "gpu_util_avg": 100.0,
+      "peak_vram_mb": 22540.0
+    },
+    {
+      "offered_concurrency": 32,
+      "admission": false,
+      "accepted": 128,
+      "completed": 128,
+      "rejected": 0,
+      "rejection_pct": 0.0,
+      "rps": 45.5128,
+      "output_tok_s": 2901.08,
+      "ttft_p95_ms": 58.5782,
+      "e2e_p95_ms": 707.4215,
+      "queue_p95_ms": 0.0,
+      "sla_violation_pct_completed": 0.0,
+      "sla_violation_pct_offered_latency_only": 0.0,
+      "gpu_util_avg": 70.0,
+      "peak_vram_mb": 22542.0
+    }
+  ],
+  "per_offered_comparison": {
+    "24": {
+      "no_admission_e2e_p95_ms": 704.3792,
+      "admission_e2e_p95_ms": 679.8351,
+      "no_admission_meets_1s": true,
+      "admission_meets_1s": true,
+      "rejection_pct_admission": 33.33,
+      "throughput_preserved_pct": 78.04,
+      "rps_preserved_pct": 78.05,
+      "queue_p95_ms_admission": 87.8867,
+      "gpu_util_admission": 62.5,
+      "gpu_util_no_admission": 100.0,
+      "peak_vram_admission_mb": 22540.0,
+      "peak_vram_no_admission_mb": 22540.0,
+      "runaway_queue_prevented": true,
+      "tradeoff": "Admission lowers/controls completed latency by rejecting or timing out 33.33% of offered load; not a free latency win."
+    },
+    "32": {
+      "no_admission_e2e_p95_ms": 707.4215,
+      "admission_e2e_p95_ms": 742.4363,
+      "no_admission_meets_1s": true,
+      "admission_meets_1s": true,
+      "rejection_pct_admission": 50.0,
+      "throughput_preserved_pct": 59.34,
+      "rps_preserved_pct": 59.32,
+      "queue_p95_ms_admission": 160.3184,
+      "gpu_util_admission": 87.5,
+      "gpu_util_no_admission": 70.0,
+      "peak_vram_admission_mb": 22542.0,
+      "peak_vram_no_admission_mb": 22542.0,
+      "runaway_queue_prevented": true,
+      "tradeoff": "Admission lowers/controls completed latency by rejecting or timing out 50.0% of offered load; not a free latency win."
+    }
+  },
+  "answers": {
+    "p95_e2e_below_or_closer_to_1s": {
+      "24": {
+        "no_admission_p95": 704.3792,
+        "admission_p95": 679.8351,
+        "admission_meets_target": true
+      },
+      "32": {
+        "no_admission_p95": 707.4215,
+        "admission_p95": 742.4363,
+        "admission_meets_target": true
+      }
+    },
+    "rejected_or_timed_out_to_achieve_it": {
+      "24": {
+        "total_offered": 96,
+        "accepted_admitted": 64,
+        "completed": 64,
+        "queued": 61,
+        "rejected_queue_full": 0,
+        "rejected_timeout": 32,
+        "rejected_total": 32,
+        "failed": 0
+      },
+      "32": {
+        "total_offered": 128,
+        "accepted_admitted": 64,
+        "completed": 64,
+        "queued": 95,
+        "rejected_queue_full": 0,
+        "rejected_timeout": 64,
+        "rejected_total": 64,
+        "failed": 0
+      }
+    },
+    "throughput_preserved": {
+      "24": 78.04,
+      "32": 59.34
+    },
+    "queue_delay_introduced_p95_ms": {
+      "24": 87.8867,
+      "32": 160.3184
+    },
+    "gpu_util_remained_high": {
+      "24": 62.5,
+      "32": 87.5
+    },
+    "vram_safe": true,
+    "prevented_runaway_queueing": true
+  },
+  "target_p95_maintained_with_admission": true,
+  "recommendation": "Recommend enabling SLA-aware admission as a protective overload control (max_active=16, queue=16, timeout=500ms) in front of W8A8+prefix-cache serving. Under this I.3 overload (prefix cache ON), completed p95 already stayed <1s without admission; admission did not buy a free latency win\u2014at offered=24 it slightly improved p95 (\u22123.5%) while rejecting 33.3%, and at offered=32 completed p95 rose slightly (queue wait in E2E) while rejecting 50%. Primary benefit: bounded queue, explicit timeout/reject instead of unbounded accept-all, and capped active concurrency at the I.1 saturation point.",
+  "worth_enabling_in_production": true,
+  "interpretation": {
+    "prefix_cache_effect": "I.2 prefix caching keeps overload p95 well under the 1s budget even without admission (~704\u2013707 ms at offered 24/32 vs I.1 no-cache c16 p95 923.5 ms).",
+    "admission_role": "protective load-shedding / bounded-queue control, not latency magic",
+    "fairness": "Always read p95 together with rejection_rate and throughput_preserved"
+  }
+}

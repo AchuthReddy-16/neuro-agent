@@ -1,0 +1,31 @@
+# Base model evaluation configuration (Stage C)
+
+model:
+  name: Qwen/Qwen3-4B-Instruct-2507
+  variant: base_BF16
+  dtype: bfloat16
+  trust_remote_code: false
+
+inference:
+  seed: 42
+  do_sample: false
+  max_new_tokens: 128
+  use_cache: true
+  temperature: 0.0
+  top_p: 1.0
+
+evaluation:
+  dataset: data/processed/eval_heldout.jsonl
+  held_out_subjects: [S026, S027, S028, S029, S030]
+  train_subjects: [S001, S002, S003, S004, S005, S006, S007, S008, S009, S010,
+                   S011, S012, S013, S014, S015, S016, S017, S018, S019, S020]
+  validation_subjects: [S021, S022, S023, S024, S025]
+
+prompt:
+  system: >
+    You are a neuroscience research assistant. Answer using only the provided
+    context. Respond with a concise direct answer only. Do not add unsupported
+    interpretation.
+
+output:
+  dir: results/base_model_eval

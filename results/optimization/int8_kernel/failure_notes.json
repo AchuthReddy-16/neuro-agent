@@ -1,0 +1,14 @@
+{
+  "stage": "H.5",
+  "integration_attempted": true,
+  "microbench_decode_m1_improved": true,
+  "model_level_did_not_improve": true,
+  "prefill_triton_regression": true,
+  "notes": [
+    "Isolated fused kernel beat bitsandbytes on M=1 and M=4.",
+    "Prefill M>=128 Triton tiled kernel is 1.5\u20133\u00d7 slower than cuBLASLt int8_linear_matmul.",
+    "Patching 72 gate/up_proj modules did not raise generate() decode tok/s vs this session's unpatched INT8.",
+    "Quality sanity 0.875 matches H.4.",
+    "Do not keep the Triton patch as the default inference path."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "method": "GRPO",
+  "model_name": "Qwen/Qwen3-4B-Instruct-2507",
+  "base_adapter_path": "/workspace/neuro-agent/checkpoints/sft_corrected_v2/final",
+  "train_examples": 3269,
+  "max_steps": 150,
+  "num_generations": 2,
+  "learning_rate": 5e-07,
+  "beta": 0.04,
+  "total_steps": 150,
+  "runtime_s": 2032.2646546550095,
+  "peak_vram_mb": 10677.359375,
+  "adapter_size_mb": 389.03313064575195,
+  "checkpoint_path": "/workspace/neuro-agent/checkpoints/rlvr/final",
+  "seed": 42,
+  "reward_mean": 0.6558333333333334,
+  "reward_std": 0.115773365772194,
+  "reward_min": 0.375,
+  "reward_max": 0.9,
+  "kl_mean": 0.00021552333516076884
+}

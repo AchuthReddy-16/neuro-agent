@@ -1,0 +1,69 @@
+{
+  "sample_count": 512,
+  "target_count": 512,
+  "source_file": "/workspace/neuro-agent/data/processed/sft_corrective_v2_mixed.jsonl",
+  "source_split": "sft_corrective_v2_mixed train/val-domain examples (adapter training distribution)",
+  "held_out_subjects_excluded": [
+    "S026",
+    "S027",
+    "S028",
+    "S029",
+    "S030"
+  ],
+  "dropped_heldout_rows": 0,
+  "subjects_present": [
+    "S001",
+    "S002",
+    "S003",
+    "S004",
+    "S005",
+    "S006",
+    "S007",
+    "S008",
+    "S009",
+    "S010",
+    "S011",
+    "S012",
+    "S013",
+    "S014",
+    "S015",
+    "S016",
+    "S017",
+    "S018",
+    "S019",
+    "S020"
+  ],
+  "subject_min": "S001",
+  "subject_max": "S020",
+  "category_counts": {
+    "execution_vs_imagery": 103,
+    "movement_task_classification": 103,
+    "channel_ranking": 102,
+    "band_power_analysis": 102,
+    "numerical_reasoning": 102
+  },
+  "prompt_length_tokens": {
+    "min": 117,
+    "max": 1695,
+    "mean": 731.0,
+    "median": 132.0,
+    "p90": 1658
+  },
+  "families_present_in_training_mix": [
+    "execution_vs_imagery",
+    "movement_task_classification",
+    "channel_ranking",
+    "band_power_analysis",
+    "numerical_reasoning"
+  ],
+  "families_absent_from_non_heldout_train_jsonl": [
+    "statistical_comparison",
+    "tool_selection",
+    "factual_grounding"
+  ],
+  "absent_family_note": "Those three families exist on the held-out eval set but not in sft_corrective_v2_mixed or sft_train. They were not used for calibration to avoid S026-S030 leakage. Linear-layer activation statistics are still covered by the five production families, which share the same EEG JSON context shape.",
+  "why_production_representative": "Calibration uses 512 stratified prompts from the corrected mixed SFT training distribution (S001-S020), formatted with the production system prompt and chat template. Held-out evaluation subjects S026-S030 are excluded. Generic datasets (GSM8K, Open-Platypus, WikiText) were not used.",
+  "tokenizer": "/workspace/neuro-agent/checkpoints/text_merged_corrected_bf16",
+  "calibration_prompts_path": "/workspace/neuro-agent/results/quantization/w8a8_int8/calibration_prompts.jsonl",
+  "generic_datasets_used": false
+}

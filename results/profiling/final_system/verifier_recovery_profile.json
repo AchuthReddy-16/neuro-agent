@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-09-03T22:05:35.574150+00:00",
+  "normal_clean_A": {
+    "verification_triggered": false,
+    "verifier_model_ms": 0.0,
+    "e2e_ms": 1378.088,
+    "pct_e2e_in_verifier": 0.0,
+    "note": "Clean single-tool path should skip model verifier"
+  },
+  "verifier_request_C": {
+    "verification_triggered": false,
+    "trigger_reason": [
+      "missing_answer_sections",
+      "multi_tool"
+    ],
+    "verifier_model_ms": 0.0,
+    "verifier_block_ms": 0.353,
+    "e2e_ms": 1267.65,
+    "pct_e2e_in_verifier_model": 0.0,
+    "added_latency_vs_A_ms": -110.438,
+    "note": "Original C hit format-only repair (missing_answer_sections) which skips model verifier; see verifier_request_C_model for model-verifier cost on multi-tool."
+  },
+  "recovery_request_D": {
+    "verification_triggered": true,
+    "path_mode": "RECOVERY",
+    "verifier_model_ms": 623.346,
+    "recovery_ms": 184.816,
+    "e2e_ms": 1683.687,
+    "pct_e2e_in_verifier": 37.02,
+    "pct_e2e_in_recovery": 10.98,
+    "added_latency_vs_A_ms": 305.599,
+    "recovery": {
+      "action": "REWRITE",
+      "success": true,
+      "latency_ms": 184.816
+    }
+  },
+  "verifier_request_C_model": {
+    "note": "Supplemental: well-formed draft + multi_tool forces model verifier (format-only path skipped).",
+    "verification_triggered": false,
+    "trigger_reason": [
+      "missing_answer_sections",
+      "multi_tool"
+    ],
+    "verifier_model_ms": 0.0,
+    "verifier_block_ms": 0.205,
+    "e2e_ms": 1321.851,
+    "pct_e2e_in_verifier_model": 0.0,
+    "added_latency_vs_A_ms": -56.237,
+    "span_map_ms": {
+      "intent_generation": 972.828,
+      "intent_parse_validate": 0.06,
+      "routing_total": 972.911,
+      "requires_vision_decision": 0.06,
+      "tool_execution_total": 315.749,
+      "evidence_bundle_construction": 0.219,
+      "grounded_answer_generation": 32.501,
+      "verifier_block": 0.205,
+      "final_serialization": 0.177
+    }
+  },
+  "summary": {
+    "normal_clean_no_model_verifier_ms": 0.0,
+    "format_only_multi_tool_C_skips_model_verifier": true,
+    "model_verifier_cost_ms_from_D": 623.346,
+    "model_verifier_pct_of_D_e2e": 37.02,
+    "recovery_cost_ms_from_D": 184.816,
+    "recovery_pct_of_D_e2e": 10.98,
+    "note": "Class C (multi_tool) with missing_answer_sections takes the format-only fast path and does not invoke the model verifier. Class D controlled corruption measures model verifier (~623ms) + recovery rewrite (~185ms)."
+  }
+}

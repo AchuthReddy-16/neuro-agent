@@ -1,0 +1,100 @@
+{
+  "stage": "J",
+  "timestamp": "2026-09-03T20:59:18.149543+00:00",
+  "model_architecture": "Qwen2_5_VLForConditionalGeneration",
+  "base_model": "Qwen/Qwen2.5-VL-3B-Instruct",
+  "adapter": "/workspace/neuro-agent/checkpoints/multimodal_sft_corrected/final",
+  "adapter_type": "PEFT LoRA (not merged)",
+  "dtype": "bfloat16",
+  "quantization": null,
+  "vision_tower_dtype": "bfloat16",
+  "device": "cuda:0",
+  "serving_runtime_backend": "HuggingFace Transformers + PEFT + qwen_vl_utils",
+  "not_vllm": true,
+  "image_preprocessing": {
+    "processor": "Qwen2_5_VLProcessor / Qwen2VLImageProcessor",
+    "path": "qwen_vl_utils.process_vision_info \u2192 processor(images=...)",
+    "normalize_rescale_resize": true,
+    "patch_size": 14
+  },
+  "max_image_resolution_settings": "processor defaults from checkpoint processor_config.json",
+  "vram_idle_mb": 8000.0,
+  "vram_peak_torch_mb": 7453.7,
+  "weight_memory_mb": 7303.1015625,
+  "load_info": {
+    "model_name": "Qwen/Qwen2.5-VL-3B-Instruct",
+    "dtype": "bfloat16",
+    "device": "cuda:0",
+    "total_parameters": 3791775744,
+    "vision_parameters": 675903488,
+    "merger_parameters": 36708608,
+    "weight_memory_mb": 7303.1015625,
+    "load_time_s": 6.953667455352843,
+    "adapter_path": "/workspace/neuro-agent/checkpoints/multimodal_sft_corrected/final",
+    "quantization": null,
+    "vision_tower_dtype": "bfloat16",
+    "backend": "transformers+peft (not vLLM)",
+    "architecture": "Qwen2_5_VLForConditionalGeneration"
+  },
+  "co_residency_verdict": "PASS",
+  "processor_config": {
+    "image_processor": {
+      "do_convert_rgb": true,
+      "do_normalize": true,
+      "do_rescale": true,
+      "do_resize": true,
+      "image_mean": [
+        0.48145466,
+        0.4578275,
+        0.40821073
+      ],
+      "image_processor_type": "Qwen2VLImageProcessor",
+      "image_std": [
+        0.26862954,
+        0.26130258,
+        0.27577711
+      ],
+      "merge_size": 2,
+      "patch_size": 14,
+      "resample": 3,
+      "rescale_factor": 0.00392156862745098,
+      "size": {
+        "longest_edge": 12845056,
+        "shortest_edge": 3136
+      },
+      "temporal_patch_size": 2
+    },
+    "processor_class": "Qwen2_5_VLProcessor",
+    "video_processor": {
+      "do_convert_rgb": true,
+      "do_normalize": true,
+      "do_rescale": true,
+      "do_resize": true,
+      "do_sample_frames": false,
+      "image_mean": [
+        0.48145466,
+        0.4578275,
+        0.40821073
+      ],
+      "image_std": [
+        0.26862954,
+        0.26130258,
+        0.27577711
+      ],
+      "max_frames": 768,
+      "max_video_tokens": 128000,
+      "merge_size": 2,
+      "min_frames": 4,
+      "patch_size": 14,
+      "resample": 3,
+      "rescale_factor": 0.00392156862745098,
+      "return_metadata": false,
+      "size": {
+        "longest_edge": 12845056,
+        "shortest_edge": 3136
+      },
+      "temporal_patch_size": 2,
+      "video_processor_type": "Qwen2VLVideoProcessor"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-09-03T22:11:28.343431+00:00",
+  "tools": "CPU-bound (pandas/numpy/HDF5)",
+  "text_path": "GPU-bound vLLM W8A8 decode/prefill; util measured via nvidia-smi snapshots on each generate",
+  "vision_path": "GPU-bound HF generate + orchestration wall for swap",
+  "torch_profiler": "not run globally \u2014 wall-clock spans + CUDA synchronize on VLM sufficient",
+  "hardware_counters": "ncu/nsys not required for K.1 ranking; available under results/profiling/ncu|nsys from prior stages",
+  "prefix_cache": "enabled on vLLM; warm request issued before A",
+  "final_gpu": {
+    "nvidia_smi_used_mb": 4.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 0.0,
+    "torch_reserved_mb": 0.0
+  },
+  "notes": [
+    "vLLM OpenAI API does not expose separate queue wait at c=1",
+    "Vision encoder latency not separately exposed by HF generate"
+  ]
+}

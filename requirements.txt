@@ -1,9 +1,7 @@
-# Core scaffold dependencies (minimal install)
+# Minimal install. Prefer editable extras from pyproject.toml:
+#   pip install -e .
+#   pip install -e ".[dev]"
+#   pip install -e ".[api]"
+#   pip install -e ".[hardware]"
+#   pip install -e ".[train]"
 pyyaml>=6.0
-
-# Hardware verification (install when GPU is available)
-# pip install -e ".[hardware]"
-# torch>=2.1
-
-# Training stack (install later when starting QLoRA/SFT)
-# pip install -e ".[train]"

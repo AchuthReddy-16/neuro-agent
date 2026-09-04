@@ -1,0 +1,53 @@
+{
+  "stage": "I.2",
+  "timestamp": "2026-09-03T20:23:19.410801+00:00",
+  "vllm_version": "0.28.0",
+  "cuda_version": "13.0",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "compute_capability": [
+    8,
+    9
+  ],
+  "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "served_model_name": "w8a8-int8",
+  "dtype": "auto",
+  "max_model_len": 4096,
+  "gpu_memory_utilization": 0.9,
+  "tensor_parallel_size": 1,
+  "enforce_eager": true,
+  "max_tokens": 64,
+  "temperature": 0.0,
+  "ignore_eos": true,
+  "i1_reference": {
+    "1": {
+      "tok_s": 131.38,
+      "rps": 2.05,
+      "e2e_p95_ms": 486.5
+    },
+    "8": {
+      "tok_s": 765.88,
+      "rps": 11.97,
+      "e2e_p95_ms": 674.3
+    },
+    "16": {
+      "tok_s": 1176.01,
+      "rps": 18.45,
+      "e2e_p95_ms": 923.5
+    }
+  },
+  "main_prefix": "production",
+  "prefix_shared_tokens": {
+    "short": 90,
+    "medium": 435,
+    "production": 875
+  },
+  "kernel_log_lines": [
+    "(EngineCore pid=168145) INFO 09-03 20:23:33 [__init__.py:755] Selected CutlassInt8ScaledMMLinearKernel for CompressedTensorsW8A8Int8",
+    "(EngineCore pid=173278) INFO 09-03 20:24:29 [__init__.py:755] Selected CutlassInt8ScaledMMLinearKernel for CompressedTensorsW8A8Int8"
+  ],
+  "results_dir": "/workspace/neuro-agent/results/serving/prefix_cache/w8a8_int8",
+  "comparison_path": "/workspace/neuro-agent/results/model_comparison/w8a8_prefix_cache_comparison.json",
+  "verdict": "PASS",
+  "true_cold_note": "Supplemental true-cold run used VLLM_SERVER_DEV_MODE=1 so /reset_prefix_cache works. See cache_on_cold.json true_cold_correction.",
+  "prefix_length_sensitivity_caveat": "Sensitivity cold samples in the main run were warm-contaminated (reset 404); use relative ordering cautiously. Absolute cold/warm for production uses true_cold_correction + cache_on_warm."
+}

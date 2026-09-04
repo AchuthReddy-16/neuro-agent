@@ -1,0 +1,59 @@
+{
+  "passed": false,
+  "catastrophic": false,
+  "checks": {
+    "numerical_reasoning": {
+      "rate": 1.0,
+      "minimum": 0.8,
+      "reference": 1.0,
+      "passed": true
+    },
+    "channel_ranking": {
+      "rate": 0.8,
+      "minimum": 0.65,
+      "reference": 0.816,
+      "passed": true
+    },
+    "band_power_analysis": {
+      "rate": 0.9,
+      "minimum": 0.7,
+      "reference": 0.88,
+      "passed": true
+    },
+    "movement_task_classification": {
+      "rate": 0.7,
+      "minimum": 0.55,
+      "reference": 0.728,
+      "passed": true
+    },
+    "execution_vs_imagery": {
+      "rate": 1.0,
+      "minimum": 0.8,
+      "reference": 1.0,
+      "passed": true
+    },
+    "statistical_comparison": {
+      "rate": 1.0,
+      "minimum": 0.8,
+      "reference": 1.0,
+      "passed": true
+    },
+    "tool_selection": {
+      "rate": 1.0,
+      "minimum": 0.8,
+      "reference": 1.0,
+      "passed": true
+    },
+    "factual_grounding": {
+      "rate": 0.2,
+      "minimum": 0.3,
+      "reference": 0.488,
+      "passed": false
+    }
+  },
+  "reasons": [
+    "task_floors_failed=['factual_grounding']"
+  ],
+  "overall_pass_rate": 0.825,
+  "invalid_parse_rate": 0.0
+}

@@ -1,0 +1,458 @@
+{
+  "stage": "J",
+  "timestamp": "2026-09-03T20:59:36.286192+00:00",
+  "n_requests": 25,
+  "overall": {
+    "preprocess_ms": {
+      "p50": 9.688,
+      "p95": 17.3972,
+      "mean": 11.362,
+      "n": 25
+    },
+    "ttft_proxy_ms": {
+      "p50": 208.028,
+      "p95": 642.0888,
+      "mean": 258.121,
+      "n": 25
+    },
+    "e2e_ms": {
+      "p50": 210.728,
+      "p95": 651.1066,
+      "mean": 260.561,
+      "n": 25
+    },
+    "decode_tok_s": {
+      "p50": 4878.67,
+      "p95": 8302.452,
+      "mean": 4761.264,
+      "n": 25
+    },
+    "peak_torch_mb": {
+      "p50": 7429.1,
+      "p95": 7757.5,
+      "mean": 7534.404,
+      "n": 25
+    },
+    "nvidia_smi_mb": {
+      "p50": 8806.0,
+      "p95": 8806.0,
+      "mean": 8806.0,
+      "n": 25
+    }
+  },
+  "per_image_type": {
+    "topomap": {
+      "preprocess_ms": {
+        "p50": 12.682,
+        "p95": 15.6916,
+        "mean": 13.062,
+        "n": 5
+      },
+      "ttft_proxy_ms": {
+        "p50": 351.255,
+        "p95": 633.1282,
+        "mean": 385.15,
+        "n": 5
+      },
+      "e2e_ms": {
+        "p50": 352.702,
+        "p95": 642.1408,
+        "mean": 388.053,
+        "n": 5
+      },
+      "decode_tok_s": {
+        "p50": 6221.32,
+        "p95": 8478.908,
+        "mean": 6454.66,
+        "n": 5
+      },
+      "n": 5
+    },
+    "spectrogram": {
+      "preprocess_ms": {
+        "p50": 8.751,
+        "p95": 9.5146,
+        "mean": 8.955,
+        "n": 5
+      },
+      "ttft_proxy_ms": {
+        "p50": 122.71,
+        "p95": 154.737,
+        "mean": 131.128,
+        "n": 5
+      },
+      "e2e_ms": {
+        "p50": 123.332,
+        "p95": 156.5124,
+        "mean": 132.1,
+        "n": 5
+      },
+      "decode_tok_s": {
+        "p50": 4826.49,
+        "p95": 4881.222,
+        "mean": 4293.536,
+        "n": 5
+      },
+      "n": 5
+    },
+    "psd": {
+      "preprocess_ms": {
+        "p50": 8.595,
+        "p95": 9.5448,
+        "mean": 8.468,
+        "n": 5
+      },
+      "ttft_proxy_ms": {
+        "p50": 132.041,
+        "p95": 250.7534,
+        "mean": 160.2,
+        "n": 5
+      },
+      "e2e_ms": {
+        "p50": 133.072,
+        "p95": 255.8242,
+        "mean": 162.139,
+        "n": 5
+      },
+      "decode_tok_s": {
+        "p50": 3880.23,
+        "p95": 4831.5,
+        "mean": 3840.61,
+        "n": 5
+      },
+      "n": 5
+    },
+    "waveform": {
+      "preprocess_ms": {
+        "p50": 9.688,
+        "p95": 9.874,
+        "mean": 9.471,
+        "n": 5
+      },
+      "ttft_proxy_ms": {
+        "p50": 208.028,
+        "p95": 330.2636,
+        "mean": 205.495,
+        "n": 5
+      },
+      "e2e_ms": {
+        "p50": 210.728,
+        "p95": 339.5154,
+        "mean": 209.034,
+        "n": 5
+      },
+      "decode_tok_s": {
+        "p50": 2962.79,
+        "p95": 5486.984,
+        "mean": 3584.606,
+        "n": 5
+      },
+      "n": 5
+    },
+    "band_power": {
+      "preprocess_ms": {
+        "p50": 16.866,
+        "p95": 19.2588,
+        "mean": 16.855,
+        "n": 5
+      },
+      "ttft_proxy_ms": {
+        "p50": 393.507,
+        "p95": 684.6432,
+        "mean": 408.629,
+        "n": 5
+      },
+      "e2e_ms": {
+        "p50": 394.988,
+        "p95": 693.089,
+        "mean": 411.478,
+        "n": 5
+      },
+      "decode_tok_s": {
+        "p50": 6060.67,
+        "p95": 7338.546,
+        "mean": 5632.91,
+        "n": 5
+      },
+      "n": 5
+    }
+  },
+  "rows": [
+    {
+      "image_type": "topomap",
+      "category": "topomap_strongest_alpha_mu",
+      "preprocess_ms": 11.434,
+      "ttft_proxy_ms": 258.059,
+      "e2e_ms": 258.413,
+      "decode_tok_s": 8482.51,
+      "completion_tokens": 3,
+      "peak_torch_mb": 7713.5,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "topomap",
+      "category": "topomap_beta_top3",
+      "preprocess_ms": 12.682,
+      "ttft_proxy_ms": 353.233,
+      "e2e_ms": 354.692,
+      "decode_tok_s": 6169.42,
+      "completion_tokens": 9,
+      "peak_torch_mb": 7714.2,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "topomap",
+      "category": "topomap_high_delta_set",
+      "preprocess_ms": 16.347,
+      "ttft_proxy_ms": 703.102,
+      "e2e_ms": 714.003,
+      "decode_tok_s": 2935.55,
+      "completion_tokens": 32,
+      "peak_torch_mb": 7695.2,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "topomap",
+      "category": "topomap_strongest_alpha_mu",
+      "preprocess_ms": 13.07,
+      "ttft_proxy_ms": 260.102,
+      "e2e_ms": 260.456,
+      "decode_tok_s": 8464.5,
+      "completion_tokens": 3,
+      "peak_torch_mb": 7713.5,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "topomap",
+      "category": "topomap_beta_top3",
+      "preprocess_ms": 11.777,
+      "ttft_proxy_ms": 351.255,
+      "e2e_ms": 352.702,
+      "decode_tok_s": 6221.32,
+      "completion_tokens": 9,
+      "peak_torch_mb": 7715.6,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "spectrogram",
+      "category": "spectrogram_dominant_band",
+      "preprocess_ms": 8.64,
+      "ttft_proxy_ms": 120.76,
+      "e2e_ms": 121.376,
+      "decode_tok_s": 4878.67,
+      "completion_tokens": 3,
+      "peak_torch_mb": 7420.2,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "spectrogram",
+      "category": "spectrogram_peak_frequency",
+      "preprocess_ms": 8.561,
+      "ttft_proxy_ms": 129.409,
+      "e2e_ms": 130.458,
+      "decode_tok_s": 3814.7,
+      "completion_tokens": 4,
+      "peak_torch_mb": 7405.8,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "spectrogram",
+      "category": "spectrogram_strongest_vs_weakest",
+      "preprocess_ms": 9.237,
+      "ttft_proxy_ms": 121.694,
+      "e2e_ms": 122.309,
+      "decode_tok_s": 4881.86,
+      "completion_tokens": 3,
+      "peak_torch_mb": 7420.6,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "spectrogram",
+      "category": "spectrogram_dominant_band",
+      "preprocess_ms": 9.584,
+      "ttft_proxy_ms": 122.71,
+      "e2e_ms": 123.332,
+      "decode_tok_s": 4826.49,
+      "completion_tokens": 3,
+      "peak_torch_mb": 7420.0,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "spectrogram",
+      "category": "spectrogram_peak_frequency",
+      "preprocess_ms": 8.751,
+      "ttft_proxy_ms": 161.069,
+      "e2e_ms": 163.026,
+      "decode_tok_s": 3065.96,
+      "completion_tokens": 6,
+      "peak_torch_mb": 7406.5,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "psd",
+      "category": "psd_peak_frequency",
+      "preprocess_ms": 6.836,
+      "ttft_proxy_ms": 130.256,
+      "e2e_ms": 131.289,
+      "decode_tok_s": 3872.95,
+      "completion_tokens": 4,
+      "peak_torch_mb": 7407.9,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "psd",
+      "category": "psd_dominant_band",
+      "preprocess_ms": 9.316,
+      "ttft_proxy_ms": 122.962,
+      "e2e_ms": 123.569,
+      "decode_tok_s": 4945.2,
+      "completion_tokens": 3,
+      "peak_torch_mb": 7423.3,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "psd",
+      "category": "psd_band_order",
+      "preprocess_ms": 9.602,
+      "ttft_proxy_ms": 279.342,
+      "e2e_ms": 285.452,
+      "decode_tok_s": 2127.97,
+      "completion_tokens": 13,
+      "peak_torch_mb": 7425.5,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "psd",
+      "category": "psd_peak_frequency",
+      "preprocess_ms": 8.595,
+      "ttft_proxy_ms": 132.041,
+      "e2e_ms": 133.072,
+      "decode_tok_s": 3880.23,
+      "completion_tokens": 4,
+      "peak_torch_mb": 7408.0,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "psd",
+      "category": "psd_dominant_band",
+      "preprocess_ms": 7.992,
+      "ttft_proxy_ms": 136.399,
+      "e2e_ms": 137.313,
+      "decode_tok_s": 4376.7,
+      "completion_tokens": 4,
+      "peak_torch_mb": 7423.3,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "waveform",
+      "category": "waveform_highest_rms",
+      "preprocess_ms": 9.688,
+      "ttft_proxy_ms": 112.678,
+      "e2e_ms": 113.034,
+      "decode_tok_s": 5631.58,
+      "completion_tokens": 2,
+      "peak_torch_mb": 7427.6,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "waveform",
+      "category": "waveform_rms_order",
+      "preprocess_ms": 9.754,
+      "ttft_proxy_ms": 223.614,
+      "e2e_ms": 226.893,
+      "decode_tok_s": 2744.79,
+      "completion_tokens": 9,
+      "peak_torch_mb": 7429.7,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "waveform",
+      "category": "waveform_max_rms_numeric",
+      "preprocess_ms": 8.922,
+      "ttft_proxy_ms": 356.926,
+      "e2e_ms": 367.671,
+      "decode_tok_s": 1675.27,
+      "completion_tokens": 18,
+      "peak_torch_mb": 7429.1,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "waveform",
+      "category": "waveform_highest_rms",
+      "preprocess_ms": 9.089,
+      "ttft_proxy_ms": 126.231,
+      "e2e_ms": 126.842,
+      "decode_tok_s": 4908.6,
+      "completion_tokens": 3,
+      "peak_torch_mb": 7426.6,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "waveform",
+      "category": "waveform_rms_order",
+      "preprocess_ms": 9.904,
+      "ttft_proxy_ms": 208.028,
+      "e2e_ms": 210.728,
+      "decode_tok_s": 2962.79,
+      "completion_tokens": 8,
+      "peak_torch_mb": 7429.7,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "band_power",
+      "category": "band_power_beta_top3",
+      "preprocess_ms": 15.278,
+      "ttft_proxy_ms": 393.507,
+      "e2e_ms": 394.988,
+      "decode_tok_s": 6075.69,
+      "completion_tokens": 9,
+      "peak_torch_mb": 7753.1,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "band_power",
+      "category": "band_power_weakest_alpha_mu",
+      "preprocess_ms": 16.866,
+      "ttft_proxy_ms": 315.261,
+      "e2e_ms": 315.784,
+      "decode_tok_s": 7654.26,
+      "completion_tokens": 4,
+      "peak_torch_mb": 7751.4,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "band_power",
+      "category": "band_power_high_beta_set",
+      "preprocess_ms": 17.53,
+      "ttft_proxy_ms": 756.295,
+      "e2e_ms": 766.481,
+      "decode_tok_s": 3141.73,
+      "completion_tokens": 32,
+      "peak_torch_mb": 7758.6,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "band_power",
+      "category": "band_power_dominant_mean_band",
+      "preprocess_ms": 19.691,
+      "ttft_proxy_ms": 180.044,
+      "e2e_ms": 180.618,
+      "decode_tok_s": 5232.2,
+      "completion_tokens": 3,
+      "peak_torch_mb": 7481.5,
+      "nvidia_smi_mb": 8806.0
+    },
+    {
+      "image_type": "band_power",
+      "category": "band_power_beta_top3",
+      "preprocess_ms": 14.91,
+      "ttft_proxy_ms": 398.036,
+      "e2e_ms": 399.521,
+      "decode_tok_s": 6060.67,
+      "completion_tokens": 9,
+      "peak_torch_mb": 7759.7,
+      "nvidia_smi_mb": 8806.0
+    }
+  ],
+  "vision_encoder_latency_observable": false
+}

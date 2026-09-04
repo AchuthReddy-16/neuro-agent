@@ -1,17 +1,17 @@
-"""Centralized path resolution; forces Hugging Face caches under /workspace."""
+"""Centralized path resolution for project artifacts and model caches."""
 
 from __future__ import annotations
 
 import os
 from pathlib import Path
 
-# Persistent workspace root (RunPod volume)
-WORKSPACE_ROOT = Path(os.environ.get("NEURO_WORKSPACE_ROOT", "/workspace"))
-
 # Project root (this repo)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-# Hugging Face cache directories — must live on persistent /workspace storage
+# Cache / volume root. Override with NEURO_WORKSPACE_ROOT for shared persistent storage.
+WORKSPACE_ROOT = Path(os.environ.get("NEURO_WORKSPACE_ROOT", str(PROJECT_ROOT)))
+
+# Hugging Face cache directories under the workspace root
 HF_HOME = WORKSPACE_ROOT / ".cache" / "huggingface"
 HF_HUB_CACHE = HF_HOME / "hub"
 HF_DATASETS_CACHE = HF_HOME / "datasets"
@@ -38,12 +38,11 @@ def ensure_dirs() -> None:
 
 
 def configure_hf_cache() -> None:
-    """Set environment variables so HF libraries use /workspace caches."""
+    """Set environment variables so HF libraries use the configured cache root."""
     os.environ.setdefault("HF_HOME", str(HF_HOME))
     os.environ.setdefault("HUGGINGFACE_HUB_CACHE", str(HF_HUB_CACHE))
     os.environ.setdefault("HF_DATASETS_CACHE", str(HF_DATASETS_CACHE))
     os.environ.setdefault("TRANSFORMERS_CACHE", str(HF_TRANSFORMERS_CACHE))
-    # Redirect torch hub as well
     os.environ.setdefault("TORCH_HOME", str(WORKSPACE_ROOT / ".cache" / "torch"))
 
 

@@ -1,0 +1,72 @@
+{
+  "backend": "vllm_w8a8_int8_compressed_tensors",
+  "checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "prompt_tokens": 344,
+  "max_new_tokens": 64,
+  "num_warmups": 2,
+  "num_timed": 5,
+  "concurrency": 1,
+  "prefix_caching": false,
+  "enable_lora": false,
+  "load_time_s": 14.22,
+  "model_vram_mb": 4372.5,
+  "model_vram_gb": 4.27,
+  "peak_vram_mb": 5519.4,
+  "peak_vram_gb": 5.39,
+  "vram_source": "vLLM EngineCore logs: model loading 4.27 GiB; consumed weights+non-torch 4.72 GiB; peak activation 0.67 GiB. peak_vram_gb = 4.72+0.67. nvidia-smi ~22GB is KV-cache reservation at gpu_memory_utilization=0.90 and is not used as the production-comparison peak.",
+  "kernel_selected": "CutlassInt8ScaledMMLinearKernel for CompressedTensorsW8A8Int8",
+  "e2e_ms": 476.5,
+  "generated_tokens_avg": 64.0,
+  "decode_tok_per_s": 134.3,
+  "latency_per_token_ms": 7.45,
+  "ttft_ms": null,
+  "ttft_note": "offline LLM.generate does not expose TTFT; E2E includes prefill+decode",
+  "gpu_util_pct_samples": [
+    100.0,
+    100.0,
+    100.0,
+    100.0,
+    100.0
+  ],
+  "e2e_all_ms": [
+    476.2,
+    476.6,
+    476.8,
+    476.3,
+    476.7
+  ],
+  "failures": 0,
+  "kernel_path": {
+    "quant_config_class": "CompressedTensorsConfig",
+    "expected": "CompressedTensorsW8A8Int8 -> CutlassInt8ScaledMMLinearKernel"
+  },
+  "comparisons_existing": {
+    "hf_bf16": {
+      "quality": 0.864,
+      "peak_gb": 8.16,
+      "decode_tok_s": 52.74,
+      "e2e_ms": 1264.5
+    },
+    "hf_bnb_int8": {
+      "quality": 0.866,
+      "peak_gb": 4.71,
+      "decode_tok_s": 12.5,
+      "e2e_ms": 5450
+    },
+    "h4_fair_bnb_int8": {
+      "peak_gb": 4.7,
+      "decode_tok_s": 18.73,
+      "e2e_ms": 3497
+    },
+    "vllm_bf16": {
+      "peak_gb": 8.24,
+      "decode_tok_s": 61.3,
+      "e2e_ms": 1043.8
+    },
+    "vllm_fp8_reference_only": {
+      "peak_gb": 5.18,
+      "decode_tok_s": 54.1,
+      "e2e_ms": 1182.5
+    }
+  }
+}

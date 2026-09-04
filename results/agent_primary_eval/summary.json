@@ -1,0 +1,60 @@
+{
+  "metrics": {
+    "total_examples": 16,
+    "intent_schema_validity_rate": 1.0,
+    "intent_accuracy_rate": 1.0,
+    "valid_json_rate": 1.0,
+    "tool_execution_success_rate": 1.0,
+    "grounding_pass_rate": 1.0,
+    "e2e_success_rate": 1.0,
+    "unsupported_numeric_claims": 0,
+    "avg_tool_calls": 1.125,
+    "max_tool_calls": 2,
+    "avg_latency_ms": 5558.684684860054,
+    "max_latency_ms": 17689.488048665226,
+    "peak_vram_mb": 13387.310546875,
+    "intent_families_covered": 6,
+    "intent_families": [
+      "band_power",
+      "channel_ranking",
+      "condition_comparison",
+      "psd_peak",
+      "rms",
+      "threshold_set"
+    ],
+    "failure_categories": {},
+    "eval_runtime_s": 88.9393420945853,
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "adapter_path": "checkpoints/sft_corrected_v2/final"
+  },
+  "gate": {
+    "passed": true,
+    "checks": {
+      "intent_schema_validity": {
+        "value": 1.0,
+        "minimum": 0.95,
+        "passed": true
+      },
+      "tool_execution_success": {
+        "value": 1.0,
+        "minimum": 0.95,
+        "passed": true
+      },
+      "unsupported_numeric_claims": {
+        "value": 0,
+        "maximum": 0,
+        "passed": true
+      },
+      "all_intent_families": {
+        "value": 6,
+        "expected": 6,
+        "passed": true
+      },
+      "max_tool_calls": {
+        "value": 2,
+        "maximum": 6,
+        "passed": true
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "all_requests_ok": true,
+  "different_suffixes_produce_independent_outputs": true,
+  "identical_prompt_repeat_deterministic": true,
+  "altered_prefix_request_ok": true,
+  "altered_prefix_output_differs_from_original": false,
+  "outputs_preview": {
+    "same_prefix_q0": "{\"question_type\": \"band_power\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"frequency_band\": \"beta\", \"frequency_range\": [1.0,",
+    "same_prefix_q1": "{\"question_type\": \"channel_ranking\", \"sample_id\": \"S002_R04_E008\", \"channels\": \"all\", \"metric\": \"alpha_mu_power\", \"top_k\": 5, \"",
+    "same_prefix_q0_repeat": "{\"question_type\": \"band_power\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"frequency_band\": \"beta\", \"frequency_range\": [1.0,",
+    "altered_prefix_q0": "{\"question_type\": \"band_power\", \"sample_id\": \"S001_R03_E012\", \"channels\": [\"C3\"], \"frequency_band\": \"beta\", \"frequency_range\": [1.0,"
+  },
+  "checks": [
+    "Requests sharing an identical prefix still produce suffix-dependent outputs.",
+    "Repeating the exact same prompt under greedy+ignore_eos is byte-stable (no KV corruption).",
+    "A content-changed prefix still serves successfully (no stale-state crash)."
+  ],
+  "note": "Correctness here is serving/KV integrity under prefix reuse, not full agent quality eval."
+}

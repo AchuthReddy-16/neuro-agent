@@ -1,0 +1,180 @@
+{
+  "timestamp": "2026-09-03T22:47:42.441281+00:00",
+  "i1_reference_util_0.90": {
+    "1": {
+      "rps": 2.0527,
+      "output_tok_s": 131.38,
+      "ttft_p50_ms": 27.3875,
+      "ttft_p95_ms": 29.1837,
+      "e2e_p50_ms": 484.9265,
+      "e2e_p95_ms": 486.4591
+    },
+    "8": {
+      "rps": 11.9668,
+      "output_tok_s": 765.88,
+      "ttft_p50_ms": 122.622,
+      "ttft_p95_ms": 153.8022,
+      "e2e_p50_ms": 667.9405,
+      "e2e_p95_ms": 674.2661
+    },
+    "16": {
+      "rps": 18.4472,
+      "output_tok_s": 1176.01,
+      "ttft_p50_ms": 173.2065,
+      "ttft_p95_ms": 282.3705,
+      "e2e_p50_ms": 853.428,
+      "e2e_p95_ms": 923.4758
+    }
+  },
+  "co_resident": {
+    "0.40": {
+      "1": {
+        "concurrency": 1,
+        "n_submitted": 16,
+        "completed_requests": 16,
+        "failed_requests": 0,
+        "wall_s": 7.3,
+        "requests_per_sec": 2.1917,
+        "output_tokens_per_sec": 109.58,
+        "ttft_ms": {
+          "p50": 16.757,
+          "p95": 24.92,
+          "mean": 17.856
+        },
+        "e2e_ms": {
+          "p50": 454.958,
+          "p95": 463.363,
+          "mean": 456.239
+        },
+        "gpu_peak_during": {
+          "nvidia_smi_used_mb": 18571.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "nvidia_smi_free_mb": 5993.0,
+          "gpu_util_pct": 100.0,
+          "torch_allocated_mb": 7311.3,
+          "torch_reserved_mb": 7582.0,
+          "timestamp": "2026-09-03T22:43:55.390820+00:00"
+        },
+        "failures": [],
+        "oom_suspected": false
+      },
+      "8": {
+        "concurrency": 8,
+        "n_submitted": 24,
+        "completed_requests": 24,
+        "failed_requests": 0,
+        "wall_s": 1.471,
+        "requests_per_sec": 16.3132,
+        "output_tokens_per_sec": 808.18,
+        "ttft_ms": {
+          "p50": 21.866,
+          "p95": 39.514,
+          "mean": 24.766
+        },
+        "e2e_ms": {
+          "p50": 485.368,
+          "p95": 498.857,
+          "mean": 486.779
+        },
+        "gpu_peak_during": {
+          "nvidia_smi_used_mb": 18571.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "nvidia_smi_free_mb": 5993.0,
+          "gpu_util_pct": 100.0,
+          "torch_allocated_mb": 7311.3,
+          "torch_reserved_mb": 7582.0,
+          "timestamp": "2026-09-03T22:43:56.875676+00:00"
+        },
+        "failures": [],
+        "oom_suspected": false
+      },
+      "16": {
+        "concurrency": 16,
+        "n_submitted": 32,
+        "completed_requests": 32,
+        "failed_requests": 0,
+        "wall_s": 1.029,
+        "requests_per_sec": 31.106,
+        "output_tokens_per_sec": 1600.99,
+        "ttft_ms": {
+          "p50": 33.638,
+          "p95": 48.475,
+          "mean": 35.558
+        },
+        "e2e_ms": {
+          "p50": 503.339,
+          "p95": 522.429,
+          "mean": 504.625
+        },
+        "gpu_peak_during": {
+          "nvidia_smi_used_mb": 18571.0,
+          "nvidia_smi_total_mb": 24564.0,
+          "nvidia_smi_free_mb": 5993.0,
+          "gpu_util_pct": 100.0,
+          "torch_allocated_mb": 7311.3,
+          "torch_reserved_mb": 7582.0,
+          "timestamp": "2026-09-03T22:43:57.933530+00:00"
+        },
+        "failures": [],
+        "oom_suspected": false
+      }
+    }
+  },
+  "workload_caveat": {
+    "i1_workload": "512-token prompts, prefix cache OFF, util=0.90",
+    "k2_workload": "short prompts, prefix cache ON, util=0.40 + VLM resident",
+    "kv_reservation_mb": {
+      "i1_or_production_util_0.90": 22536,
+      "k2_coresident_util_0.40_text_only_after_load": 10512.0,
+      "k2_coresident_both_idle": 18489.0
+    },
+    "interpretation": "Short-prompt microbench at util=0.40 can look equal/better than I.1 on tok/s, but KV budget is ~half of util=0.90 (~10.5 GB text reservation vs ~22.5 GB). True high-concurrency / long-prefix capacity is reduced. Prefer hybrid policy.",
+    "k2_measured": {
+      "c1": {
+        "requests_per_sec": 2.1917,
+        "output_tokens_per_sec": 109.58,
+        "ttft_ms": {
+          "p50": 16.757,
+          "p95": 24.92,
+          "mean": 17.856
+        },
+        "e2e_ms": {
+          "p50": 454.958,
+          "p95": 463.363,
+          "mean": 456.239
+        },
+        "failed_requests": 0
+      },
+      "c8": {
+        "requests_per_sec": 16.3132,
+        "output_tokens_per_sec": 808.18,
+        "ttft_ms": {
+          "p50": 21.866,
+          "p95": 39.514,
+          "mean": 24.766
+        },
+        "e2e_ms": {
+          "p50": 485.368,
+          "p95": 498.857,
+          "mean": 486.779
+        },
+        "failed_requests": 0
+      },
+      "c16": {
+        "requests_per_sec": 31.106,
+        "output_tokens_per_sec": 1600.99,
+        "ttft_ms": {
+          "p50": 33.638,
+          "p95": 48.475,
+          "mean": 35.558
+        },
+        "e2e_ms": {
+          "p50": 503.339,
+          "p95": 522.429,
+          "mean": 504.625
+        },
+        "failed_requests": 0
+      }
+    }
+  }
+}

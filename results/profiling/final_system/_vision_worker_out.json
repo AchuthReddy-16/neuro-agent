@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "before_all": {
+    "nvidia_smi_used_mb": 4.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 0.0,
+    "torch_reserved_mb": 0.0
+  },
+  "vlm_load_ms": 33164.664,
+  "load_time_s_reported": 33.13973551616073,
+  "before_load": {
+    "nvidia_smi_used_mb": 4.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 0.0,
+    "torch_reserved_mb": 0.0
+  },
+  "after_load": {
+    "nvidia_smi_used_mb": 7980.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 7303.1,
+    "torch_reserved_mb": 7522.0
+  },
+  "vram_delta_load_mb": 7976.0,
+  "preprocess_ms": 140.856,
+  "generate_ms": 4257.637,
+  "ttft_proxy_ms": 4382.054,
+  "infer_e2e_ms": 4398.493,
+  "input_tokens": 516,
+  "completion_tokens": 2,
+  "output": "yes",
+  "peak_torch_mb": 7415.8,
+  "vlm_unload_ms": 1073.761,
+  "before_unload": {
+    "nvidia_smi_used_mb": 8060.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "gpu_util_pct": 3.0,
+    "torch_allocated_mb": 7317.9,
+    "torch_reserved_mb": 7582.0
+  },
+  "after_unload": {
+    "nvidia_smi_used_mb": 7640.0,
+    "nvidia_smi_total_mb": 24564.0,
+    "gpu_util_pct": 0.0,
+    "torch_allocated_mb": 8.1,
+    "torch_reserved_mb": 7162.0
+  },
+  "vram_released_unload_mb": 420.0
+}

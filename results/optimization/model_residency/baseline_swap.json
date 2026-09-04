@@ -1,0 +1,49 @@
+{
+  "stage": "K.2_baseline_from_K.1",
+  "timestamp": "2026-09-03T22:41:31.111088+00:00",
+  "mode": "full_swap",
+  "text_util": 0.9,
+  "swap_overhead_mean_ms": 58008.954,
+  "E": {
+    "text_unload_release": 908.764,
+    "vram_released_on_text_unload_mb": 22536.0,
+    "vlm_load": 33783.181,
+    "image_preprocess": 118.712,
+    "vlm_generate": 5378.179,
+    "vlm_ttft_proxy": 5451.505,
+    "vlm_unload": 1067.131,
+    "post_vision_vram_settle": 28.535,
+    "text_vllm_restore": 22524.341,
+    "text_vllm_wait_healthy": 22516.727,
+    "total_swap_overhead_excluding_infer": 58311.952,
+    "total_swap_plus_infer": 63808.843,
+    "measurement_note": "VLM ran in isolated subprocess so CUDA releases on process exit; swap overhead is measured wall-clock, not invented."
+  },
+  "F": {
+    "text_unload_release": 912.843,
+    "vram_released_on_text_unload_mb": 22532.0,
+    "vlm_load": 33164.664,
+    "image_preprocess": 140.856,
+    "vlm_generate": 4257.637,
+    "vlm_ttft_proxy": 4382.054,
+    "vlm_unload": 1073.761,
+    "post_vision_vram_settle": 30.263,
+    "text_vllm_restore": 22524.426,
+    "text_vllm_wait_healthy": 22515.903,
+    "total_swap_overhead_excluding_infer": 57705.957,
+    "total_swap_plus_infer": 62104.45,
+    "measurement_note": "VLM ran in isolated subprocess so CUDA releases on process exit; swap overhead is measured wall-clock, not invented."
+  },
+  "vision_e2e_with_swap_ms": {
+    "E": 174727.799,
+    "F": 177006.378
+  },
+  "components_mean_approx_ms": {
+    "text_unload": 910.803,
+    "vlm_load": 33473.923,
+    "vlm_infer_generate": 4817.908,
+    "vlm_unload": 1070.446,
+    "text_restore": 22524.383
+  },
+  "source": "results/profiling/final_system/vision_path_profile.json"
+}

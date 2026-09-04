@@ -1,0 +1,28 @@
+{
+  "stage": "J.1",
+  "source": "repaired",
+  "confusion_matrix": {
+    "labels": [
+      "TEXT_ONLY",
+      "VISION_REQUIRED"
+    ],
+    "matrix_expected_rows_predicted_cols": {
+      "TEXT_ONLY": {
+        "TEXT_ONLY": 50,
+        "VISION_REQUIRED": 0
+      },
+      "VISION_REQUIRED": {
+        "TEXT_ONLY": 1,
+        "VISION_REQUIRED": 50
+      }
+    },
+    "counts": {
+      "expected_TEXT_ONLY": 50,
+      "expected_VISION_REQUIRED": 51,
+      "predicted_TEXT_ONLY": 51,
+      "predicted_VISION_REQUIRED": 50
+    }
+  },
+  "false_positive_vision_count": 0,
+  "false_negative_vision_count": 1
+}

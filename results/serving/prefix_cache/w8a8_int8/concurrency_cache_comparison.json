@@ -1,0 +1,346 @@
+{
+  "production_prefix_tokens": 875,
+  "cache_off": {
+    "c1": {
+      "label": "cacheoff-prod-c1",
+      "completed_requests": 32,
+      "failed_requests": 0,
+      "n_submitted": 32,
+      "wall_s": 16.253,
+      "requests_per_sec": 1.9689,
+      "output_tokens_per_sec": 125.45,
+      "mean_output_tokens": 63.72,
+      "ttft_ms": {
+        "p50": 40.068,
+        "p95": 42.4468,
+        "p99": 54.0468,
+        "mean": 40.841,
+        "min": 38.652,
+        "max": 58.946
+      },
+      "e2e_ms": {
+        "p50": 501.3345,
+        "p95": 532.1206,
+        "p99": 554.1901,
+        "mean": 506.94
+      },
+      "prefill_latency_ms": {
+        "observable": false,
+        "proxy": "ttft_ms",
+        "p50": 40.068,
+        "p95": 42.4468,
+        "note": "No separate prefill metric on streaming completions; TTFT is the prefill+queue proxy."
+      },
+      "gpu": {
+        "avg_gpu_util": 97.04,
+        "peak_gpu_util": 100.0,
+        "peak_vram_mb": 22536.0,
+        "n_samples": 54
+      },
+      "cache_metrics": {
+        "delta_prefix_cache_hits": null,
+        "delta_prefix_cache_queries": null,
+        "hit_rate_over_window": null,
+        "before": {
+          "prefix_cache_hits": null,
+          "prefix_cache_queries": null,
+          "prefix_cache_hit_rate": null,
+          "gpu_cache_usage_perc": null,
+          "note": "Counters are process-lifetime cumulative unless differenced."
+        },
+        "after": {
+          "prefix_cache_hits": null,
+          "prefix_cache_queries": null,
+          "prefix_cache_hit_rate": null,
+          "gpu_cache_usage_perc": null,
+          "note": "Counters are process-lifetime cumulative unless differenced."
+        }
+      },
+      "failures": [],
+      "concurrency": 1,
+      "primed": false
+    },
+    "c8": {
+      "label": "cacheoff-prod-c8",
+      "completed_requests": 48,
+      "failed_requests": 0,
+      "n_submitted": 48,
+      "wall_s": 4.712,
+      "requests_per_sec": 10.1857,
+      "output_tokens_per_sec": 649.34,
+      "mean_output_tokens": 63.75,
+      "ttft_ms": {
+        "p50": 129.7215,
+        "p95": 224.9977,
+        "p99": 241.9247,
+        "mean": 135.861,
+        "min": 41.576,
+        "max": 248.061
+      },
+      "e2e_ms": {
+        "p50": 784.004,
+        "p95": 827.7348,
+        "p99": 834.4161,
+        "mean": 780.759
+      },
+      "prefill_latency_ms": {
+        "observable": false,
+        "proxy": "ttft_ms",
+        "p50": 129.7215,
+        "p95": 224.9977,
+        "note": "No separate prefill metric on streaming completions; TTFT is the prefill+queue proxy."
+      },
+      "gpu": {
+        "avg_gpu_util": 96.62,
+        "peak_gpu_util": 100.0,
+        "peak_vram_mb": 22538.0,
+        "n_samples": 16
+      },
+      "cache_metrics": {
+        "delta_prefix_cache_hits": null,
+        "delta_prefix_cache_queries": null,
+        "hit_rate_over_window": null,
+        "before": {
+          "prefix_cache_hits": null,
+          "prefix_cache_queries": null,
+          "prefix_cache_hit_rate": null,
+          "gpu_cache_usage_perc": null,
+          "note": "Counters are process-lifetime cumulative unless differenced."
+        },
+        "after": {
+          "prefix_cache_hits": null,
+          "prefix_cache_queries": null,
+          "prefix_cache_hit_rate": null,
+          "gpu_cache_usage_perc": null,
+          "note": "Counters are process-lifetime cumulative unless differenced."
+        }
+      },
+      "failures": [],
+      "concurrency": 8,
+      "primed": false
+    }
+  },
+  "cache_on_warm": {
+    "c1": {
+      "label": "cacheon-prod-warm-c1",
+      "completed_requests": 32,
+      "failed_requests": 0,
+      "n_submitted": 32,
+      "wall_s": 15.527,
+      "requests_per_sec": 2.0609,
+      "output_tokens_per_sec": 131.51,
+      "mean_output_tokens": 63.81,
+      "ttft_ms": {
+        "p50": 18.9445,
+        "p95": 26.0483,
+        "p99": 33.1823,
+        "mean": 20.463,
+        "min": 17.871,
+        "max": 35.418
+      },
+      "e2e_ms": {
+        "p50": 481.045,
+        "p95": 495.4334,
+        "p99": 507.7099,
+        "mean": 482.907
+      },
+      "prefill_latency_ms": {
+        "observable": false,
+        "proxy": "ttft_ms",
+        "p50": 18.9445,
+        "p95": 26.0483,
+        "note": "No separate prefill metric on streaming completions; TTFT is the prefill+queue proxy."
+      },
+      "gpu": {
+        "avg_gpu_util": 96.24,
+        "peak_gpu_util": 100.0,
+        "peak_vram_mb": 22538.0,
+        "n_samples": 51
+      },
+      "cache_metrics": {
+        "delta_prefix_cache_hits": null,
+        "delta_prefix_cache_queries": null,
+        "hit_rate_over_window": null,
+        "before": {
+          "prefix_cache_hits": null,
+          "prefix_cache_queries": null,
+          "prefix_cache_hit_rate": null,
+          "gpu_cache_usage_perc": null,
+          "note": "Counters are process-lifetime cumulative unless differenced."
+        },
+        "after": {
+          "prefix_cache_hits": null,
+          "prefix_cache_queries": null,
+          "prefix_cache_hit_rate": null,
+          "gpu_cache_usage_perc": null,
+          "note": "Counters are process-lifetime cumulative unless differenced."
+        }
+      },
+      "failures": [],
+      "concurrency": 1,
+      "primed": true
+    },
+    "c8": {
+      "label": "cacheon-prod-warm-c8",
+      "completed_requests": 48,
+      "failed_requests": 0,
+      "n_submitted": 48,
+      "wall_s": 3.219,
+      "requests_per_sec": 14.913,
+      "output_tokens_per_sec": 948.53,
+      "mean_output_tokens": 63.6,
+      "ttft_ms": {
+        "p50": 27.5905,
+        "p95": 34.502,
+        "p99": 36.7772,
+        "mean": 27.296,
+        "min": 20.088,
+        "max": 38.699
+      },
+      "e2e_ms": {
+        "p50": 534.531,
+        "p95": 545.1315,
+        "p99": 546.1151,
+        "mean": 534.124
+      },
+      "prefill_latency_ms": {
+        "observable": false,
+        "proxy": "ttft_ms",
+        "p50": 27.5905,
+        "p95": 34.502,
+        "note": "No separate prefill metric on streaming completions; TTFT is the prefill+queue proxy."
+      },
+      "gpu": {
+        "avg_gpu_util": 100.0,
+        "peak_gpu_util": 100.0,
+        "peak_vram_mb": 22540.0,
+        "n_samples": 10
+      },
+      "cache_metrics": {
+        "delta_prefix_cache_hits": null,
+        "delta_prefix_cache_queries": null,
+        "hit_rate_over_window": null,
+        "before": {
+          "prefix_cache_hits": null,
+          "prefix_cache_queries": null,
+          "prefix_cache_hit_rate": null,
+          "gpu_cache_usage_perc": null,
+          "note": "Counters are process-lifetime cumulative unless differenced."
+        },
+        "after": {
+          "prefix_cache_hits": null,
+          "prefix_cache_queries": null,
+          "prefix_cache_hit_rate": null,
+          "gpu_cache_usage_perc": null,
+          "note": "Counters are process-lifetime cumulative unless differenced."
+        }
+      },
+      "failures": [],
+      "concurrency": 8,
+      "primed": true
+    }
+  },
+  "cache_on_cold_c1_serial": {
+    "label": "cacheon-prod-cold",
+    "completed_requests": 12,
+    "failed_requests": 0,
+    "n_submitted": 12,
+    "wall_s": 7.617,
+    "requests_per_sec": 1.5755,
+    "output_tokens_per_sec": 100.57,
+    "mean_output_tokens": 63.83,
+    "ttft_ms": {
+      "p50": 21.317,
+      "p95": 24.376,
+      "p99": 25.8192,
+      "mean": 21.405,
+      "min": 19.098,
+      "max": 26.18
+    },
+    "e2e_ms": {
+      "p50": 479.7975,
+      "p95": 487.6759,
+      "p99": 490.7216,
+      "mean": 481.191
+    },
+    "prefill_latency_ms": {
+      "observable": false,
+      "proxy": "ttft_ms",
+      "p50": 21.317,
+      "p95": 24.376,
+      "note": "No separate prefill metric on streaming completions; TTFT is the prefill+queue proxy."
+    },
+    "gpu": {
+      "avg_gpu_util": 71.24,
+      "peak_gpu_util": 100.0,
+      "peak_vram_mb": 22538.0,
+      "n_samples": 25
+    },
+    "cache_metrics": {
+      "delta_prefix_cache_hits": null,
+      "delta_prefix_cache_queries": null,
+      "hit_rate_over_window": null,
+      "before": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      },
+      "after": {
+        "prefix_cache_hits": null,
+        "prefix_cache_queries": null,
+        "prefix_cache_hit_rate": null,
+        "gpu_cache_usage_perc": null,
+        "note": "Counters are process-lifetime cumulative unless differenced."
+      }
+    },
+    "failures": [],
+    "resets": [
+      {
+        "http_status": 404,
+        "ok": false,
+        "body": {
+          "detail": "Not Found"
+        }
+      },
+      {
+        "http_status": 404,
+        "ok": false,
+        "body": {
+          "detail": "Not Found"
+        }
+      },
+      {
+        "http_status": 404,
+        "ok": false,
+        "body": {
+          "detail": "Not Found"
+        }
+      },
+      {
+        "n_more": 9
+      }
+    ],
+    "reset_enabled": true
+  },
+  "improvement_warm_vs_off": {
+    "c1": {
+      "ttft_p50_reduction_pct": 52.72,
+      "ttft_p95_reduction_pct": 38.63,
+      "e2e_p50_reduction_pct": 4.05,
+      "e2e_p95_reduction_pct": 6.89,
+      "throughput_change_pct": 4.83,
+      "rps_change_pct": 4.67
+    },
+    "c8": {
+      "ttft_p50_reduction_pct": 78.73,
+      "ttft_p95_reduction_pct": 84.67,
+      "e2e_p50_reduction_pct": 31.82,
+      "e2e_p95_reduction_pct": 34.14,
+      "throughput_change_pct": 46.08,
+      "rps_change_pct": 46.41
+    }
+  },
+  "note": "Concurrency 16 not re-run; I.1 already established saturation at 16."
+}

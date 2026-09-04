@@ -1,0 +1,71 @@
+{
+  "status": "ok",
+  "note": "oneshot saved the compressed checkpoint; a duplicate save_pretrained hit overlay disk quota and overwrote config.json. quantization_config was restored from the identical H.7 W8A8 scheme. INT8 weights in model.safetensors were verified.",
+  "timestamp_utc": "2026-09-03T19:52:04.592368+00:00",
+  "source_checkpoint": "/workspace/neuro-agent/checkpoints/text_merged_corrected_bf16",
+  "output_checkpoint": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_balanced_calibration",
+  "h7_checkpoint_preserved": "/workspace/neuro-agent/checkpoints/text_w8a8_int8_compressed",
+  "disk_checkpoint_bytes": 4425336558,
+  "disk_checkpoint_gb": 4.1214,
+  "parameters": {
+    "smoothquant_smoothing_strength": 0.8,
+    "smoothquant_alpha": 0.8,
+    "gptq_scheme": "W8A8",
+    "excluded_layers": [
+      "lm_head"
+    ],
+    "calibration_samples": 512
+  },
+  "compression_config": {
+    "config_groups": {
+      "group_0": {
+        "format": "int-quantized",
+        "input_activations": {
+          "actorder": null,
+          "block_structure": null,
+          "dynamic": true,
+          "group_size": null,
+          "num_bits": 8,
+          "observer": null,
+          "observer_kwargs": {},
+          "scale_dtype": null,
+          "strategy": "token",
+          "symmetric": true,
+          "type": "int",
+          "zp_dtype": null
+        },
+        "output_activations": null,
+        "targets": [
+          "Linear"
+        ],
+        "weights": {
+          "actorder": "static",
+          "block_structure": null,
+          "dynamic": false,
+          "group_size": null,
+          "num_bits": 8,
+          "observer": "memoryless_minmax",
+          "observer_kwargs": {},
+          "scale_dtype": null,
+          "strategy": "channel",
+          "symmetric": true,
+          "type": "int",
+          "zp_dtype": null
+        }
+      }
+    },
+    "format": "int-quantized",
+    "global_compression_ratio": null,
+    "ignore": [
+      "lm_head"
+    ],
+    "kv_cache_scheme": null,
+    "quant_method": "compressed-tensors",
+    "quantization_status": "compressed",
+    "sparsity_config": {},
+    "transform_config": {},
+    "version": "0.18.0"
+  },
+  "fp8_used": false,
+  "bitsandbytes_used": false
+}

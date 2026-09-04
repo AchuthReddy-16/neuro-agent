@@ -1,0 +1,122 @@
+{
+  "base_variant": "base_BF16",
+  "original_sft_variant": "sft_QLoRA_BF16",
+  "corrected_sft_variant": "sft_corrected_v2_QLoRA_BF16",
+  "rlvr_variant": "rlvr_QLoRA_BF16",
+  "eval_note": "Base and original SFT evaluated on eval_heldout.jsonl; corrected SFT v2 and RLVR on eval_heldout_corrected.jsonl.",
+  "overall": {
+    "base_pass_rate": 0.6,
+    "original_sft_pass_rate": 0.717,
+    "corrected_sft_pass_rate": 0.864,
+    "rlvr_pass_rate": 0.861,
+    "original_sft_vs_base_delta": 0.11699999999999999,
+    "corrected_sft_vs_base_delta": 0.264,
+    "corrected_vs_original_sft_delta": 0.14700000000000002,
+    "rlvr_vs_corrected_v2_delta": -0.0030000000000000027,
+    "rlvr_vs_base_delta": 0.261
+  },
+  "per_task": {
+    "band_power_analysis": {
+      "base_pass_rate": 0.576,
+      "original_sft_pass_rate": 0.88,
+      "corrected_sft_pass_rate": 0.88,
+      "rlvr_pass_rate": 0.88,
+      "original_sft_vs_base_delta": 0.30400000000000005,
+      "corrected_sft_vs_base_delta": 0.30400000000000005,
+      "corrected_vs_original_sft_delta": 0.0,
+      "rlvr_vs_corrected_v2_delta": 0.0,
+      "rlvr_vs_base_delta": 0.30400000000000005,
+      "count": 125
+    },
+    "channel_ranking": {
+      "base_pass_rate": 0.664,
+      "original_sft_pass_rate": 0.824,
+      "corrected_sft_pass_rate": 0.816,
+      "rlvr_pass_rate": 0.816,
+      "original_sft_vs_base_delta": 0.15999999999999992,
+      "corrected_sft_vs_base_delta": 0.1519999999999999,
+      "corrected_vs_original_sft_delta": -0.008000000000000007,
+      "rlvr_vs_corrected_v2_delta": 0.0,
+      "rlvr_vs_base_delta": 0.1519999999999999,
+      "count": 125
+    },
+    "execution_vs_imagery": {
+      "base_pass_rate": 0.56,
+      "original_sft_pass_rate": 0.296,
+      "corrected_sft_pass_rate": 1.0,
+      "rlvr_pass_rate": 1.0,
+      "original_sft_vs_base_delta": -0.26400000000000007,
+      "corrected_sft_vs_base_delta": 0.43999999999999995,
+      "corrected_vs_original_sft_delta": 0.704,
+      "rlvr_vs_corrected_v2_delta": 0.0,
+      "rlvr_vs_base_delta": 0.43999999999999995,
+      "count": 125
+    },
+    "factual_grounding": {
+      "base_pass_rate": 0.0,
+      "original_sft_pass_rate": 0.0,
+      "corrected_sft_pass_rate": 0.488,
+      "rlvr_pass_rate": 0.464,
+      "original_sft_vs_base_delta": 0.0,
+      "corrected_sft_vs_base_delta": 0.488,
+      "corrected_vs_original_sft_delta": 0.488,
+      "rlvr_vs_corrected_v2_delta": -0.023999999999999966,
+      "rlvr_vs_base_delta": 0.464,
+      "count": 125
+    },
+    "movement_task_classification": {
+      "base_pass_rate": 0.0,
+      "original_sft_pass_rate": 0.736,
+      "corrected_sft_pass_rate": 0.728,
+      "rlvr_pass_rate": 0.728,
+      "original_sft_vs_base_delta": 0.736,
+      "corrected_sft_vs_base_delta": 0.728,
+      "corrected_vs_original_sft_delta": -0.008000000000000007,
+      "rlvr_vs_corrected_v2_delta": 0.0,
+      "rlvr_vs_base_delta": 0.728,
+      "count": 125
+    },
+    "numerical_reasoning": {
+      "base_pass_rate": 1.0,
+      "original_sft_pass_rate": 1.0,
+      "corrected_sft_pass_rate": 1.0,
+      "rlvr_pass_rate": 1.0,
+      "original_sft_vs_base_delta": 0.0,
+      "corrected_sft_vs_base_delta": 0.0,
+      "corrected_vs_original_sft_delta": 0.0,
+      "rlvr_vs_corrected_v2_delta": 0.0,
+      "rlvr_vs_base_delta": 0.0,
+      "count": 125
+    },
+    "statistical_comparison": {
+      "base_pass_rate": 1.0,
+      "original_sft_pass_rate": 1.0,
+      "corrected_sft_pass_rate": 1.0,
+      "rlvr_pass_rate": 1.0,
+      "original_sft_vs_base_delta": 0.0,
+      "corrected_sft_vs_base_delta": 0.0,
+      "corrected_vs_original_sft_delta": 0.0,
+      "rlvr_vs_corrected_v2_delta": 0.0,
+      "rlvr_vs_base_delta": 0.0,
+      "count": 125
+    },
+    "tool_selection": {
+      "base_pass_rate": 1.0,
+      "original_sft_pass_rate": 1.0,
+      "corrected_sft_pass_rate": 1.0,
+      "rlvr_pass_rate": 1.0,
+      "original_sft_vs_base_delta": 0.0,
+      "corrected_sft_vs_base_delta": 0.0,
+      "corrected_vs_original_sft_delta": 0.0,
+      "rlvr_vs_corrected_v2_delta": 0.0,
+      "rlvr_vs_base_delta": 0.0,
+      "count": 125
+    }
+  },
+  "quality_check": {
+    "strong_tasks_substantially_regressed_vs_corrected_v2": [],
+    "preserve_tasks_substantially_regressed_vs_corrected_v2": [],
+    "factual_grounding_rlvr_rate": 0.464,
+    "pass": true
+  }
+}
