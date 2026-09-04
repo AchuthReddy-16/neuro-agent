@@ -67,6 +67,21 @@ PRECISION = "BF16"
 TEXT_BACKEND_DEFAULT = "PrimaryResearchAgent HF Transformers + LoRA (sft_corrected_v2)"
 VISION_BACKEND_DEFAULT = "HF Transformers + PEFT (lazy)"
 
+# Shown under Limitations for open-ended topomap/spectrogram VLM answers only.
+UNRELIABLE_VISION_FIGURE_NOTE = (
+    "Experimental visual reading for topomap/spectrogram figures — "
+    "not reliable for research conclusions."
+)
+
+_UNRELIABLE_VISION_FIGURE_RE = re.compile(
+    r"(topomap|topo[\s_-]?map|scalp[\s_-]*map|spectrogram|time[\s_-]?freq(?:uency)?)",
+    re.IGNORECASE,
+)
+_WAVEFORM_FIGURE_RE = re.compile(
+    r"(waveform|eeg[\s_-]*trace|time[\s_-]?series|(?:^|[^A-Za-z0-9])waves?(?:[^A-Za-z0-9]|$))",
+    re.IGNORECASE,
+)
+
 # Visual-language cues: vision only when the question needs image interpretation.
 _VISUAL_LANGUAGE_RE = re.compile(
     r"\b("
@@ -622,9 +637,18 @@ class AnalysisService:
                 enriched,
                 enable_verification=plan.use_verify,
             )
+        elif plan.use_vision:
+            # Vision-primary: do NOT feed prior tool evidence into synthesis.
+            # Follow-up visual context is OK; tool/EEG history is not.
+            vision_prior = None
+            if plan.is_follow_up and plan.prior_context_for_answer:
+                vision_prior = plan.prior_context_for_answer
+            trace = agent.ask_text_only(
+                enriched,
+                prior_context=vision_prior,
+                history_snippet=None,
+            )
         else:
-            # Vision-primary: still may run a light text path; prefer text_only shell
-            # then attach VLM below.
             trace = agent.ask_text_only(
                 enriched,
                 prior_context=plan.prior_context_for_answer,
@@ -942,22 +966,78 @@ class AnalysisService:
             if name:
                 tools.append(str(name))
 
-        computed = self._extract_computed_evidence(evidence, tools)
+        plan_use_tools = bool((task_plan or {}).get("use_tools"))
+        plan_use_vision = bool(requires_vision)
+
+        # Evidence isolation: only keep evidence from components that ran THIS request.
+        if plan_use_vision and not plan_use_tools:
+            tools = []
+            computed: list[ComputedEvidenceItem] = []
+        else:
+            computed = self._extract_computed_evidence(evidence, tools)
+
         raw_answer = getattr(trace, "final_answer", None) or ""
-        # When the VISION path produced a real VLM interpretation but the text
-        # synthesizer returned nothing, surface the VLM text as the answer
-        # (do not invent unrelated prose).
-        if requires_vision and vlm_text and not str(raw_answer).strip():
-            raw_answer = vlm_text
+
+        if plan_use_vision and not plan_use_tools:
+            # Vision-only answers come from the VLM for the selected image — never
+            # from a text shell that may still carry stale EEG/tool prose.
+            if vlm_text and str(vlm_text).strip():
+                raw_answer = str(vlm_text).strip()
+            elif visual_items and (visual_items[0].observation or visual_items[0].vlm_interpretation):
+                raw_answer = str(
+                    visual_items[0].observation or visual_items[0].vlm_interpretation or ""
+                ).strip()
+            else:
+                raw_answer = ""
+        elif plan_use_tools and not plan_use_vision:
+            # Tool path: keep tool synthesis; drop any accidental vision rows
+            visual_items = []
+        elif plan_use_tools and plan_use_vision and vlm_text and str(vlm_text).strip():
+            # Rare combined path: append current VLM observation to tool answer
+            tool_ans = str(raw_answer).strip()
+            vis_ans = str(vlm_text).strip()
+            if tool_ans and vis_ans and vis_ans not in tool_ans:
+                raw_answer = f"{tool_ans}\n\nVisual observation: {vis_ans}"
+            elif vis_ans and not tool_ans:
+                raw_answer = vis_ans
+
         answer, uncertainty = self._present_user_facing_answer(
             raw_answer,
             getattr(trace, "warnings", []) or [],
         )
 
+        # Product safety: open-ended topomap/spectrogram VLM reading failed the
+        # real V2/V3 gate — keep vision enabled, but mark those answers clearly.
+        if plan_use_vision and not plan_use_tools:
+            if self._is_unreliable_open_ended_vision_figure(
+                question=question,
+                vision_content_type=vision_content_type,
+                source_image_name=source_image_name,
+                raw_intent=raw_intent,
+                visual_items=visual_items,
+            ):
+                if UNRELIABLE_VISION_FIGURE_NOTE.lower() not in uncertainty.lower():
+                    uncertainty = (
+                        f"{uncertainty}; {UNRELIABLE_VISION_FIGURE_NOTE}"
+                        if uncertainty
+                        else UNRELIABLE_VISION_FIGURE_NOTE
+                    )
+
         ver_triggered = bool(getattr(trace, "verification_triggered", False))
         recovery = getattr(trace, "recovery", None)
         recovery_triggered = recovery is not None
         final_ver = getattr(trace, "final_verification", None)
+
+        # Verifier gating: never for vision-only / text-only conversational paths
+        if plan_use_vision and not plan_use_tools:
+            ver_triggered = False
+            recovery_triggered = False
+            final_ver = None
+        if bool((task_plan or {}).get("text_only")) and not plan_use_tools:
+            ver_triggered = False
+            recovery_triggered = False
+            final_ver = None
+
         if recovery_triggered:
             ver_status = "recovered"
         elif ver_triggered:
@@ -1025,7 +1105,9 @@ class AnalysisService:
         ]
 
         # Interpretation: only when it adds something beyond the research answer.
-        if vlm_text and vlm_text.strip() and vlm_text.strip() != answer.strip():
+        if plan_use_vision and not plan_use_tools:
+            interpretation = ""  # answer already is the VLM text
+        elif vlm_text and vlm_text.strip() and vlm_text.strip() != answer.strip():
             interpretation = vlm_text.strip()
         elif tools and answer and not (task_plan or {}).get("text_only"):
             interpretation = ""
@@ -1201,6 +1283,51 @@ class AnalysisService:
 
         return items
 
+    @staticmethod
+    def _is_unreliable_open_ended_vision_figure(
+        *,
+        question: str,
+        vision_content_type: str | None,
+        source_image_name: str | None,
+        raw_intent: dict[str, Any],
+        visual_items: list[VisualEvidenceItem],
+    ) -> bool:
+        """True for topomap/spectrogram open-ended vision; false for waveform-style.
+
+        Prefer the concrete asset name over intent (intent can be a generic
+        visual_inspection stub that still says requested_visual_type=topomap).
+        """
+        name = source_image_name or ""
+        # Filename is the strongest signal for uploads.
+        if name:
+            if _WAVEFORM_FIGURE_RE.search(name) and not _UNRELIABLE_VISION_FIGURE_RE.search(
+                name
+            ):
+                return False
+            if _UNRELIABLE_VISION_FIGURE_RE.search(name):
+                return True
+
+        req_type = str(raw_intent.get("requested_visual_type") or "")
+        tabs = " ".join(
+            str(getattr(item, "tab", "") or "")
+            + " "
+            + str(getattr(item, "image_type", "") or "")
+            + " "
+            + str(getattr(item, "label", "") or "")
+            for item in visual_items[:1]
+        )
+        blob = " ".join(
+            [
+                question or "",
+                vision_content_type or "",
+                req_type,
+                tabs,
+            ]
+        )
+        if _WAVEFORM_FIGURE_RE.search(blob) and not _UNRELIABLE_VISION_FIGURE_RE.search(blob):
+            return False
+        return bool(_UNRELIABLE_VISION_FIGURE_RE.search(blob))
+
     def _present_user_facing_answer(
         self, raw_answer: str, warnings: list[str]
     ) -> tuple[str, str]:
@@ -1243,7 +1370,7 @@ class AnalysisService:
             seen.add(key)
             clean_unc.append(p)
 
-        uncertainty = "; ".join(clean_unc) if clean_unc else "None"
+        uncertainty = "; ".join(clean_unc) if clean_unc else ""
         return answer, uncertainty
 
     def _extract_uncertainty(self, answer: str, warnings: list[str]) -> str:

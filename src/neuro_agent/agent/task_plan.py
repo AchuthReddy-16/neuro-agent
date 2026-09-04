@@ -213,6 +213,17 @@ def _has_visual_inspection_semantics(question: str) -> bool:
         return True
     if domain and (inspect or deictic):
         return True
+    # Standalone perceptual asks still require a visual artifact even without
+    # naming "image/figure" or a spatial noun ("What do you see?").
+    if inspect and re.search(
+        r"(?i)\b("
+        r"what\s+do\s+you\s+see|what(?:'s|\s+is)\s+(?:visible|shown|displayed)|"
+        r"interpret(?:\s+this)?|analy[sz]e\s+this|make\s+sense\s+of\s+this|"
+        r"describe\s+what\s+you\s+see"
+        r")\b",
+        q,
+    ):
+        return True
     return False
 
 

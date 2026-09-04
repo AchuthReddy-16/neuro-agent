@@ -28,9 +28,10 @@ User
   → FastAPI
   → Router
 
-TEXT PATH                         VISION PATH
-  → Qwen3-4B (W8A8 vLLM)            → Qwen2.5-VL-3B (corrected SFT)
-  → deterministic tools             → figure interpretation
+TEXT PATH (live API)                  VISION PATH (live API)
+  → Qwen3-4B corrected SFT            → Qwen2.5-VL-3B corrected SFT
+  → HF Transformers + LoRA (BF16)     → HF Transformers + PEFT (BF16)
+  → deterministic tools               → figure interpretation
 
   → EvidenceBundle
   → grounded synthesis
@@ -38,6 +39,7 @@ TEXT PATH                         VISION PATH
   → structured answer
 ```
 
+**Live product serving** uses HF Transformers + corrected LoRA/PEFT in BF16 (see `scripts/start_api_production.sh`, `src/neuro_agent/api/service.py`). Separate **W8A8 + vLLM** results below are systems benchmarks for the text stack—not what the live API loads today.
 Routing decides whether a question needs visual interpretation (`requires_vision`) or can be answered with stored features and tools. On a 101-example routing eval (50 TEXT_ONLY / 51 VISION_REQUIRED), a single bounded prompt repair raised accuracy from **67.3% → 99.0%** and vision-required recall from **41.2% → 98.0%** (`results/routing/j1_summary.json`).
 
 ---
@@ -108,7 +110,7 @@ Corrected SFT v2 remained the selected quality checkpoint because RLVR did not i
 
 ## Quantized Quality Tradeoff
 
-Production serving uses **compressed-tensors W8A8** on the merged corrected checkpoint. Overall held-out quality stays close to BF16 (**84.3% vs 86.4%**, n=1000), but one family regresses sharply:
+The **W8A8 + vLLM** text path is a systems benchmark on the merged corrected checkpoint (not the live FastAPI default, which serves HF Transformers + LoRA BF16). Overall held-out quality stays close to BF16 (**84.3% vs 86.4%**, n=1000), but one family regresses sharply:
 
 ![Category quality breakdown](docs/figures/02_category_quality_breakdown.png)
 
@@ -132,8 +134,10 @@ Qwen3 does not provide the vision-encoder path required here, so the stack uses 
 |----------------|----------:|--:|
 | Base | 11.4% | 440 |
 | Multimodal SFT | 16.4% | 440 |
-| **Corrected multimodal SFT (selected)** | **49.3%** | 440 |
+| **Corrected multimodal SFT (selected / production)** | **49.3%** | 440 |
 | Multimodal RLVR | 48.2% | 440 |
+
+Corrected multimodal SFT remains the production VLM checkpoint (`checkpoints/multimodal_sft_corrected/final`). Waveform-style vision is usable in live testing; **open-ended topomap and spectrogram interpretation is not reliable enough for research conclusions** (real V2/V3 gate failures). Later targeted patches raised aggregate held-out slightly but still failed those cases and were **rejected** (see [What Did Not Work](#what-did-not-work)).
 
 Exact numerical scientific claims come from **deterministic tools**, not VLM visual estimation. Multimodal exact-numeric families remain limited (e.g. set/threshold and percent-difference tasks stay near zero on held-out corrected eval).
 
@@ -370,6 +374,8 @@ Measured engineering decisions—not buried caveats:
 | **Corrective SFT v1** regressed prior families (movement 73.6%→35.2%; execution_vs_imagery 29.6%→8.8%; overall 71.7%→70.2%, n=1000) | `results/sft_model_eval/`, `results/sft_corrected_eval/` |
 | **RLVR** did not beat corrected SFT (86.1% vs 86.4%, n=1000) | `results/rlvr_model_eval/` |
 | **Multimodal RLVR** did not beat corrected multimodal SFT (48.2% vs 49.3%, n=440) | `results/model_comparison/multimodal_base_vs_sft_vs_corrected_vs_rlvr.json` |
+| **Topomap/spectrogram patch v1** improved aggregate held-out (→50.9%) but failed real V2/V3; rejected | `results/multimodal_topomap_spectrogram_patch_gate/` |
+| **Vision reading V2** (audited synthetic scale-up) held waveform at 52.0% / overall 50.9% but still failed real V2/V3; rejected | `results/multimodal_vision_v2_training/` |
 | **bnb INT8** saved VRAM but crushed throughput (12.5 vs 52.7 tok/s) | `results/model_comparison/final_precision_cost_matrix.json` |
 | **INT4** failed the quality gate (`factual_grounding` 20% < 30% floor) | `results/quantization/text/quality/int4_targeted/gate_result.json` |
 | **torch.compile** worsened decode (14.9 vs 18.7 tok/s) | `results/model_comparison/int8_before_vs_after_optimization.json` |
@@ -386,8 +392,9 @@ Measured engineering decisions—not buried caveats:
 
 | Layer | Choice |
 |-------|--------|
-| Text | Qwen3-4B corrected SFT → merged → W8A8 → vLLM Cutlass INT8 |
-| Vision | Qwen2.5-VL-3B corrected SFT (invoked on vision route) |
+| Text (live API) | Qwen3-4B corrected SFT (`checkpoints/sft_corrected_v2/final`) via HF Transformers + LoRA, BF16 |
+| Text (systems bench) | Merged corrected → W8A8 → vLLM Cutlass INT8 (benchmark path; not live API default) |
+| Vision (live API) | Qwen2.5-VL-3B corrected SFT (`checkpoints/multimodal_sft_corrected/final`) via HF Transformers + PEFT, BF16 |
 | Tools | Deterministic EEG / statistical analysis (6 tools) |
 | Routing | 99.0% accuracy, 98.0% vision recall (n=101) |
 | Verifier | Conditional; max one recovery |

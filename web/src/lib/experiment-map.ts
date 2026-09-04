@@ -265,7 +265,13 @@ export function mapExperimentFromApi(
 export function mergeUploadResponse(
   prev: Experiment | null,
   res: ApiUploadResponse,
-  localFile: { name: string; kind: "eeg" | "figure" | "metadata"; sizeBytes: number },
+  localFile: {
+    name: string;
+    kind: "eeg" | "figure" | "metadata";
+    sizeBytes: number;
+    /** Client pending id before server assetId is known */
+    localPendingId?: string | null;
+  },
 ): Experiment {
   const artifacts = res.uploaded_artifacts ?? [];
   const visualizations = mapVisualizations(res.available_visualizations);
@@ -298,10 +304,27 @@ export function mergeUploadResponse(
       image_files = [...image_files.filter((f) => f.id !== file.id), file];
   }
 
-  const selected_image_id =
-    localFile.kind === "figure"
-      ? prev?.selected_image_id ?? res.assetId
-      : prev?.selected_image_id ?? image_files[0]?.id ?? null;
+  const prevSel = prev?.selected_image_id ?? null;
+  const pendingId = localFile.localPendingId ?? null;
+  let selected_image_id: string | null = prevSel;
+  if (localFile.kind === "figure") {
+    if (prevSel && image_files.some((f) => f.id === prevSel)) {
+      selected_image_id = prevSel;
+    } else if (!prevSel || prevSel === pendingId) {
+      // Auto-select sole new upload, or remap pending local id → asset id
+      selected_image_id = res.assetId;
+    } else if (image_files.length === 1) {
+      selected_image_id = image_files[0].id;
+    } else {
+      // Stale local id with multiple images — require explicit selection
+      selected_image_id = null;
+    }
+  } else {
+    selected_image_id =
+      (prevSel && image_files.some((f) => f.id === prevSel) ? prevSel : null) ??
+      image_files[0]?.id ??
+      null;
+  }
 
   const selected = image_files.find((f) => f.id === selected_image_id);
   const eegRaw = res.eeg;
@@ -335,7 +358,7 @@ export function mergeUploadResponse(
           type: "figure",
           label: selected.name,
         }
-      : prev?.figure,
+      : undefined,
     metadata: defaultMetadata(res.metadata ?? prev?.metadata),
     visualizations: visualizations.length ? visualizations : prev?.visualizations ?? [],
     modalities: {
@@ -346,3 +369,4 @@ export function mergeUploadResponse(
     },
   };
 }
+

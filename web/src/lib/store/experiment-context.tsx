@@ -35,6 +35,7 @@ import {
 import { mergeUploadResponse, mapExperimentFromApi } from "@/lib/experiment-map";
 import {
   explicitLiveImageId,
+  resolveSelectedImage,
 } from "@/lib/routing";
 import { progressiveTimeline } from "@/lib/mock/responses";
 import {
@@ -746,6 +747,7 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
         name: file.name,
         kind: fileType,
         sizeBytes: file.size,
+        localPendingId: localPendingId,
       });
       const next = { ...merged, isDemo: false };
       experimentRef.current = next;
@@ -870,16 +872,20 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       if (backendMode === "live") {
         try {
           patchFileProgress("figure", fileId, { progress: 40 });
-          const prevSelected =
-            experiment && !experiment.isDemo ? experiment.selected_image_id : null;
           const res = await uploadViaApi(file, "figure", fileId);
           URL.revokeObjectURL(blobUrl);
           setExperiment((prev) => {
             if (!prev) return prev;
+            // Selection must be a real asset id present in image_files (never stale local pending id)
             const keep =
-              prevSelected && prev.image_files.some((f) => f.id === prevSelected)
-                ? prevSelected
-                : prev.selected_image_id ?? res.assetId;
+              prev.selected_image_id &&
+              prev.image_files.some((f) => f.id === prev.selected_image_id)
+                ? prev.selected_image_id
+                : prev.image_files.length === 1
+                  ? prev.image_files[0].id
+                  : res.assetId && prev.image_files.some((f) => f.id === res.assetId)
+                    ? res.assetId
+                    : null;
             const next = syncModalities({ ...prev, selected_image_id: keep });
             const sel = next.image_files.find((f) => f.id === keep) ?? null;
             setVisionState((vs) => visionStateFromSelectedImage(vs, sel));
@@ -1097,7 +1103,14 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       }
 
       const expId = exp.experiment_id ?? exp.id;
-      const imageId = explicitLiveImageId(exp);
+      const imageResolve = resolveSelectedImage(
+        exp.image_files,
+        exp.selected_image_id,
+      );
+      const imageId =
+        imageResolve.ok && imageResolve.image
+          ? imageResolve.image.id
+          : explicitLiveImageId(exp);
       const selected =
         imageId ? exp.image_files.find((f) => f.id === imageId) ?? null : null;
 
@@ -1131,7 +1144,12 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
                 selected_image_id: imageId,
                 selected_image_name: selected?.name ?? null,
               }
-            : undefined,
+            : {
+                has_image: false,
+                attached_image_count: exp.image_files.filter(
+                  (f) => f.status === "ready" || f.status === "uploading",
+                ).length,
+              },
         });
         // Prefer backend provenance — never invent a different image id
         final = {

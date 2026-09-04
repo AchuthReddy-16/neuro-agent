@@ -33,6 +33,7 @@ export function ChatInterface() {
     uploadFigure,
     uploadMetadata,
     removeFile,
+    selectImage,
     selectedImage,
     analysisError,
     clearAnalysisError,
@@ -207,22 +208,42 @@ export function ChatInterface() {
                   </button>
                 </span>
               )}
-              {attachmentChips.map((f) => (
-                <span
-                  key={f.id}
-                  className="inline-flex items-center gap-1.5 text-[10px] px-2 py-1 rounded-md bg-muted/50 text-secondary"
-                >
-                  {f.name}
-                  <button
-                    type="button"
-                    className="text-muted hover:text-primary"
-                    onClick={() => removeFile(f.id)}
-                    aria-label={`Remove ${f.name}`}
+              {attachmentChips.map((f) => {
+                const isFigure = f.kind === "figure";
+                const isSelected = isFigure && selectedImage?.id === f.id;
+                return (
+                  <span
+                    key={f.id}
+                    className={
+                      isSelected
+                        ? "inline-flex items-center gap-1.5 text-[10px] px-2 py-1 rounded-md border border-signal-vision/50 bg-signal-vision/10 text-signal-vision"
+                        : "inline-flex items-center gap-1.5 text-[10px] px-2 py-1 rounded-md bg-muted/50 text-secondary"
+                    }
                   >
-                    ×
-                  </button>
-                </span>
-              ))}
+                    {isFigure ? (
+                      <button
+                        type="button"
+                        className="hover:underline text-left"
+                        onClick={() => selectImage(f.id)}
+                        title="Select for vision analysis"
+                      >
+                        {f.name}
+                        {isSelected ? " · selected" : ""}
+                      </button>
+                    ) : (
+                      <span>{f.name}</span>
+                    )}
+                    <button
+                      type="button"
+                      className="text-muted hover:text-primary"
+                      onClick={() => removeFile(f.id)}
+                      aria-label={`Remove ${f.name}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                );
+              })}
               {selectedImage && !attachmentChips.some((f) => f.id === selectedImage.id) && (
                 <span className="text-[10px] text-signal-vision">Figure: {selectedImage.name}</span>
               )}
