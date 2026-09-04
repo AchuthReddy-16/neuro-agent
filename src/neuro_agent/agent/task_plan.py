@@ -82,13 +82,6 @@ _CONCEPT = re.compile(
     r"\b(what is|what'?s|define|explain|meaning of|generally|in general|tell me about)\b",
     re.I,
 )
-_VISION = re.compile(
-    r"\b(topomap|spectrogram|figure|plot|image|heatmap|visual(?:ly|s|ization)?|"
-    r"look(?:ing)?\s+at|what\s+does\s+this\s+(?:figure|plot|image|topomap)|"
-    r"interpret(?:ing)?\s+(?:the\s+)?(?:map|plot|figure|image)|"
-    r"show(?:s|ing)?\s+(?:this\s+)?(?:figure|plot|image|topomap))\b",
-    re.I,
-)
 _COMPUTE = re.compile(
     r"\b(which\s+channels?|rank|highest|lowest|band[\s-]?power|rms|psd\s*peak|"
     r"compare|threshold|discriminative|outlier|effect\s+size|compute|calculate|"
@@ -97,8 +90,8 @@ _COMPUTE = re.compile(
 )
 _EXPLICIT_DATA_REF = re.compile(
     r"\b(this\s+(?:sample|recording|eeg|dataset|csv|experiment|run)|"
-    r"these\s+data|current\s+(?:sample|result|figure)|selected\s+figure|"
-    r"uploaded|for\s+sample\s+S\d+)\b",
+    r"these\s+data|current\s+(?:sample|result)|"
+    r"uploaded\s+(?:sample|eeg|dataset)|for\s+sample\s+S\d+)\b",
     re.I,
 )
 _DOCUMENT = re.compile(
@@ -118,6 +111,48 @@ _FOLLOW_UP_COMPUTE = re.compile(
     re.I,
 )
 _CHANNEL_TOKEN = re.compile(r"\b([A-Z]{1,3}\d{1,2}|Iz|IZ|Cz|CZ|Fz|FZ|Pz|PZ|Oz|OZ)\b")
+
+# Visual-task semantics: inspection acts + visible-content properties.
+# Intentionally NOT keyed on artifact nouns (image/figure/plot).
+_VISUAL_INSPECT_ACT = re.compile(
+    r"\b("
+    r"see|seeing|seen|look(?:s|ing)?|observe|observing|notice|noticing|"
+    r"interpret(?:ation|ing)?|describe|describing|depicted|portrayed|"
+    r"visible|visually|appearance|appears?|seem(?:s|ing)?|"
+    r"stand(?:s)?\s+out|what'?s\s+(?:going\s+on|shown|displayed|visible)|"
+    r"what\s+do\s+you\s+see|characterize|inspect(?:ion|ing)?|"
+    r"what\s+does\s+this\b|analy[sz]e\s+this|interpret\s+this|"
+    r"make\s+sense\s+of\s+this|read\s+this"
+    r")\b",
+    re.I,
+)
+_VISIBLE_CONTENT = re.compile(
+    r"\b("
+    r"region|regions|panel|panels|hemisphere|scalp|hotspot|hot[\s-]?spot|"
+    r"color|colour|colormap|colourmap|bright(?:er|est)?|dark(?:er|est)?|"
+    r"axis|axes|trend|contour|asymmetr\w+|lateralit\w+|"
+    r"left\s+(?:side|panel|half|region)|right\s+(?:side|panel|half|region)|"
+    r"upper|lower|central\s+region|spatial\s+(?:pattern|distribution)|"
+    r"focus|foci|activation|blob|pattern|patterns|gradient"
+    r")\b",
+    re.I,
+)
+_DEICTIC_PRESENT = re.compile(
+    r"\b("
+    r"this|that|here|these|those|"
+    r"the\s+(?:selected|current|attached|uploaded)\b|"
+    r"what\s+i(?:'?m| am)\s+looking\s+at"
+    r")\b",
+    re.I,
+)
+# Soft domain cues for EEG visualization families (not required for routing).
+_VIZ_DOMAIN = re.compile(
+    r"\b(topomap|spectrogram|heatmap|scalp\s+map|time[\s-]frequency)\b",
+    re.I,
+)
+_PURE_DEFINITION = re.compile(
+    r"(?i)^\s*(what\s+is|what'?s|define|explain|meaning\s+of)\b",
+)
 
 
 def _last_user_assistant(
@@ -144,10 +179,50 @@ def _prior_tools(history: list[ConversationTurn]) -> list[str]:
     return tools
 
 
+def _prior_was_vision(history: list[ConversationTurn]) -> bool:
+    _, last_asst = _last_user_assistant(history)
+    if last_asst is None:
+        return False
+    if (last_asst.route or "").upper() == "VISION":
+        return True
+    # Assistant answered a visual turn without tools
+    if not last_asst.tools_used and last_user_was_visual_request(history):
+        return True
+    return False
+
+
+def last_user_was_visual_request(history: list[ConversationTurn]) -> bool:
+    last_user, _ = _last_user_assistant(history)
+    if last_user is None:
+        return False
+    return _has_visual_inspection_semantics(last_user.content)
+
+
+def _has_visual_inspection_semantics(question: str) -> bool:
+    """True when the utterance itself is about inspecting visible content."""
+    q = question.strip()
+    if not q:
+        return False
+    inspect = bool(_VISUAL_INSPECT_ACT.search(q))
+    content = bool(_VISIBLE_CONTENT.search(q))
+    deictic = bool(_DEICTIC_PRESENT.search(q))
+    domain = bool(_VIZ_DOMAIN.search(q))
+    if inspect and (deictic or content or domain):
+        return True
+    if content and (inspect or deictic or domain):
+        return True
+    if domain and (inspect or deictic):
+        return True
+    return False
+
+
 def _looks_like_concept_only(question: str) -> bool:
     q = question.strip()
     if _GREETING.match(q) or _CAPABILITY.search(q):
         return True
+    # Visual inspection is never "concept only"
+    if _has_visual_inspection_semantics(q):
+        return False
     # Channel/metric lookups are computations, not definitions.
     channel_metric = bool(_CHANNEL_TOKEN.search(q) and _COMPUTE.search(q))
     # Definitions / general explanations — even if the topic mentions band power, etc.
@@ -159,18 +234,82 @@ def _looks_like_concept_only(question: str) -> bool:
         q
     ):
         return True
-    if re.search(r"(?i)^explain\b", q) and not _EXPLICIT_DATA_REF.search(q) and not _VISION.search(q):
+    if re.search(r"(?i)^explain\b", q) and not _EXPLICIT_DATA_REF.search(q):
         return True
     if _CONCEPT.search(q) and not _EXPLICIT_DATA_REF.search(q) and not _COMPUTE.search(q):
+        # "tell me about the left panel pattern" is visual, already excluded above
         return True
     return False
 
 
-def _needs_vision(question: str) -> bool:
-    if _COMPUTE.search(question) and not _VISION.search(question):
-        # ranking / band power without visual language
+def _requires_visual_inspection(
+    question: str,
+    *,
+    has_image: bool,
+    history: list[ConversationTurn],
+) -> bool:
+    """Decide whether answering needs looking at a selected visual artifact.
+
+    Uses task semantics (inspection acts, visible-content properties, deixis,
+    prior vision turns) — not literal artifact-type nouns as the decision rule.
+    """
+    q = question.strip()
+    if not q or _GREETING.match(q) or _CAPABILITY.search(q):
         return False
-    return bool(_VISION.search(question))
+
+    # Pure definitions stay TEXT even if an image remains selected.
+    if _PURE_DEFINITION.match(q) and not _has_visual_inspection_semantics(q):
+        if not _VISIBLE_CONTENT.search(q) and not _VIZ_DOMAIN.search(q):
+            return False
+
+    if _looks_like_concept_only(q) and not _has_visual_inspection_semantics(q):
+        return False
+
+    # Deterministic EEG computation without visual-inspection semantics → tools path
+    if _COMPUTE.search(q) and not _has_visual_inspection_semantics(q) and not _VIZ_DOMAIN.search(q):
+        # "this sample" compute is not vision
+        if _EXPLICIT_DATA_REF.search(q) or _CHANNEL_TOKEN.search(q):
+            return False
+
+    inspect = bool(_VISUAL_INSPECT_ACT.search(q))
+    content = bool(_VISIBLE_CONTENT.search(q))
+    deictic = bool(_DEICTIC_PRESENT.search(q))
+    domain = bool(_VIZ_DOMAIN.search(q))
+    prior_vision = _prior_was_vision(history)
+
+    if _has_visual_inspection_semantics(q):
+        return True
+
+    # Visible-content questions (regions/panels/colors/…) imply looking at a figure
+    # unless they are clearly sample computations.
+    if content and not _looks_like_concept_only(q):
+        if not (
+            _COMPUTE.search(q)
+            and (_EXPLICIT_DATA_REF.search(q) or _CHANNEL_TOKEN.search(q))
+        ):
+            return True
+
+    # Selected artifact + short deictic / inspection ask without naming file types
+    if has_image and inspect:
+        return True
+    if has_image and deictic and not _looks_like_concept_only(q):
+        words = len(q.split())
+        if words <= 14 and (
+            inspect
+            or content
+            or domain
+            or re.search(r"(?i)\b(analy[sz]e|what(?:'s| is)|tell me)\b", q)
+        ):
+            return True
+
+    # Multi-turn: follow-up about visible content after a vision answer
+    if prior_vision and not _looks_like_concept_only(q):
+        if content or inspect or (deictic and len(q.split()) <= 12):
+            if _COMPUTE.search(q) and _CHANNEL_TOKEN.search(q) and not (inspect or content):
+                return False
+            return True
+
+    return False
 
 
 def _needs_compute(question: str, *, is_follow_up_compute: bool) -> bool:
@@ -178,7 +317,7 @@ def _needs_compute(question: str, *, is_follow_up_compute: bool) -> bool:
         return True
     if _looks_like_concept_only(question):
         return False
-    if _needs_vision(question) and not _COMPUTE.search(question):
+    if _has_visual_inspection_semantics(question) and not _COMPUTE.search(question):
         return False
     if _EXPLICIT_DATA_REF.search(question) and _COMPUTE.search(question):
         return True
@@ -339,12 +478,17 @@ def plan_task(
             reason="concept_explanation",
         )
 
-    # Explanatory follow-up after tools — TEXT with prior context, no new tools
+    # Explanatory follow-up after tools — TEXT with prior context, no new tools.
+    # Visual follow-ups after a VISION turn must not be swallowed here.
     if is_follow_up and not wants_fu_compute:
-        prior_tools = _prior_tools(history)
-        if prior_tools or (prior and "Previous answer" in prior):
-            # "why is T8 highest?" / "what does that mean?"
-            if not _needs_vision(q) and not wants_fu_compute:
+        if _requires_visual_inspection(
+            q, has_image=artifacts.has_image, history=history
+        ):
+            pass  # fall through to vision handling
+        else:
+            prior_tools = _prior_tools(history)
+            if prior_tools or (prior and "Previous answer" in prior):
+                # "why is T8 highest?" / "what does that mean?"
                 return TaskPlan(
                     components=["TEXT"],
                     text_only=True,
@@ -361,8 +505,14 @@ def plan_task(
                     reason="follow_up_explanation",
                 )
 
-    needs_vision = _needs_vision(q)
+    needs_vision = _requires_visual_inspection(
+        q, has_image=artifacts.has_image, history=history
+    )
     needs_compute = _needs_compute(q, is_follow_up_compute=wants_fu_compute)
+
+    # Prefer vision when visual inspection is required (even if compute words also appear)
+    if needs_vision and needs_compute and not _EXPLICIT_DATA_REF.search(q):
+        needs_compute = False
 
     if needs_vision:
         if not artifacts.has_image:
