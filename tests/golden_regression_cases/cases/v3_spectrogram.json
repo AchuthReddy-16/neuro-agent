@@ -1,0 +1,21 @@
+{
+  "case_id": "V3_real_spectrogram",
+  "evaluation_only": true,
+  "training_allowed": false,
+  "figure_family": "spectrogram",
+  "asset": "assets/v3_spectrogram_tf.png",
+  "source_filename": "spectrogram_tf.png",
+  "question": "What stands out in the upper region?",
+  "expected_route": "VISION",
+  "expect_experimental_limitations_note": true,
+  "expect_no_tools": true,
+  "expect_no_stale_eeg_markers": true,
+  "baseline_output": {
+    "checkpoint": "checkpoints/multimodal_sft_corrected/final",
+    "role": "accepted_production_baseline_only",
+    "scientifically_correct": false,
+    "note": "Recorded from the accepted corrected multimodal SFT under the real V3 held-out gate. Do not treat as ground-truth science.",
+    "text": "delta_power"
+  },
+  "locked_visual_gt_note": "Upper (high-Hz) region is dark/low on the real spectrogram; baseline VLM output failed that gate and remains a product limitation."
+}

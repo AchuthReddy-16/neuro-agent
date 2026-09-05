@@ -880,13 +880,13 @@ class AnalysisService:
             self.state.vision_error = None
             logger.info("VISION_RUNTIME_LOADING")
             try:
+                from neuro_agent.api.release_manifest import VISION_CHECKPOINT_REL
+
                 cfg = InferenceConfig(
                     model_name="Qwen/Qwen2.5-VL-3B-Instruct",
                     dtype="bfloat16",
                     trust_remote_code=True,
-                    adapter_path=str(
-                        PROJECT_ROOT / "checkpoints" / "multimodal_sft_corrected" / "final"
-                    ),
+                    adapter_path=str(PROJECT_ROOT / VISION_CHECKPOINT_REL),
                     max_new_tokens=64,
                     do_sample=False,
                 )

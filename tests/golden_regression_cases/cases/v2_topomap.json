@@ -1,0 +1,21 @@
+{
+  "case_id": "V2_real_topomap",
+  "evaluation_only": true,
+  "training_allowed": false,
+  "figure_family": "topomap",
+  "asset": "assets/v2_scalp_topomap_beta.png",
+  "source_filename": "scalp_topomap_beta.png",
+  "question": "Describe the dominant spatial pattern",
+  "expected_route": "VISION",
+  "expect_experimental_limitations_note": true,
+  "expect_no_tools": true,
+  "expect_no_stale_eeg_markers": true,
+  "baseline_output": {
+    "checkpoint": "checkpoints/multimodal_sft_corrected/final",
+    "role": "accepted_production_baseline_only",
+    "scientifically_correct": false,
+    "note": "Recorded from the accepted corrected multimodal SFT under the real V2 held-out gate. Do not treat as ground-truth science.",
+    "text": "frontal and occipital regions"
+  },
+  "locked_visual_gt_note": "Real figure has frontal high / occipital darker for the locked gate; baseline VLM output failed that gate and remains a product limitation."
+}

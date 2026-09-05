@@ -101,6 +101,8 @@ def create_app() -> FastAPI:
     # ----- health / metrics -----
     @app.get("/api/health", response_model=HealthResponse)
     def health() -> HealthResponse:
+        from neuro_agent.api.release_manifest import build_release_fields
+
         svc = api_deps.get_service()
         st = svc.state
         mock = svc.mock_runner is not None
@@ -115,6 +117,7 @@ def create_app() -> FastAPI:
         else:
             # Process is up; text model not yet ready (lazy / loading).
             overall = "degraded"
+        release = build_release_fields(agent=None if mock else st.agent)
         return HealthResponse(
             status=overall,  # type: ignore[arg-type]
             text_model=TEXT_MODEL_LABEL,
@@ -130,6 +133,12 @@ def create_app() -> FastAPI:
             precision=st.precision or PRECISION,
             text_error=st.text_error,
             vision_error=st.vision_error,
+            git_commit=release["git_commit"],
+            text_checkpoint=release["text_checkpoint"],
+            vision_checkpoint=release["vision_checkpoint"],
+            runtime=release["runtime"],
+            package_version=release["package_version"],
+            frontend_build_id=release["frontend_build_id"],
         )
 
     @app.get("/api/system/metrics", response_model=SystemMetricsResponse)

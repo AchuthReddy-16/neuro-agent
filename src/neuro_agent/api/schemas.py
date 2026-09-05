@@ -44,6 +44,21 @@ class HealthResponse(BaseModel):
     precision: str | None = None
     text_error: str | None = Field(default=None, serialization_alias="textError")
     vision_error: str | None = Field(default=None, serialization_alias="visionError")
+    # Release identification (additive; null when unavailable — never invent).
+    git_commit: str | None = Field(default=None, serialization_alias="gitCommit")
+    text_checkpoint: str | None = Field(
+        default=None, serialization_alias="textCheckpoint"
+    )
+    vision_checkpoint: str | None = Field(
+        default=None, serialization_alias="visionCheckpoint"
+    )
+    runtime: str | None = None
+    package_version: str | None = Field(
+        default=None, serialization_alias="packageVersion"
+    )
+    frontend_build_id: str | None = Field(
+        default=None, serialization_alias="frontendBuildId"
+    )
 
 
 class SystemMetricsResponse(BaseModel):
